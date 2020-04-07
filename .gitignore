@@ -6,13 +6,28 @@ __pycache__/
 *.so
 
 # include .gitignore files to keep empty migration folders
-!.gitignore
+#!.gitignore
 
 # node.js modules
 node_module/
 
 # local media
 media_www/
+
+
+# migrations
+vuwir/migrations/
+invitations/migrations/
+
+# misc folders
+static_www/
+static_archive/
+archive/
+
+# misc files
+join_test.html
+get_case_d3.html
+get_cases.py
 
 # vscode folder
 .vscode
@@ -64,15 +79,6 @@ docs/_build/
 
 # PyBuilder
 target/
-
-# migrations
-vuwir/migrations/
-invitations/migrations/
-
-# misc folders
-static_www/
-static_archive/
-
 
 
 
