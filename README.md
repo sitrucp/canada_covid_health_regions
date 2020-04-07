@@ -15,9 +15,9 @@ The Statscan health region data and working group data are not aligned as descri
 
 Health region names are either not current or have informal usage eg they are abbreviations or alternate names. For example, Quebec "Région de Montréal" is "Montréal" in Quebec COVID-91 reporting, and "City of Toronto Health Unit" is "Toronto" in Ontario COVID-91 reporting, etc.
 
-Statscan arcinfo health region boundaries do not reflect current provincial status or COVID-19 reporting:
+Statscan arcinfo health region boundaries do not perfectly reflect current provincial health regions or COVID-19 reporting:
 
-*  Sask and Nova Scotia updated boundaries. "canada_healthregions.json" Sask boundaries still need some work to 'dissolve' polygons into updated boundaries.
+*  Sask has updated boundaries. "canada_healthregions.json" Sask boundaries still need some work to 'dissolve' polygons into updated boundaries.
 
 * BC Statscan arcinfo health region boundaries reference smaller health region areas, whereas BC is COVID-19 reporting references larger health authorities comprised of these smaller areas. 
 
