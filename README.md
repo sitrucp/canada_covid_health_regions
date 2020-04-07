@@ -1,4 +1,9 @@
-Canada Confirmed COVID-19 Cases By Provincial Health Regions This Leaflet map uses modified Statscan arcinfo health region boundaries to show confirmed COVID-91 counts by health region. COVID-91 data comes from COVID-19 Canada Open Data Working Group Data last updated April 6, 2020
+Canada Confirmed COVID-19 Cases By Provincial Health Regions 
+
+View map here:
+<a href="https://sitrucp.github.io/canada_covid_health_regions/index.html">https://sitrucp.github.io/canada_covid_health_regions/index.html</a>
+
+This Leaflet map uses modified Statscan arcinfo health region boundaries to show confirmed COVID-91 counts by health region. COVID-91 data comes from COVID-19 Canada Open Data Working Group Data last updated April 6, 2020
 
 Statscan health region name values are not current. Sask and Nova Scotia have both updated their boundaries. These have been manually edited here. Sask boundaries still need to be dissolved into updated boundaries.
 
