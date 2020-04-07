@@ -85,7 +85,6 @@ function getProvince(regionName) {
     for(var i = 0; i < covid_data.length; i++) {
         var obj = covid_data[i];
         if (obj.statscan_arcgis_health_region === regionName) {
-    
             regionProvince = obj.province;
             break;
          }
