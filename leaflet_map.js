@@ -1,6 +1,7 @@
 
-var map = L.map('map').setView(['53.145743', '-102.283131'], 4);
+var map = L.map('map',{ zoomControl: false }).setView(['53.145743', '-102.283131'], 4);
 map.once('focus', function() { map.scrollWheelZoom.enable(); });
+L.control.zoom({ position: 'bottomright' }).addTo(map);
 
 L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
     maxZoom: 18,
