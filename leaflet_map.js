@@ -49,7 +49,8 @@ function mouseOverActions(e) {
     }
     var regionName = layer.feature.properties.ENG_LABEL;
     var caseCount = getCaseCount(regionName);
-    document.getElementsByClassName('infobox')[0].innerHTML = '<p>' + regionName + ' has ' + caseCount + ' cases</p>';
+    var regionProvince = getProvince(regionName);
+    document.getElementsByClassName('infobox')[0].innerHTML = '<p>Province:' + regionProvince + ': <br>' + 'Health Region: ' + regionName + '<br>' + 'Confirmed cases: ' + caseCount + '</p>';
 };
 
 function mouseOutActions(e) {
@@ -75,6 +76,20 @@ function getCaseCount(regionName) {
         caseCount = 0; 
    }
    return caseCount;
+}
+
+// get health region province bc it isn't in Statscan boundary file 
+function getProvince(regionName) {
+    var regionProvince;
+    for(var i = 0; i < covid_data.length; i++) {
+        var obj = covid_data[i];
+        if (obj.statscan_arcgis_health_region === regionName) {
+            console.log(obj);
+            regionProvince = obj.province;
+            break;
+         }
+    }
+   return regionProvince;
 }
 
 // case color for legend and health region shape
