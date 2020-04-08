@@ -12,6 +12,8 @@
     
     <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js" integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew==" crossorigin=""></script>
 
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"   integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+
     <link rel="stylesheet" type="text/css" href="site.css" />
 
     <style>
@@ -21,19 +23,53 @@
 </head>
 
 <body>
-    <div class="header">
-        <h3>Canada COVID-19 Cases By Provincial Health Regions</h3>
-        <p>This map uses modified <a href="https://www150.statcan.gc.ca/n1/pub/82-402-x/2013003/reg-eng.htm">Statscan arcinfo health region boundaries</a> to show confirmed COVID-91 counts by health region. COVID-91 data comes from <a href = "https://github.com/ishaberry/Covid19Canada">COVID-19 Canada Open Data Working Group</a> Data last update: 07 April 2020, 13:00 EST. All files on <a href="https://github.com/sitrucp/canada_covid_health_regions">github.com/sitrucp/canada_covid_health_regions</a>
+    <div>
+        <h3>Canada COVID-19 Confirmed Cases By Provincial Health Regions</h3>
+        <p>This map uses modified <a href="https://www150.statcan.gc.ca/n1/pub/82-402-x/2013003/reg-eng.htm">Statscan arcinfo health region boundaries</a> to show confirmed COVID-91 counts by health region. COVID-91 data comes from <a href = "https://github.com/ishaberry/Covid19Canada">COVID-19 Canada Open Data Working Group</a>. Updated: April 8, 2020 12pm.
         </p>
     </div>
     
     <div id='map'></div>
+
+    <p>Site files: <a href="https://github.com/sitrucp/canada_covid_health_regions">github.com/sitrucp/canada_covid_health_regions</a></p>
 
     <script src="canada_healthregions.json" type="text/javascript"></script>
 
     <script src="Public_COVID-19_Canada_final.json" type="text/javascript"></script>
 
     <script src="leaflet_map.js"></script>
+
+    <table>
+        <!-- data table -->
+    </table>
+
+    <script>
+        let table_data = covid_data;
+        function generateTableHead(table, data) {
+            let thead = table.createTHead();
+            let row = thead.insertRow();
+            for (let key of data) {
+                let th = document.createElement("th");
+                let text = document.createTextNode(key);
+                th.appendChild(text);
+                row.appendChild(th);
+            }
+        }
+            function generateTable(table, data) {
+            for (let element of data) {
+                let row = table.insertRow();
+                for (key in element) {
+                    let cell = row.insertCell();
+                    let text = document.createTextNode(element[key]);
+                    cell.appendChild(text);
+                }
+            }
+        }
+        let table = document.querySelector("table");
+        let data = Object.keys(table_data[0]);
+        generateTableHead(table, data);
+        generateTable(table, table_data);
+    </script>
 
 </body>
 </html>
