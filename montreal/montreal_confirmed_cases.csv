@@ -1,34 +1,36 @@
 region_name,confirmed_case_count
-Ahuntsic-Cartierville,200
-Anjou,42
+Ahuntsic-Cartierville,223
+Anjou,47
 BAIE D'URFE,5
-BEACONSFIELD,11
-Côte-des-Neiges–Notre-Dame-de-Grâce,428
-CÔTE-SAINT-LUC,232
-DOLLARD-DES-ORMEAUX,54
-DORVAL,31
+BEACONSFIELD,13
+Côte-des-Neiges–Notre-Dame-de-Grâce,453
+CÔTE-SAINT-LUC,241
+DOLLARD-DES-ORMEAUX,64
+DORVAL,37
 HAMPSTEAD,28
 KIRKLAND,12
-Lachine,71
-LaSalle,237
-L’Île-Bizard–Sainte-Geneviève,16
-Mercier–Hochelaga-Maisonneuve,182
+Lachine,78
+LaSalle,267
+L’Île-Bizard–Sainte-Geneviève,20
+Mercier–Hochelaga-Maisonneuve,195
 MONTRÉAL-EST,5
-MONTRÉAL-NORD,149
+MONTRÉAL-NORD,165
 MONTRÉAL-OUEST,5
-MONT-ROYAL,37
-Outremont,119
-Pierrefonds-Roxboro,56
-Le Plateau-Mont-Royal,186
-POINTE-CLAIRE,24
-Rivière-des-Prairies–Pointe-aux-Trembles,148
-Rosemont–La Petite-Patrie,217
+MONT-ROYAL,38
+Outremont,131
+Pierrefonds-Roxboro,69
+Le Plateau-Mont-Royal,203
+POINTE-CLAIRE,30
+Rivière-des-Prairies–Pointe-aux-Trembles,161
+Rosemont–La Petite-Patrie,227
 SAINTE-ANNE-DE-BELLEVUE,5
-Saint-Laurent,141
-Saint-Léonard,96
+Saint-Laurent,152
+Saint-Léonard,103
 SENNEVILLE,5
-Le Sud-Ouest,162
-Verdun,134
-Ville-Marie,152
-Villeray–Saint-Michel–Parc-Extension,185
-WESTMOUNT,52
+Le Sud-Ouest,171
+Verdun,141
+Ville-Marie,164
+Villeray–Saint-Michel–Parc-Extension,199
+WESTMOUNT,55
+Territory to be confirmed,"1,067"
+Total for Montréal,"4,775"
