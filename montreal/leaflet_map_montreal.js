@@ -1,5 +1,5 @@
 
-var map = L.map('map',{ zoomControl: false }).setView(['53.145743', '-102.283131'], 4);
+var map = L.map('map',{ zoomControl: false }).setView(['45.504613', '-73.634624'], 10);
 map.once('focus', function() { map.scrollWheelZoom.enable(); });
 L.control.zoom({ position: 'bottomright' }).addTo(map);
 
@@ -13,15 +13,15 @@ L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
     zoomOffset: -1
 }).addTo(map);
 
-// add statscan health regions to map
-var geojson = L.geoJson(health_region_json, {
+// add montreal  regions to map
+var geojson = L.geoJson(montreal_regions, {
     style: function (feature) {
         return {
             color: 'grey', //shape border color
             dashArray: '3',
             weight: 1,
             opacity: 1,
-            fillColor: getRegionColor(feature.properties.ENG_LABEL),
+            fillColor: getRegionColor(feature.properties.district),
             fillOpacity: .7
         };
     },
@@ -48,15 +48,14 @@ function mouseOverActions(e) {
     if (!L.Browser.ie && !L.Browser.opera) {
         layer.bringToFront();
     }
-    var regionName = layer.feature.properties.ENG_LABEL;
+    var regionName = layer.feature.properties.district;
     var caseCount = getCaseCount(regionName);
-    var regionProvince = getProvince(regionName);
-    document.getElementsByClassName('infobox')[0].innerHTML = '<p>Province:' + regionProvince + ': <br>' + 'Health Region: ' + regionName + '<br>' + 'Confirmed cases: ' + caseCount + '</p>';
+    document.getElementsByClassName('infobox')[0].innerHTML = '<p>Province: Quebec <br>' + 'Montreal Region: ' + regionName + '<br>' + 'Confirmed cases: ' + caseCount + '</p>';
 };
 
 function mouseOutActions(e) {
     geojson.resetStyle(e.target);
-    document.getElementsByClassName('infobox')[0].innerHTML = '<p>Hover over health region to see name and counts. Scroll to zoom.</p>';
+    document.getElementsByClassName('infobox')[0].innerHTML = '<p>Hover over region to see name and counts. Scroll to zoom.</p>';
 }
 
 function zoomToFeature(e) {
@@ -68,8 +67,8 @@ function getCaseCount(regionName) {
     var caseCount = 0;
     for(var i = 0; i < covid_data.length; i++) {
         var obj = covid_data[i];
-        if (obj.statscan_arcgis_health_region === regionName) {
-            caseCount = obj.case_count;
+        if (obj.region_name === regionName) {
+            caseCount = obj.confirmed_case_count;
             break;
          }
     }
@@ -79,26 +78,13 @@ function getCaseCount(regionName) {
    return caseCount;
 }
 
-// get health region province bc it isn't in Statscan boundary file 
-function getProvince(regionName) {
-    var regionProvince;
-    for(var i = 0; i < covid_data.length; i++) {
-        var obj = covid_data[i];
-        if (obj.statscan_arcgis_health_region === regionName) {
-            regionProvince = obj.province;
-            break;
-         }
-    }
-   return regionProvince;
-}
-
 // case color for legend and health region shape
 function getRegionColor(regionName) {
     var regionColor;
     for(var i = 0; i < covid_data.length; i++) {
         var obj = covid_data[i];
-        if (obj.statscan_arcgis_health_region === regionName) {
-            regionColor = getColor(obj.case_count);
+        if (obj.region_name === regionName) {
+            regionColor = getColor(obj.confirmed_case_count);
             break;
         }
     }
@@ -106,13 +92,13 @@ function getRegionColor(regionName) {
 }
 
 function getColor(n) {
-    return n > 2000 ? '#b10026'
-        : n > 1500 ? '#e31a1c' 
-        : n > 1000 ? '#fc4e2a' 
-        : n > 500 ? '#fd8d3c'
-        : n > 250  ? '#feb24c'
-        : n > 100  ? '#fed976'
-        : n > 50  ? '#ffeda0'
+    return n > 500 ? '#b10026'
+        : n > 400 ? '#e31a1c' 
+        : n > 300 ? '#fc4e2a' 
+        : n > 200 ? '#fd8d3c'
+        : n > 100  ? '#feb24c'
+        : n > 50  ? '#fed976'
+        : n > 25  ? '#ffeda0'
         : n > 0  ? '#ffffcc'
         : '#ffffff';
 }
@@ -121,7 +107,7 @@ function getColor(n) {
 var legend = L.control({position: 'topright'});
 legend.onAdd = function (map) {
     var div = L.DomUtil.create('div', 'legend'),
-        grades = [0, 50, 100, 250, 500, 1000, 1500, 2000],
+        grades = [0, 25, 50, 100, 200, 300, 400, 500],
         labels = [],
         from, to;
     for (var i = 0; i < grades.length; i++) {
@@ -147,9 +133,7 @@ var infobox = L.control({position: 'topleft'});
 infobox.onAdd = function (map) {
     var div = L.DomUtil.create('div', 'infobox');
     var infobox = document.getElementsByClassName('infobox')[0];
-    div.innerHTML = '<p>Hover over health region to see name and counts.</p>';
+    div.innerHTML = '<p>Hover over region to see name and counts.</p>';
     return div;
 };
 infobox.addTo(map);
-
-
