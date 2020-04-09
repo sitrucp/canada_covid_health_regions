@@ -133,7 +133,7 @@ var infobox = L.control({position: 'topleft'});
 infobox.onAdd = function (map) {
     var div = L.DomUtil.create('div', 'infobox');
     var infobox = document.getElementsByClassName('infobox')[0];
-    div.innerHTML = '<p>Hover over region to see name and counts.</p>';
+    div.innerHTML = '<p>Hover over region to see name and counts. Scroll to zoom.</p>';
     return div;
 };
 infobox.addTo(map);
