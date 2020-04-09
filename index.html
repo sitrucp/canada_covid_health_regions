@@ -14,6 +14,8 @@
 
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"   integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+
     <link rel="stylesheet" type="text/css" href="site.css" />
 
     <style>
@@ -36,8 +38,12 @@
 
     <script src="canada_healthregions.json" type="text/javascript"></script>
 
+<!--
     <script src="Public_COVID-19_Canada_final.json" type="text/javascript"></script>
+         
 
+    <script src="get_data.js"></script>
+   -->
     <script src="leaflet_map.js"></script>
 
     <table>
@@ -45,31 +51,7 @@
     </table>
 
     <script>
-        let table_data = covid_data;
-        function generateTableHead(table, data) {
-            let thead = table.createTHead();
-            let row = thead.insertRow();
-            for (let key of data) {
-                let th = document.createElement("th");
-                let text = document.createTextNode(key);
-                th.appendChild(text);
-                row.appendChild(th);
-            }
-        }
-            function generateTable(table, data) {
-            for (let element of data) {
-                let row = table.insertRow();
-                for (key in element) {
-                    let cell = row.insertCell();
-                    let text = document.createTextNode(element[key]);
-                    cell.appendChild(text);
-                }
-            }
-        }
-        let table = document.querySelector("table");
-        let data = Object.keys(table_data[0]);
-        generateTableHead(table, data);
-        generateTable(table, table_data);
+
     </script>
 
 </body>
