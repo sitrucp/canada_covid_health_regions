@@ -3,24 +3,16 @@ Canada Confirmed COVID-19 Cases By Provincial Health Regions
 View map here:
 <a href="https://sitrucp.github.io/canada_covid_health_regions/index.html">https://sitrucp.github.io/canada_covid_health_regions/index.html</a>
 
-This Leaflet map uses modified Statscan arcinfo health region boundaries to show confirmed COVID-91 counts by health region. 
+This Leaflet map is based on the <a href="https://www150.statcan.gc.ca/n1/pub/82-402-x/2018001/hrbf-flrs-eng.htm">Statscan ArcGIS Health region boundary Canada dataset</a>, with some modifications as described below. The Statscan health region boundary data is maintained in the file "canada_healthregions.json".
 
-COVID-91 confirmed count data comes from <a href = "https://github.com/ishaberry/Covid19Canada">COVID-19 Canada Open Data Working Group</a> 'cases.csv' file.
+The COVID-91 confirmed count data comes from the <a href = "https://github.com/ishaberry/Covid19Canada">COVID-19 Canada Open Data Working Group</a> 'cases.csv' file which comes from provincial COVID-91 reporting. This data is maintained in the file "Public_COVID-19_Canada_final.json"
 
-The <a href="https://www150.statcan.gc.ca/n1/pub/82-402-x/2013003/reg-eng.htm">Statscan health region boundary data</a> is maintained in the file "canada_healthregions.json".
+Note that the Statscan and COVID-19 Canada Open Data Working Group data health region boundaries have some differences. 
 
-The COVID-19 Canada Open Data Working Group data comes from provincial COVID-91 reporting.
+* Many health region names used in provincial health authority public reporting are either given in an informal manner eg using abbreviations or alternate names of the fully qualified names used in Statscan data. For example, Quebec "Région de Montréal" is "Montréal" in Quebec COVID-91 reporting, and "City of Toronto Health Unit" is "Toronto" in Ontario COVID-91 reporting, etc.
 
-The Statscan health region data and working group data are not aligned as described below.
+* Statscan arcinfo health region boundaries do not have current provincial health region boundaries. For example, Saskatchewan has newer health region boundaries that are not yet reflected in Statscan data. Updated boundaries are included in the "canada_healthregions.json" although they still need some work to 'dissolve' polygons into updated boundaries.
 
-Health region names are either not current or have informal usage eg they are abbreviations or alternate names. For example, Quebec "Région de Montréal" is "Montréal" in Quebec COVID-91 reporting, and "City of Toronto Health Unit" is "Toronto" in Ontario COVID-91 reporting, etc.
+* Public reporting does not match Statscan boundaries. For example, BC is reporting  COVID-19 data grouped by Health Authorities, but Statscan only has Health Regions which are sub0units of Health Authorities. To map by BC Health Authority, the "canada_healthregions.json" was manually edited to include Health Authority boundaries obtained from BC government website.
 
-Statscan arcinfo health region boundaries do not perfectly reflect current provincial health regions or COVID-19 reporting:
-
-*  Sask has updated boundaries. "canada_healthregions.json" Sask boundaries still need some work to 'dissolve' polygons into updated boundaries.
-
-* BC Statscan arcinfo health region boundaries reference smaller health region areas, whereas BC is COVID-19 reporting references larger health authorities comprised of these smaller areas. 
-
-These issues required manual edits to the Statscan arcinfo health region boundaries data in the file "canada_healthregions.json". In addition a mapping file "health_region_lookup.csv" was created to match Statscan health region names to the working group data in order to display the confirmed counts on the map.
-
-Excel Power Query was used to join working group COVID-19 data to the mapping file to provide  Statscan arcinfo health region name to allow counts to be displayed on map.
+In addition, to lookup table was created in file "health_region_lookup.csv" to match Statscan health region names in "canada_healthregions.json" to the working group data in "Public_COVID-19_Canada_final.json" to enable presentation of confirmed counts on the map.The data manipulation is currently being done using Excel Power Query to do this matching.
