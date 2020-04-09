@@ -52,7 +52,7 @@ d3.queue()
     // 4th step is to join cases & mortalities to hr_lookup
     // on the new province + health_region concat field
     const case_mort_by_region_final = equijoinWithDefault(case_mort_by_region, hr_lookup, "case_prov_health_region", "province_health_region", ({mort_count, case_count}, {province, authority_report_health_region, statscan_arcgis_health_region}) => ({province, authority_report_health_region, statscan_arcgis_health_region, case_count, mort_count}), {mort_count:0});
-    
+ 
     var covid_data = case_mort_by_region_final;
 
     //=================================
@@ -230,6 +230,9 @@ d3.queue()
 
     //=================================
     // generate data table below map
+    
+    covid_data.sort((a,b) => a.province.localeCompare(b.province) || b.authority_report_health_region.localeCompare(b.authority_report_health_region));
+    
     let table_data = covid_data;
     function generateTableHead(table, data) {
         let thead = table.createTHead();
