@@ -1,99 +1,99 @@
-province,statscan_arcgis_health_region,authority_report_health_region,case_count
-Alberta,Calgary Zone,Calgary,835
-Alberta,Central Zone,Central,66
-Alberta,Edmonton Zone,Edmonton,358
-Alberta,North Zone,North,90
-Alberta,South Zone,South,22
-Alberta,no match,Not Reported,2
-BC,Fraser,Fraser,450
-BC,Interior,Interior,128
+ï»¿province,authority_report_health_region,statscan_arcgis_health_region,case_count
+Alberta,Calgary,Calgary Zone,860
+Alberta,Central,Central Zone,72
+Alberta,Edmonton,Edmonton Zone,368
+Alberta,North,North Zone,95
+Alberta,Not Reported,no match,2
+Alberta,South,South Zone,26
+BC,Fraser,Fraser,487
+BC,Interior,Interior,130
+BC,Island,Vancouver Island,81
 BC,Northern,Northern,23
-BC,Vancouver Coastal,Vancouver Coastal,586
-BC,Vancouver Island,Island,79
-Manitoba,Interlake-Eastern Regional Health Authority,Interlake-Eastern,11
-Manitoba,Northern Regional Health Authority,Northern,3
-Manitoba,Prairie Mountain Health,Prairie Mountain,11
+BC,Vancouver Coastal,Vancouver Coastal,615
+Manitoba,Interlake-Eastern,Interlake-Eastern Regional Health Authority,14
+Manitoba,Northern,Northern Regional Health Authority,3
+Manitoba,Prairie Mountain,Prairie Mountain Health,11
 Manitoba,Southern Health,Southern Health,23
-Manitoba,Winnipeg Regional Health Authority,Winnipeg,169
-NL,Central Regional Integrated Health Authority,Central,4
-NL,Eastern Regional Integrated Health Authority,Eastern,217
-NL,Labrador-Grenfell Regional Integrated Health Authority,Labrador-Grenfell,6
-NL,Western Regional Integrated Health Authority,Western,1
-NWT,Northwest Territories,NWT,5
-New Brunswick,Zone 1,Zone 1 (Moncton area),23
-New Brunswick,Zone 2,Zone 2 (Saint John area),23
-New Brunswick,Zone 3,Zone 3 (Fredericton area),40
-New Brunswick,Zone 4,Zone 4 (Edmundston area),7
-New Brunswick,Zone 5,Zone 5 (Campbellton area),10
-New Brunswick,Zone 6,Zone 6 (Bathurst area),0
-New Brunswick,Zone 7,Zone 7 (Miramichi area),2
-Nova Scotia,,Not Reported,305
+Manitoba,Winnipeg,Winnipeg Regional Health Authority,170
+NL,Central,Central Regional Integrated Health Authority,6
+NL,Eastern,Eastern Regional Integrated Health Authority,219
+NL,Labrador-Grenfell,Labrador-Grenfell Regional Integrated Health Authority,6
+NL,Western,Western Regional Integrated Health Authority,1
+NWT,NWT,Northwest Territories,5
+New Brunswick,Zone 1 (Moncton area),Zone 1,23
+New Brunswick,Zone 2 (Saint John area),Zone 2,23
+New Brunswick,Zone 3 (Fredericton area),Zone 3,42
+New Brunswick,Zone 4 (Edmundston area),Zone 4,7
+New Brunswick,Zone 5 (Campbellton area),Zone 5,10
+New Brunswick,Zone 6 (Bathurst area),Zone 6,1
+New Brunswick,Zone 7 (Miramichi area),Zone 7,2
+Nova Scotia,Not Reported,no match,337
 Nova Scotia,Zone 1 - Western,Zone 1 - Western,1
 Nova Scotia,Zone 2 - Northern,Zone 2 - Northern,0
 Nova Scotia,Zone 3 - Eastern,Zone 3 - Eastern,0
 Nova Scotia,Zone 4 - Central,Zone 4 - Central,4
 Nunavut,Nunavut,Nunavut,0
-Ontario,,Southwestern,24
-Ontario,Brant County Health Unit,Brant,47
-Ontario,Chatham-Kent Health Unit,Chatham-Kent,17
-Ontario,City of Hamilton Health Unit,Hamilton,183
-Ontario,City of Ottawa Health Unit,Ottawa,403
-Ontario,City of Toronto Health Unit,Toronto,1449
-Ontario,Durham Regional Health Unit,Durham,266
-Ontario,Elgin-St. Thomas Health Unit,Elgin,0
-Ontario,Grey Bruce Health Unit,Grey Bruce,29
-Ontario,Haldimand-Norfolk Health Unit,Haldimand-Norfolk,109
-Ontario,"Haliburton, Kawartha, Pine Ridge District Health Unit",Haliburton Kawartha Pineridge,99
-Ontario,Halton Regional Health Unit,Halton,169
-Ontario,Hastings and Prince Edward Counties Health Unit,Hastings Prince Edward,24
-Ontario,Huron County Health Unit,Huron Perth,23
-Ontario,"Kingston, Frontenac and Lennox and Addington Health Unit",Kingston Frontenac Lennox & Addington,54
-Ontario,Lambton Health Unit,Lambton,86
-Ontario,"Leeds, Grenville and Lanark District Health Unit",Leeds Grenville and Lanark,93
-Ontario,Middlesex-London Health Unit,Middlesex-London,150
-Ontario,Niagara Regional Area Health Unit,Niagara,162
-Ontario,North Bay Parry Sound District Health Unit,North Bay Parry Sound,7
-Ontario,Northwestern Health Unit,Northwestern,7
-Ontario,Oxford County Health Unit,Oxford,0
-Ontario,Peel Regional Health Unit,Peel,637
-Ontario,Perth District Health Unit,Perth,0
-Ontario,Peterborough County - City Health Unit,Peterborough,45
-Ontario,Porcupine Health Unit,Porcupine,31
-Ontario,Renfrew County and District Health Unit,Renfrew,10
-Ontario,Simcoe Muskoka District Health Unit,Simcoe Muskoka,99
-Ontario,Sudbury and District Health Unit,Sudbury,26
-Ontario,The District of Algoma Health Unit,Algoma,9
-Ontario,The Eastern Ontario Health Unit,Eastern,45
-Ontario,Thunder Bay District Health Unit,Thunder Bay,18
-Ontario,Timiskaming Health Unit,Timiskaming,5
-Ontario,Waterloo Health Unit,Waterloo,207
-Ontario,Wellington-Dufferin-Guelph Health Unit,Wellington Dufferin Guelph,113
-Ontario,Windsor-Essex County Health Unit,Windsor-Essex,227
-Ontario,York Regional Health Unit,York,523
-PEI,Prince Edward Island,Prince Edward Island,22
-Quebec,Région de Lanaudière,Lanaudière,532
-Quebec,Région de Laval,Laval,759
-Quebec,Région de Montréal,Montréal,4407
-Quebec,Région de l'Abitibi-Témiscamingue,Abitibi-Témiscamingue,108
-Quebec,Région de l'Estrie,Estrie,570
-Quebec,Région de l'Outaouais,Outaouais,129
-Quebec,Région de la Capitale-Nationale,Capitale-Nationale,375
-Quebec,Région de la Chaudière-Appalaches,Chaudière-Appalaches,181
-Quebec,Région de la Côte-Nord,Côte-Nord,71
-Quebec,Région de la Gaspésie Îles-de-la-Madeleine,Gaspésie-Îles-de-la-Madeleine,66
-Quebec,Région de la Mauricie et du Centre-du-Québec,Mauricie,589
-Quebec,Région de la Montérégie,Montérégie,961
-Quebec,Région des Laurentides,Laurentides,447
-Quebec,Région des Terres-Cries-de-la-Baie-James,Terres-Cries-de-la-Baie-James,5
-Quebec,Région du Bas-Saint-Laurent,Bas-Saint-Laurent,30
-Quebec,Région du Nord-du-Québec,Nord-du-Québec,2
-Quebec,Région du Nunavik,Nunavik,5
-Quebec,Région du Saguenay Lac-Saint-Jean,Saguenay,103
-Repatriated,,Not Reported,13
+Ontario,Algoma,The District of Algoma Health Unit,9
+Ontario,Brant,Brant County Health Unit,48
+Ontario,Chatham-Kent,Chatham-Kent Health Unit,17
+Ontario,Durham,Durham Regional Health Unit,277
+Ontario,Eastern,The Eastern Ontario Health Unit,47
+Ontario,Elgin,Elgin-St. Thomas Health Unit,0
+Ontario,Grey Bruce,Grey Bruce Health Unit,30
+Ontario,Haldimand-Norfolk,Haldimand-Norfolk Health Unit,110
+Ontario,Haliburton Kawartha Pineridge,"Haliburton, Kawartha, Pine Ridge District Health Unit",99
+Ontario,Halton,Halton Regional Health Unit,228
+Ontario,Hamilton,City of Hamilton Health Unit,198
+Ontario,Hastings Prince Edward,Hastings and Prince Edward Counties Health Unit,25
+Ontario,Huron Perth,Huron County Health Unit,24
+Ontario,Kingston Frontenac Lennox & Addington,"Kingston, Frontenac and Lennox and Addington Health Unit",54
+Ontario,Lambton,Lambton Health Unit,87
+Ontario,Leeds Grenville and Lanark,"Leeds, Grenville and Lanark District Health Unit",123
+Ontario,Middlesex-London,Middlesex-London Health Unit,162
+Ontario,Niagara,Niagara Regional Area Health Unit,180
+Ontario,North Bay Parry Sound,North Bay Parry Sound District Health Unit,8
+Ontario,Northwestern,Northwestern Health Unit,7
+Ontario,Ottawa,City of Ottawa Health Unit,429
+Ontario,Oxford,Oxford County Health Unit,0
+Ontario,Peel,Peel Regional Health Unit,684
+Ontario,Perth,Perth District Health Unit,0
+Ontario,Peterborough,Peterborough County - City Health Unit,51
+Ontario,Porcupine,Porcupine Health Unit,31
+Ontario,Renfrew,Renfrew County and District Health Unit,12
+Ontario,Simcoe Muskoka,Simcoe Muskoka District Health Unit,108
+Ontario,Southwestern,no match,27
+Ontario,Sudbury,Sudbury and District Health Unit,26
+Ontario,Thunder Bay,Thunder Bay District Health Unit,21
+Ontario,Timiskaming,Timiskaming Health Unit,7
+Ontario,Toronto,City of Toronto Health Unit,1570
+Ontario,Waterloo,Waterloo Health Unit,220
+Ontario,Wellington Dufferin Guelph,Wellington-Dufferin-Guelph Health Unit,122
+Ontario,Windsor-Essex,Windsor-Essex County Health Unit,244
+Ontario,York,York Regional Health Unit,558
+PEI,Prince Edward Island,Prince Edward Island,25
+Quebec,Abitibi-TÃ©miscamingue,RÃ©gion de l'Abitibi-TÃ©miscamingue,111
+Quebec,Bas-Saint-Laurent,RÃ©gion du Bas-Saint-Laurent,33
+Quebec,Capitale-Nationale,RÃ©gion de la Capitale-Nationale,392
+Quebec,ChaudiÃ¨re-Appalaches,RÃ©gion de la ChaudiÃ¨re-Appalaches,195
+Quebec,CÃ´te-Nord,RÃ©gion de la CÃ´te-Nord,75
+Quebec,Estrie,RÃ©gion de l'Estrie,597
+Quebec,GaspÃ©sie-ÃŽles-de-la-Madeleine,RÃ©gion de la GaspÃ©sie ÃŽles-de-la-Madeleine,75
+Quebec,LanaudiÃ¨re,RÃ©gion de LanaudiÃ¨re,580
+Quebec,Laurentides,RÃ©gion des Laurentides,459
+Quebec,Laval,RÃ©gion de Laval,831
+Quebec,Mauricie,RÃ©gion de la Mauricie et du Centre-du-QuÃ©bec,614
+Quebec,MontrÃ©al,RÃ©gion de MontrÃ©al,4775
+Quebec,MontÃ©rÃ©gie,RÃ©gion de la MontÃ©rÃ©gie,1034
+Quebec,Nord-du-QuÃ©bec,RÃ©gion du Nord-du-QuÃ©bec,2
+Quebec,Nunavik,RÃ©gion du Nunavik,5
+Quebec,Outaouais,RÃ©gion de l'Outaouais,130
+Quebec,Saguenay,RÃ©gion du Saguenay Lac-Saint-Jean,118
+Quebec,Terres-Cries-de-la-Baie-James,RÃ©gion des Terres-Cries-de-la-Baie-James,5
+Repatriated,Not Reported,no match,13
 Saskatchewan,Central,Central,10
 Saskatchewan,Far North,Far North,4
-Saskatchewan,North,North,48
-Saskatchewan,Regina,Regina,52
-Saskatchewan,Saskatoon,Saskatoon,131
+Saskatchewan,North,North,51
+Saskatchewan,Regina,Regina,56
+Saskatchewan,Saskatoon,Saskatoon,135
 Saskatchewan,South,South,15
-Yukon,Yukon,Yukon,7
+Yukon,Yukon,Yukon,8

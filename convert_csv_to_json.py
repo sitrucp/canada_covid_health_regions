@@ -17,5 +17,5 @@ with open(csvfile) as f:
     
 with open(jsonfile, 'w') as f:
     f.write('var covid_data = \n')
-    json.dump(rows, f, ensure_ascii=True)
+    json.dump(rows, f, ensure_ascii=False)
 

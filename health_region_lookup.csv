@@ -26,7 +26,7 @@ NL,Central,Central Regional Integrated Health Authority
 NL,Eastern,Eastern Regional Integrated Health Authority
 NL,Labrador-Grenfell,Labrador-Grenfell Regional Integrated Health Authority
 NL,Western,Western Regional Integrated Health Authority
-Nova Scotia,Not Reported,
+Nova Scotia,Not Reported,no match
 Nova Scotia,Zone 1 - Western,Zone 1 - Western
 Nova Scotia,Zone 2 - Northern,Zone 2 - Northern
 Nova Scotia,Zone 3 - Eastern,Zone 3 - Eastern
@@ -61,7 +61,7 @@ Ontario,Peterborough,Peterborough County - City Health Unit
 Ontario,Porcupine,Porcupine Health Unit
 Ontario,Renfrew,Renfrew County and District Health Unit
 Ontario,Simcoe Muskoka,Simcoe Muskoka District Health Unit
-Ontario,Southwestern,
+Ontario,Southwestern,no match
 Ontario,Sudbury,Sudbury and District Health Unit
 Ontario,Thunder Bay,Thunder Bay District Health Unit
 Ontario,Timiskaming,Timiskaming Health Unit
@@ -89,7 +89,7 @@ Quebec,Nunavik,Région du Nunavik
 Quebec,Outaouais,Région de l'Outaouais
 Quebec,Saguenay,Région du Saguenay Lac-Saint-Jean
 Quebec,Terres-Cries-de-la-Baie-James,Région des Terres-Cries-de-la-Baie-James
-Repatriated,Not Reported,
+Repatriated,Not Reported,no match
 Saskatchewan,Central,Central
 Saskatchewan,Far North,Far North
 Saskatchewan,North,North
