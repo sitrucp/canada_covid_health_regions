@@ -53,7 +53,8 @@ d3.queue()
     // join cases & mortalities to hr_lookup
     // on the new province + health_region concat field
     const case_mort_by_region_final = equijoinWithDefault(case_mort_by_region, hr_lookup, "case_prov_health_region", "province_health_region", ({mort_count, case_count}, {province, authority_report_health_region, statscan_arcgis_health_region}) => ({province, authority_report_health_region, statscan_arcgis_health_region, case_count, mort_count}), {mort_count:0});
- 
+
+    //declare final covid dataset to put on map
     var covid_data = case_mort_by_region_final;
 
 //CREATE MAP=================================
@@ -72,8 +73,8 @@ d3.queue()
         zoomOffset: -1
     }).addTo(map);
 
-    // add statscan health regions to map
-    var geojson = L.geoJson(health_region_json, {
+    // add statscan health region boundaries to map
+    var geojson = L.geoJson(health_regions, {
         style: function (feature) {
             return {
                 color: 'grey', //shape border color
@@ -92,6 +93,29 @@ d3.queue()
             });
         }
     }).addTo(map);
+
+    /*
+    // add statscan health region boundaries to map
+    var geojsonUS = L.geoJson(us_counties, {
+        style: function (feature) {
+            return {
+                color: 'grey', //shape border color
+                dashArray: '3',
+                weight: 1,
+                opacity: 1,
+                fillColor: getRegionColor(feature.properties.NAME),
+                fillOpacity: .7
+            };
+        },
+        onEachFeature: function (feature, layer) {
+            layer.on({
+                mouseover: mouseOverActions,
+                mouseout: mouseOutActions,
+                click: zoomToFeature
+            });
+        }
+    }).addTo(map);
+    */
 
     function mouseOverActions(e) {
         var layer = e.target;
@@ -116,6 +140,7 @@ d3.queue()
 
     function mouseOutActions(e) {
         geojson.resetStyle(e.target);
+        //geojsonUS.resetStyle(e.target);
         document.getElementsByClassName('infobox')[0].innerHTML = '<p>Hover over health region to see name and counts. Scroll to zoom.</p>';
     }
 
