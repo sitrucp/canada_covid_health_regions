@@ -1,4 +1,4 @@
-**bold text**Canada Confirmed COVID-19 Cases By Provincial Health Regions **bold text**
+**Canada Confirmed COVID-19 Cases By Provincial Health Regions**
 
 View map here:
 <a href="https://sitrucp.github.io/canada_covid_health_regions/index.html">https://sitrucp.github.io/canada_covid_health_regions/index.html</a>
