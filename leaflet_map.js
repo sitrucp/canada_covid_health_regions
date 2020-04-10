@@ -1,15 +1,16 @@
 
-//=================================
-// get case, mortality data from working group github files
-// get health region lookup to map case, mortality data to map geojson boundary names
+//GET DATA=================================
+// get case, mortality csv files from working group github repository
+// get health region lookup csv from my github repository
 
 d3.queue()
 .defer(d3.csv, "https://raw.githubusercontent.com/ishaberry/Covid19Canada/master/cases.csv")
 .defer(d3.csv, "https://raw.githubusercontent.com/ishaberry/Covid19Canada/master/mortality.csv")
 .defer(d3.csv, "https://raw.githubusercontent.com/sitrucp/canada_covid_health_regions/master/health_region_lookup.csv")
 .await(function(error, cases, mortalities, hr_lookup) {
+    //everthing else below is in d3.queue scope
 
-    // 1st step is to create new province + health_region concat field
+    // create new province + health_region concat field
     // counts by province and health_region
     cases.forEach(function(d) {
         d.prov_health_region_case = d.province + '|' + d.health_region
@@ -18,7 +19,7 @@ d3.queue()
         d.prov_health_region_mort = d.province + '|' + d.health_region
     });
 
-    // 2nd step is to summarize cases and mortalities counts 
+    // summarize cases and mortalities counts 
     // by province and health_region
     var case_by_region = d3.nest()
         .key(function(d) { return d.prov_health_region_case; })
@@ -42,20 +43,20 @@ d3.queue()
             }
         });
 
-    // 3rd step is to add mortalities count value to cases array
+    // add mortalities count value to cases array
     const equijoinWithDefault = (xs, ys, primary, foreign, sel, def) => {
         const iy = ys.reduce((iy, row) => iy.set(row[foreign], row), new Map);
         return xs.map(row => typeof iy.get(row[primary]) !== 'undefined' ? sel(row, iy.get(row[primary])): sel(row, def));
     };
     const case_mort_by_region = equijoinWithDefault(case_by_region, mort_by_region, "case_prov_health_region", "mort_prov_health_region", ({case_prov_health_region, case_count}, {mort_count}) => ({case_prov_health_region, case_count, mort_count}), {mort_count:0});
 
-    // 4th step is to join cases & mortalities to hr_lookup
+    // join cases & mortalities to hr_lookup
     // on the new province + health_region concat field
     const case_mort_by_region_final = equijoinWithDefault(case_mort_by_region, hr_lookup, "case_prov_health_region", "province_health_region", ({mort_count, case_count}, {province, authority_report_health_region, statscan_arcgis_health_region}) => ({province, authority_report_health_region, statscan_arcgis_health_region, case_count, mort_count}), {mort_count:0});
  
     var covid_data = case_mort_by_region_final;
 
-    //=================================
+//CREATE MAP=================================
     // now use covid_data obtained to populate map
     var map = L.map('map',{ zoomControl: false }).setView(['53.145743', '-102.283131'], 4);
     map.once('focus', function() { map.scrollWheelZoom.enable(); });
@@ -223,16 +224,16 @@ d3.queue()
     infobox.onAdd = function (map) {
         var div = L.DomUtil.create('div', 'infobox');
         var infobox = document.getElementsByClassName('infobox')[0];
-        div.innerHTML = '<p>Hover over health region to see name and counts.</p>';
+        div.innerHTML = '<p>Hover over health region to see name and counts. Scroll to zoom.</p>';
         return div;
     };
     infobox.addTo(map);
 
-    //=================================
+//CREATE TABLE=================================
     // generate data table below map
-    
-    covid_data.sort((a,b) => a.province.localeCompare(b.province) || b.authority_report_health_region.localeCompare(b.authority_report_health_region));
-    
+    // sort table first
+    covid_data.sort((a,b) => a.province.localeCompare(b.province) || a.authority_report_health_region.localeCompare(b.authority_report_health_region));
+
     let table_data = covid_data;
     function generateTableHead(table, data) {
         let thead = table.createTHead();
