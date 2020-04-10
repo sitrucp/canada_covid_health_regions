@@ -30,6 +30,7 @@ get_case_d3.html
 get_cases.py
 cases.csv
 mortalities.csv
+us_counties.json
 
 # vscode folder
 .vscode
