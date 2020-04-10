@@ -67,8 +67,9 @@ function getCaseCount(regionName) {
     var caseCount = 0;
     for(var i = 0; i < covid_data.length; i++) {
         var obj = covid_data[i];
+        console.log('obj.region_name: ' + obj.region_name + ' regionName: ' + regionName);
         if (obj.region_name === regionName) {
-            caseCount = obj.confirmed_case_count;
+            caseCount = obj.case_count;
             break;
          }
     }
@@ -84,7 +85,7 @@ function getRegionColor(regionName) {
     for(var i = 0; i < covid_data.length; i++) {
         var obj = covid_data[i];
         if (obj.region_name === regionName) {
-            regionColor = getColor(obj.confirmed_case_count);
+            regionColor = getColor(obj.case_count);
             break;
         }
     }

@@ -31,6 +31,8 @@ get_cases.py
 cases.csv
 mortalities.csv
 us_counties.json
+montreal_confirmed_cases_scraped.json
+montreal_confirmed_cases_scrape.py
 
 # vscode folder
 .vscode
