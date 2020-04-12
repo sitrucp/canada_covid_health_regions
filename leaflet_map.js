@@ -43,16 +43,43 @@ d3.queue()
             }
         });
 
-    // add mortalities count value to cases array
+    // left join function
     const equijoinWithDefault = (xs, ys, primary, foreign, sel, def) => {
         const iy = ys.reduce((iy, row) => iy.set(row[foreign], row), new Map);
         return xs.map(row => typeof iy.get(row[primary]) !== 'undefined' ? sel(row, iy.get(row[primary])): sel(row, def));
     };
-    const case_mort_by_region = equijoinWithDefault(case_by_region, mort_by_region, "case_prov_health_region", "mort_prov_health_region", ({case_prov_health_region, case_count}, {mort_count}) => ({case_prov_health_region, case_count, mort_count}), {mort_count:0});
 
-    // join cases & mortalities to hr_lookup
+    // left join summarized case records to lookup
+    const case_by_region_lookup = equijoinWithDefault(
+        hr_lookup, case_by_region, 
+        "province_health_region", "case_prov_health_region", 
+        ({province, authority_report_health_region, statscan_arcgis_health_region}, {case_prov_health_region, case_count}) => 
+        ({province, authority_report_health_region, statscan_arcgis_health_region, case_prov_health_region, case_count}), 
+        {case_count:0, case_prov_health_region: "ProvinceName|Not Reported"});
+    console.log(JSON.stringify(case_by_region_lookup));
+
+    // left join summarized mort records to lookup
+    const mort_by_region_lookup = equijoinWithDefault(
+        hr_lookup, mort_by_region, 
+        "province_health_region", "mort_prov_health_region", 
+        ({province, authority_report_health_region, statscan_arcgis_health_region}, {mort_prov_health_region, mort_count}) => 
+        ({province, authority_report_health_region, statscan_arcgis_health_region, mort_prov_health_region, mort_count}), 
+        {mort_count:0, case_prov_health_region: "ProvinceName|Not Reported"});
+    
+    // add mortalities count value to cases array
+    const case_mort_by_region = equijoinWithDefault(case_by_region_lookup, mort_by_region_lookup, "case_prov_health_region", "mort_prov_health_region", ({case_prov_health_region, case_count}, {mort_count}) => ({case_prov_health_region, case_count, mort_count}), {mort_count:0});
+    
+
+    // join hr_lookup to cases & mortalities
     // on the new province + health_region concat field
-    const case_mort_by_region_final = equijoinWithDefault(case_mort_by_region, hr_lookup, "case_prov_health_region", "province_health_region", ({mort_count, case_count}, {province, authority_report_health_region, statscan_arcgis_health_region}) => ({province, authority_report_health_region, statscan_arcgis_health_region, case_count, mort_count}), {mort_count:0});
+    //const case_mort_by_region_final = equijoinWithDefault(case_mort_by_region, hr_lookup, "case_prov_health_region", "province_health_region", ({mort_count, case_count}, {province, authority_report_health_region, statscan_arcgis_health_region}) => ({province, authority_report_health_region, statscan_arcgis_health_region, case_count, mort_count}), {mort_count:0});
+
+    const case_mort_by_region_final = equijoinWithDefault(
+        hr_lookup, case_mort_by_region, 
+        "province_health_region", "case_prov_health_region", 
+        ({province, authority_report_health_region, statscan_arcgis_health_region}, {mort_count, case_count}) => 
+        ({province, authority_report_health_region, statscan_arcgis_health_region, case_count, mort_count}), 
+        {province_health_region:null,case_count:0, mort_count:0});
 
     //declare final covid dataset to put on map
     var covid_data = case_mort_by_region_final;
@@ -259,7 +286,14 @@ d3.queue()
     // sort table first
     covid_data.sort((a,b) => a.province.localeCompare(b.province) || a.authority_report_health_region.localeCompare(b.authority_report_health_region));
 
-    let table_data = covid_data;
+    //let table_data = covid_data;
+    let table_data = covid_data.map(x => ({ 
+        "Province": x.province,
+        "Health Authority Region Name": x.authority_report_health_region,
+        "Statscan Region Name": x.statscan_arcgis_health_region,
+        "Case Count": x.case_count,
+        "Mortality Count": x.mort_count
+    }));
     function generateTableHead(table, data) {
         let thead = table.createTHead();
         let row = thead.insertRow();

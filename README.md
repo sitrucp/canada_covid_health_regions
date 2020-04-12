@@ -11,7 +11,7 @@ The Statscan and COVID-19 Canada Open Data Working Group data health region boun
 
 * Many health region names used in provincial health authority public reporting are either given in an informal manner eg using abbreviations or alternate names of the fully qualified names used in Statscan data. For example, Quebec "Région de Montréal" is "Montréal" in Quebec COVID-91 reporting, and "City of Toronto Health Unit" is "Toronto" in Ontario COVID-91 reporting, etc.
 
-* Statscan ArcGIS health region boundaries do not have current provincial health region boundaries. For example, Saskatchewan has newer health region boundaries that are not yet reflected in Statscan data. Updated Saskatchewan boundaries are included in the "healths_regions.json" although they still need some work to 'dissolve' polygons into updated boundaries.
+* Statscan ArcGIS health region boundaries do not have current provincial health region boundaries. For example, Saskatchewan has newer health region boundaries that are not yet reflected in Statscan data. Statscan Saskatchewan boundaries were replaced with <a href="https://hub-saskatchewan.opendata.arcgis.com/datasets/saskatchewan-covid-19-boundaries">new Saskatchewan COVID-19 boundaries</a>.
 
 * Public reporting boundaries do not match Statscan boundaries. For example, BC is reporting COVID-19 data grouped by Health Authorities, but the Statscan health region files has Health Regions boundaries which are sub-units of Health Authorities. Therefore the "health_regions.json" was manually edited to replace Health Region boundaries with Health Authority boundaries obtained from the <a href="https://catalogue.data.gov.bc.ca/dataset/health-authority-boundaries">BC Data Catalogue</a>.
 

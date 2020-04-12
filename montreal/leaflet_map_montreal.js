@@ -48,9 +48,10 @@ function mouseOverActions(e) {
     if (!L.Browser.ie && !L.Browser.opera) {
         layer.bringToFront();
     }
-    var regionName = layer.feature.properties.district;
-    var caseCount = getCaseCount(regionName);
-    document.getElementsByClassName('infobox')[0].innerHTML = '<p>Province: Quebec <br>' + 'Montreal Region: ' + regionName + '<br>' + 'Confirmed cases: ' + caseCount + '</p>';
+    var geojsonName = layer.feature.properties.district;
+    var caseCount = getCaseCount(geojsonName);
+    var websiteName = getWebSiteName(geojsonName);
+    document.getElementsByClassName('infobox')[0].innerHTML = '<p>Province: Quebec <br>' + 'Montreal Region: ' + websiteName + '<br>' + 'Confirmed cases: ' + caseCount + '</p>';
 };
 
 function mouseOutActions(e) {
@@ -63,12 +64,11 @@ function zoomToFeature(e) {
 }
 
 // count cases in covid_data.json file by health region 
-function getCaseCount(regionName) {
+function getCaseCount(geojsonName) {
     var caseCount = 0;
     for(var i = 0; i < covid_data.length; i++) {
         var obj = covid_data[i];
-        console.log('obj.region_name: ' + obj.region_name + ' regionName: ' + regionName);
-        if (obj.region_name === regionName) {
+        if (obj.geojson_name === geojsonName) {
             caseCount = obj.case_count;
             break;
          }
@@ -80,17 +80,31 @@ function getCaseCount(regionName) {
 }
 
 // case color for legend and health region shape
-function getRegionColor(regionName) {
+function getRegionColor(geojsonName) {
     var regionColor;
     for(var i = 0; i < covid_data.length; i++) {
         var obj = covid_data[i];
-        if (obj.region_name === regionName) {
+        //console.log('obj.geojson_name ' + obj.geojson_name + ' geojsonName ' + geojsonName);
+        if (obj.geojson_name === geojsonName) {
             regionColor = getColor(obj.case_count);
             break;
         }
     }
     return regionColor;
 }
+
+// get health region province bc it isn't in Statscan boundary file 
+function getWebSiteName(geojsonName) {
+    var webSiteName;
+    for(var i = 0; i < covid_data.length; i++) {
+        var obj = covid_data[i];
+        if (obj.geojson_name === geojsonName) {
+            webSiteName = obj.website_name;
+            break;
+        }
+    }
+    return webSiteName;
+    }
 
 function getColor(n) {
     return n > 500 ? '#b10026'
