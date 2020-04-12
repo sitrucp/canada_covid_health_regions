@@ -19,6 +19,12 @@ d3.queue()
         d.prov_health_region_mort = d.province + '|' + d.health_region
     });
 
+    // summarize cases and mortalities counts overall
+    var case_total = cases.length;
+    var mort_total = mortalities.length;
+    var div = document.getElementById('header');
+    div.innerHTML += 'Canada total: cases: ' + case_total.toLocaleString() + ' mortalities: ' + mort_total.toLocaleString();
+
     // summarize cases and mortalities counts 
     // by province and health_region
     var case_by_region = d3.nest()
@@ -56,7 +62,6 @@ d3.queue()
         ({province, authority_report_health_region, statscan_arcgis_health_region}, {case_prov_health_region, case_count}) => 
         ({province, authority_report_health_region, statscan_arcgis_health_region, case_prov_health_region, case_count}), 
         {case_count:0, case_prov_health_region: "ProvinceName|Not Reported"});
-    console.log(JSON.stringify(case_by_region_lookup));
 
     // left join summarized mort records to lookup
     const mort_by_region_lookup = equijoinWithDefault(

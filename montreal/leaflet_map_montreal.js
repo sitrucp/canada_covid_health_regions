@@ -69,7 +69,7 @@ function getCaseCount(geojsonName) {
     for(var i = 0; i < covid_data.length; i++) {
         var obj = covid_data[i];
         if (obj.geojson_name === geojsonName) {
-            caseCount = obj.case_count;
+            caseCount = obj.case_count.replace(/\s/g, '');
             break;
          }
     }
@@ -86,7 +86,7 @@ function getRegionColor(geojsonName) {
         var obj = covid_data[i];
         //console.log('obj.geojson_name ' + obj.geojson_name + ' geojsonName ' + geojsonName);
         if (obj.geojson_name === geojsonName) {
-            regionColor = getColor(obj.case_count);
+            regionColor = getColor(obj.case_count.replace(/\s/g, ''));
             break;
         }
     }
@@ -152,3 +152,15 @@ infobox.onAdd = function (map) {
     return div;
 };
 infobox.addTo(map);
+
+ // summarize cases counts overall and add to header
+var case_total = 0;
+for(var i = 0; i < covid_data.length; i++) {
+    var obj = covid_data[i];
+    if( obj.website_name.includes("Total") ) {
+        case_total += parseInt(obj.case_count.replace(/\s/g, ''));
+    }
+}
+
+ var div = document.getElementById('header');
+ div.innerHTML += 'Montreal total cases: ' + case_total.toLocaleString();
