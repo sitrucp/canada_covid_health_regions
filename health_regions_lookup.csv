@@ -1,0 +1,106 @@
+province,authority_report_health_region,statscan_arcgis_health_region,province_health_region
+Alberta,Calgary,Calgary Zone,Alberta|Calgary
+Alberta,Central,Central Zone,Alberta|Central
+Alberta,Edmonton,Edmonton Zone,Alberta|Edmonton
+Alberta,North,North Zone,Alberta|North
+Alberta,Not Reported,Not Reported,Alberta|Not Reported
+Alberta,South,South Zone,Alberta|South
+BC,Fraser,Fraser,BC|Fraser
+BC,Interior,Interior,BC|Interior
+BC,Island,Vancouver Island,BC|Island
+BC,Northern,Northern,BC|Northern
+BC,Not Reported,Not Reported,BC|Not Reported
+BC,Vancouver Coastal,Vancouver Coastal,BC|Vancouver Coastal
+Manitoba,Interlake-Eastern,Interlake-Eastern Regional Health Authority,Manitoba|Interlake-Eastern
+Manitoba,Northern,Northern Regional Health Authority,Manitoba|Northern
+Manitoba,Prairie Mountain,Prairie Mountain Health,Manitoba|Prairie Mountain
+Manitoba,Southern Health,Southern Health,Manitoba|Southern Health
+Manitoba,Not Reported,Not Reported,Manitoba|Not Reported
+Manitoba,Winnipeg,Winnipeg Regional Health Authority,Manitoba|Winnipeg
+New Brunswick,Zone 1 (Moncton area),Zone 1,New Brunswick|Zone 1 (Moncton area)
+New Brunswick,Zone 2 (Saint John area),Zone 2,New Brunswick|Zone 2 (Saint John area)
+New Brunswick,Zone 3 (Fredericton area),Zone 3,New Brunswick|Zone 3 (Fredericton area)
+New Brunswick,Zone 4 (Edmundston area),Zone 4,New Brunswick|Zone 4 (Edmundston area)
+New Brunswick,Zone 5 (Campbellton area),Zone 5,New Brunswick|Zone 5 (Campbellton area)
+New Brunswick,Zone 6 (Bathurst area),Zone 6,New Brunswick|Zone 6 (Bathurst area)
+New Brunswick,Zone 7 (Miramichi area),Zone 7,New Brunswick|Zone 7 (Miramichi area)
+New Brunswick,Not Reported,Not Reported,New Brunswick|Not Reported
+NL,Central,Central Regional Integrated Health Authority,NL|Central
+NL,Eastern,Eastern Regional Integrated Health Authority,NL|Eastern
+NL,Labrador-Grenfell,Labrador-Grenfell Regional Integrated Health Authority,NL|Labrador-Grenfell
+NL,Western,Western Regional Integrated Health Authority,NL|Western
+NL,Not Reported,Not Reported,NL|Not Reported
+Nova Scotia,Not Reported,Not Reported,Nova Scotia|Not Reported
+Nova Scotia,Zone 1 - Western,Zone 1 - Western,Nova Scotia|Zone 1 - Western
+Nova Scotia,Zone 2 - Northern,Zone 2 - Northern,Nova Scotia|Zone 2 - Northern
+Nova Scotia,Zone 3 - Eastern,Zone 3 - Eastern,Nova Scotia|Zone 3 - Eastern
+Nova Scotia,Zone 4 - Central,Zone 4 - Central,Nova Scotia|Zone 4 - Central
+NWT,NWT,Northwest Territories,NWT|NWT
+Nunavut,Nunavut,Nunavut,Nunavut|Nunavut
+Ontario,Algoma,The District of Algoma Health Unit,Ontario|Algoma
+Ontario,Brant,Brant County Health Unit,Ontario|Brant
+Ontario,Chatham-Kent,Chatham-Kent Health Unit,Ontario|Chatham-Kent
+Ontario,Durham,Durham Regional Health Unit,Ontario|Durham
+Ontario,Eastern,The Eastern Ontario Health Unit,Ontario|Eastern
+Ontario,Grey Bruce,Grey Bruce Health Unit,Ontario|Grey Bruce
+Ontario,Haldimand-Norfolk,Haldimand-Norfolk Health Unit,Ontario|Haldimand-Norfolk
+Ontario,Haliburton Kawartha Pineridge,"Haliburton, Kawartha, Pine Ridge District Health Unit",Ontario|Haliburton Kawartha Pineridge
+Ontario,Halton,Halton Regional Health Unit,Ontario|Halton
+Ontario,Hamilton,City of Hamilton Health Unit,Ontario|Hamilton
+Ontario,Hastings Prince Edward,Hastings and Prince Edward Counties Health Unit,Ontario|Hastings Prince Edward
+Ontario,Huron Perth,Huron County Health Unit,Ontario|Huron Perth
+Ontario,Kingston Frontenac Lennox & Addington,"Kingston, Frontenac and Lennox and Addington Health Unit",Ontario|Kingston Frontenac Lennox & Addington
+Ontario,Lambton,Lambton Health Unit,Ontario|Lambton
+Ontario,Leeds Grenville and Lanark,"Leeds, Grenville and Lanark District Health Unit",Ontario|Leeds Grenville and Lanark
+Ontario,Middlesex-London,Middlesex-London Health Unit,Ontario|Middlesex-London
+Ontario,Niagara,Niagara Regional Area Health Unit,Ontario|Niagara
+Ontario,North Bay Parry Sound,North Bay Parry Sound District Health Unit,Ontario|North Bay Parry Sound
+Ontario,Northwestern,Northwestern Health Unit,Ontario|Northwestern
+Ontario,Perth,Perth District Health Unit,Ontario|Perth
+Ontario,Oxford,Oxford County Health Unit,Ontario|Oxford
+Ontario,Elgin,Elgin-St. Thomas Health Unit,Ontario|Elgin
+Ontario,Ottawa,City of Ottawa Health Unit,Ontario|Ottawa
+Ontario,Not Reported,Not Reported,Ontario|Not Reported
+Ontario,Peel,Peel Regional Health Unit,Ontario|Peel
+Ontario,Peterborough,Peterborough County - City Health Unit,Ontario|Peterborough
+Ontario,Porcupine,Porcupine Health Unit,Ontario|Porcupine
+Ontario,Renfrew,Renfrew County and District Health Unit,Ontario|Renfrew
+Ontario,Simcoe Muskoka,Simcoe Muskoka District Health Unit,Ontario|Simcoe Muskoka
+Ontario,Southwestern,Not Reported,Ontario|Southwestern
+Ontario,Sudbury,Sudbury and District Health Unit,Ontario|Sudbury
+Ontario,Thunder Bay,Thunder Bay District Health Unit,Ontario|Thunder Bay
+Ontario,Timiskaming,Timiskaming Health Unit,Ontario|Timiskaming
+Ontario,Toronto,City of Toronto Health Unit,Ontario|Toronto
+Ontario,Waterloo,Waterloo Health Unit,Ontario|Waterloo
+Ontario,Wellington Dufferin Guelph,Wellington-Dufferin-Guelph Health Unit,Ontario|Wellington Dufferin Guelph
+Ontario,Windsor-Essex,Windsor-Essex County Health Unit,Ontario|Windsor-Essex
+Ontario,York,York Regional Health Unit,Ontario|York
+PEI,Prince Edward Island,Prince Edward Island,PEI|Prince Edward Island
+Quebec,Abitibi-Témiscamingue,Région de l'Abitibi-Témiscamingue,Quebec|Abitibi-Témiscamingue
+Quebec,Bas-Saint-Laurent,Région du Bas-Saint-Laurent,Quebec|Bas-Saint-Laurent
+Quebec,Capitale-Nationale,Région de la Capitale-Nationale,Quebec|Capitale-Nationale
+Quebec,Chaudière-Appalaches,Région de la Chaudière-Appalaches,Quebec|Chaudière-Appalaches
+Quebec,Côte-Nord,Région de la Côte-Nord,Quebec|Côte-Nord
+Quebec,Estrie,Région de l'Estrie,Quebec|Estrie
+Quebec,Gaspésie-Îles-de-la-Madeleine,Région de la Gaspésie Îles-de-la-Madeleine,Quebec|Gaspésie-Îles-de-la-Madeleine
+Quebec,Lanaudière,Région de Lanaudière,Quebec|Lanaudière
+Quebec,Laurentides,Région des Laurentides,Quebec|Laurentides
+Quebec,Laval,Région de Laval,Quebec|Laval
+Quebec,Mauricie,Région de la Mauricie et du Centre-du-Québec,Quebec|Mauricie
+Quebec,Montérégie,Région de la Montérégie,Quebec|Montérégie
+Quebec,Montréal,Région de Montréal,Quebec|Montréal
+Quebec,Nord-du-Québec,Région du Nord-du-Québec,Quebec|Nord-du-Québec
+Quebec,Not Reported,Not Reported,Quebec|Not Reported
+Quebec,Nunavik,Région du Nunavik,Quebec|Nunavik
+Quebec,Outaouais,Région de l'Outaouais,Quebec|Outaouais
+Quebec,Saguenay,Région du Saguenay Lac-Saint-Jean,Quebec|Saguenay
+Quebec,Terres-Cries-de-la-Baie-James,Région des Terres-Cries-de-la-Baie-James,Quebec|Terres-Cries-de-la-Baie-James
+Repatriated,Not Reported,Not Reported,Repatriated|Not Reported
+Saskatchewan,Central,Central,Saskatchewan|Central
+Saskatchewan,Far North,Far North,Saskatchewan|Far North
+Saskatchewan,North,North,Saskatchewan|North
+Saskatchewan,Not Reported,Not Reported,Saskatchewan|Not Reported
+Saskatchewan,Regina,Regina,Saskatchewan|Regina
+Saskatchewan,Saskatoon,Saskatoon,Saskatchewan|Saskatoon
+Saskatchewan,South,South,Saskatchewan|South
+Yukon,Yukon,Yukon,Yukon|Yukon
