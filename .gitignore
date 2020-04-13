@@ -32,7 +32,9 @@ cases.csv
 mortalities.csv
 us_counties.json
 montreal_confirmed_cases_scraped.json
-montreal_confirmed_cases_scrape.py
+montreal_confirmed_cases.xlsm
+montreal_confirmed_cases.csv
+convert_csv_to_json_montreal.py
 
 # vscode folder
 .vscode

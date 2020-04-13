@@ -17,7 +17,7 @@ The Statscan and COVID-19 Canada Open Data Working Group data health region boun
 
 To address boundary naming variance issues above, a lookup or mapping table was created in file "health_regions_lookup.csv" to match Statscan health region names with working group cases and mortality data health region names.
 
-Montreal Map: A separate map was created for Montreal as it is Canada's "covid hotspot". The boundaries used on the Montreal map are Montreal island neighbourhood or linked cities. The confirmed cases counts come from the <a href = "https://santemontreal.qc.ca/en/public/coronavirus-covid-19/">Quebec Health Montreal website</a>. This map is updated manually using Excel Power Query to retrieve and transform webpage table data.
-
 Edit: As of April 9 the map now retrieves COVID-19 Canada Open Data Working Group data  automatically directly from working group Github repository when the map web page is opened or refreshed in browser by using D3.js to get and transform data from cases.csv and mortaliy.csv files. This code is included in "leaflet_map.js" file. Previously, the  data manipulation was done manually using Excel Power Query to retrieve and transform data files to create map "covid_data" json dataset.
+
+Montreal Map: A separate map was created for Montreal as it is Canada's "covid hotspot". The boundaries used on the Montreal map are Montreal island neighbourhood or linked cities. The confirmed cases counts come from the <a href = "https://santemontreal.qc.ca/en/public/coronavirus-covid-19/">Quebec Health Montreal website</a>. As of April 9 the Montreal map data uses server based cron job using Python BeautifulSoup4, Requests, Pandas to retrieve and transform webpage table data and create the json data file "montreal_confirmed_cases.json".
 
