@@ -5,19 +5,12 @@
     <title>Canada COVID-19 Cases By Provincial Health Regions</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <link rel="shortcut icon" type="image/x-icon" href="docs/images/favicon.ico" />
-
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ==" crossorigin=""/>
-    
     <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js" integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew==" crossorigin=""></script>
-
     <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
-
     <script src="https://d3js.org/d3.v4.min.js"></script>
-
     <link rel="stylesheet" type="text/css" href="site.css" />
-
 </head>
 
 <body>
@@ -26,21 +19,14 @@
         <p id="header">This map uses modified <a href="https://www150.statcan.gc.ca/n1/pub/82-402-x/2018001/hrbf-flrs-eng.htm">Statscan ArcGIS Health region boundary Canada dataset</a> to show confirmed COVID-91 counts by health region. COVID-91 data comes from <a href = "https://github.com/ishaberry/Covid19Canada">COVID-19 Canada Open Data Working Group</a>. Canada hotspot: <a href="montreal/montreal.html">Montreal</a>. Last updated data: 
         </p>
     </div>
-    
     <div id='map'></div>
-
     <p>Site files: <a href="https://github.com/sitrucp/canada_covid_health_regions">github.com/sitrucp/canada_covid_health_regions</a></p>
-
     <script src="health_regions.json" type="text/javascript"></script>
-
     <!--
     <script src="us_counties.json" type="text/javascript"></script>
-
     <script src="Public_COVID-19_Canada_final.json" type="text/javascript"></script>
    -->
-
     <script src="leaflet_map.js"></script>
-
     <table>
         <!-- data table -->
     </table>
