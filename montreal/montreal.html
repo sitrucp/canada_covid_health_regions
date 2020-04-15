@@ -33,7 +33,7 @@
         //let table_data = covid_data;
         let table_data = covid_data.map(x => ({ 
             "Region Name": x.website_name,
-            "Case Count": x.case_count.replace(/\s/g, '')
+            "Case Count": x.case_count
         }));
         function generateTableHead(table, data) {
             let thead = table.createTHead();

@@ -27,6 +27,7 @@ with open(jsonfile, 'w') as file:
     # join lookup table on website name & region_name to get geojson_name field to use on map
     table_data_w_lookup = pd.merge(montreal_regions_lookup, table_data, left_on='website_name', right_on='region_name', how='left')
     table_data_final = table_data_w_lookup[['website_name', 'region_name', 'geojson_name', 'case_count']]
+    print(table_data_final)
     # transform pandas dataframe into dictionary to write as json
     json_table = table_data_final.to_dict('records')
 
