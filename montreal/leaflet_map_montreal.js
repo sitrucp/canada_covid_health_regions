@@ -163,5 +163,10 @@ for(var i = 0; i < covid_data.length; i++) {
     }
 }
 
+const now = new Date();
+const offsetMs = now.getTimezoneOffset() * 60 * 1000;
+const dateLocal = new Date(now.getTime() - offsetMs);
+const last_updated = dateLocal.toISOString().slice(0, 19).replace("T", " ");
+
  var div = document.getElementById('header');
- div.innerHTML += 'Montreal total cases: ' + case_total.toLocaleString();
+ div.innerHTML += 'Montreal total cases: ' + case_total.toLocaleString() + ' Data updated: ' + last_updated.toLocaleString();

@@ -6,8 +6,9 @@
 d3.queue()
 .defer(d3.csv, "https://raw.githubusercontent.com/ishaberry/Covid19Canada/master/cases.csv")
 .defer(d3.csv, "https://raw.githubusercontent.com/ishaberry/Covid19Canada/master/mortality.csv")
+.defer(d3.csv, "https://raw.githubusercontent.com/ishaberry/Covid19Canada/master/update_time.txt")
 .defer(d3.csv, "https://raw.githubusercontent.com/sitrucp/canada_covid_health_regions/master/health_regions_lookup.csv")
-.await(function(error, cases, mortalities, hr_lookup) {
+.await(function(error, cases, mortalities, update_time, hr_lookup) {
     //everthing else below is in d3.queue scope
 
     // create new province + health_region concat field
@@ -19,11 +20,14 @@ d3.queue()
         d.prov_health_region_mort = d.province + '|' + d.health_region
     });
 
+    // get update time 
+    last_updated = update_time.columns[0];
+
     // summarize cases and mortalities counts overall
     var case_total = cases.length;
     var mort_total = mortalities.length;
     var div = document.getElementById('header');
-    div.innerHTML += 'Canada total: cases: ' + case_total.toLocaleString() + ' mortalities: ' + mort_total.toLocaleString();
+    div.innerHTML += 'Canada total: cases: ' + case_total.toLocaleString() + ' mortalities: ' + mort_total.toLocaleString() + ' Data updated: ' + last_updated;
 
     // summarize cases and mortalities counts 
     // by province and health_region
