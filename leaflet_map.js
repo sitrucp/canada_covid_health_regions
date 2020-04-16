@@ -27,7 +27,7 @@ d3.queue()
     var case_total = cases.length;
     var mort_total = mortalities.length;
     var div = document.getElementById('header');
-    div.innerHTML += 'Canada total: cases: ' + case_total.toLocaleString() + ' mortalities: ' + mort_total.toLocaleString() + ' Data updated: ' + last_updated;
+    div.innerHTML += 'Canada total: cases: ' + case_total.toLocaleString() + ' mortalities: ' + mort_total.toLocaleString() + ' Date data updated: ' + last_updated;
 
     // summarize cases and mortalities counts 
     // by province and health_region
