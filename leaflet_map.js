@@ -244,38 +244,30 @@ d3.queue()
     }
 
     function getColor(n) {
-        return n > 2000 ? '#b10026'
-            : n > 1500 ? '#e31a1c' 
-            : n > 1000 ? '#fc4e2a' 
-            : n > 500 ? '#fd8d3c'
-            : n > 250  ? '#feb24c'
-            : n > 100  ? '#fed976'
-            : n > 50  ? '#ffeda0'
-            : n > 0  ? '#ffffcc'
+        return n > 3000 ? '#800026'
+            : n > 2000 ? '#bd0026' 
+            : n > 1000 ? '#e31a1c' 
+            : n > 500 ? '#fc4e2a'
+            : n > 250  ? '#fd8d3c'
+            : n > 100  ? '#feb24c'
+            : n > 50  ? '#fed976'
+            : n > 10  ? '#ffeda0'
+            : n > -1  ? '#ffffcc'
             : '#ffffff';
     }
 
     // add legend with color gradients by case count
     var legend = L.control({position: 'topright'});
     legend.onAdd = function (map) {
-        var div = L.DomUtil.create('div', 'legend'),
-            grades = [0, 50, 100, 250, 500, 1000, 1500, 2000],
-            labels = [],
-            from, to;
+        var div = L.DomUtil.create('div', 'infobox legend'),
+            grades = [0, 10, 50, 100, 250, 500, 1000, 2000, 3000],
+            labels = [];
+        // loop through our density intervals and generate a label with a colored square for each interval
         for (var i = 0; i < grades.length; i++) {
-            from = grades[i];
-            if (i === 0) {
-                var_from_to = grades[i];
-                var_color = getColor(from);
-            } else {
-                var_from_to =  from + (grades[i + 1] ? '&ndash;' + grades[i + 1] : '+') ;
-                var_color = getColor(from + 1);
-            }
-            labels.push(
-                '<i style="background:' + var_color + '"></i> ' +
-                var_from_to);
+            div.innerHTML +=
+                '<i style="background:' + getColor(grades[i] + 1) + '"></i> ' +
+                grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
         }
-        div.innerHTML = labels.join('<br>');
         return div;
     };
     legend.addTo(map);

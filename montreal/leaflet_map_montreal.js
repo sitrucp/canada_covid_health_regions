@@ -69,7 +69,7 @@ function getCaseCount(geojsonName) {
     for(var i = 0; i < covid_data.length; i++) {
         var obj = covid_data[i];
         if (obj.geojson_name === geojsonName) {
-            caseCount = obj.case_count.replace(/\s/g, '');
+            caseCount = cleanCaseCount(obj.case_count);
             break;
          }
     }
@@ -86,7 +86,7 @@ function getRegionColor(geojsonName) {
         var obj = covid_data[i];
         //console.log('obj.geojson_name ' + obj.geojson_name + ' geojsonName ' + geojsonName);
         if (obj.geojson_name === geojsonName) {
-            regionColor = getColor(obj.case_count.replace(/\s/g, ''));
+            regionColor = getColor(cleanCaseCount(obj.case_count));
             break;
         }
     }
@@ -121,24 +121,15 @@ function getColor(n) {
 // add legend with color gradients by case count
 var legend = L.control({position: 'topright'});
 legend.onAdd = function (map) {
-    var div = L.DomUtil.create('div', 'legend'),
+    var div = L.DomUtil.create('div', 'infobox legend'),
         grades = [0, 25, 50, 100, 200, 300, 400, 500],
-        labels = [],
-        from, to;
+        labels = [];
+    // loop through our density intervals and generate a label with a colored square for each interval
     for (var i = 0; i < grades.length; i++) {
-        from = grades[i];
-        if (i === 0) {
-            var_from_to = grades[i];
-            var_color = getColor(from);
-        } else {
-            var_from_to =  from + (grades[i + 1] ? '&ndash;' + grades[i + 1] : '+') ;
-            var_color = getColor(from + 1);
-        }
-        labels.push(
-            '<i style="background:' + var_color + '"></i> ' +
-             var_from_to);
+        div.innerHTML +=
+            '<i style="background:' + getColor(grades[i] + 1) + '"></i> ' +
+            grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
     }
-    div.innerHTML = labels.join('<br>');
     return div;
 };
 legend.addTo(map);
@@ -157,11 +148,18 @@ infobox.addTo(map);
 var case_total = 0;
 for(var i = 0; i < covid_data.length; i++) {
     var obj = covid_data[i];
-    if( obj.website_name.includes("Total") ) {
-
-        case_total += parseInt(obj.case_count.toString().replace(/\s/g, ''));
-    }
+    //if( obj.website_name.includes("Total") ) {
+        //case_count_clean = obj.case_count.toString().replace(/\s/g, '').replace('<', '');
+        case_total += cleanCaseCount(obj.case_count);
+   // }
 }
+
+function cleanCaseCount(case_count) {
+    case_count_clean = parseInt(case_count.toString().replace(/\s/g, '').replace('<', ''));
+    return case_count_clean;
+}
+
+case_count_clean = obj.case_count.toString().replace(/\s/g, '').replace('<', '');
 
 const now = new Date();
 const offsetMs = now.getTimezoneOffset() * 60 * 1000;
