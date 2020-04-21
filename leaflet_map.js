@@ -95,7 +95,7 @@ d3.queue()
 
 //CREATE MAP=================================
     // now use covid_data obtained to populate map
-    var map = L.map('map',{ zoomControl: false }).setView(['53.145743', '-102.283131'], 4);
+    var map = L.map('map',{ zoomControl: false }).setView(['53.145743','-95.424717'], 4);
     map.once('focus', function() { map.scrollWheelZoom.enable(); });
     L.control.zoom({ position: 'bottomright' }).addTo(map);
 

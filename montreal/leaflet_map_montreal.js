@@ -149,7 +149,6 @@ var case_total = 0;
 for(var i = 0; i < covid_data.length; i++) {
     var obj = covid_data[i];
     if( obj.website_name.includes("Total") ) {
-        //case_count_clean = obj.case_count.toString().replace(/\s/g, '').replace('<', '');
         case_total += cleanCaseCount(obj.case_count);
     }
 }
