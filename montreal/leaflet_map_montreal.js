@@ -167,3 +167,34 @@ const last_updated = dateLocal.toISOString().slice(0, 19).replace("T", " ");
 
  var div = document.getElementById('header');
  div.innerHTML += 'Montreal total cases: ' + case_total.toLocaleString() + ' Date data updated: ' + last_updated.toLocaleString();
+
+ //CREATE TABLE=================================
+    
+ $(document).ready(function () {
+        
+    var thead;
+    var thead_tr;
+    thead = $("<thead>");
+    thead_tr = $("<tr/>");
+    thead_tr.append("<th>Region Name</th>");
+    thead_tr.append("<th style='text-align: right';>Case Count</th>");
+    thead_tr.append("</tr>");
+    thead.append(thead_tr);
+    $('table').append(thead);
+
+    var tbody;
+    var tbody_tr;
+    tbody = $("<tbody>");
+    $('table').append(tbody);
+    for(var i = 0; i < covid_data.length; i++) {
+        var obj = covid_data[i];
+        tbody_tr = $('<tr/>');
+        tbody_tr.append("<td>" + obj.website_name + "</td>");
+        tbody_tr.append("<td style='text-align: right';>" + obj.case_count + "</td>");
+        tbody.append(tbody_tr);
+    }
+});
+
+$(document).ready(function($){ 
+    $("#covid_tabular").tablesorter();
+}); 
