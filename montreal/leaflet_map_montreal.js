@@ -107,7 +107,8 @@ function getWebSiteName(geojsonName) {
     }
 
 function getColor(n) {
-    return n > 500 ? '#b10026'
+    return n > 600 ? '#b10026'
+        : n > 500 ? '#e31a1c' 
         : n > 400 ? '#e31a1c' 
         : n > 300 ? '#fc4e2a' 
         : n > 200 ? '#fd8d3c'
@@ -122,7 +123,7 @@ function getColor(n) {
 var legend = L.control({position: 'topright'});
 legend.onAdd = function (map) {
     var div = L.DomUtil.create('div', 'infobox legend'),
-        grades = [0, 25, 50, 100, 200, 300, 400, 500],
+        grades = [0, 25, 50, 100, 200, 300, 400, 500, 600],
         labels = [];
     // loop through our density intervals and generate a label with a colored square for each interval
     for (var i = 0; i < grades.length; i++) {
