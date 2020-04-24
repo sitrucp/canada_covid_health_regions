@@ -107,8 +107,8 @@ function getWebSiteName(geojsonName) {
     }
 
 function getColor(n) {
-    return n > 600 ? '#b10026'
-        : n > 500 ? '#e31a1c' 
+    return n > 600 ? '#800026'
+        : n > 500 ? '#bd0026' 
         : n > 400 ? '#e31a1c' 
         : n > 300 ? '#fc4e2a' 
         : n > 200 ? '#fd8d3c'
