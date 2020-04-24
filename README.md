@@ -3,7 +3,7 @@
 View map here:
 <a href="https://sitrucp.github.io/canada_covid_health_regions/index.html">https://sitrucp.github.io/canada_covid_health_regions/index.html</a>
 
-This Leaflet map is based on the <a href="https://www150.statcan.gc.ca/n1/pub/82-402-x/2018001/hrbf-flrs-eng.htm">Statscan ArcGIS health region boundary Canada file</a> with some modifications required as described below. The Statscan health region boundary ArcGIS data was converted to GeoJSON format using QGIS as described <a href="https://gis.stackexchange.com/questions/354142/what-is-this-coordinate-system-from-esri-and-how-do-i-convert-it-to-regular-coor/354144?noredirect=1#comment584986_354144">here</a> and maintained in the "health_regions.json" file.
+This Leaflet choropleth map is based on the <a href="https://www150.statcan.gc.ca/n1/pub/82-402-x/2018001/hrbf-flrs-eng.htm">Statscan ArcGIS health region boundary Canada file</a> with some modifications required as described below. The Statscan health region boundary ArcGIS data was converted to GeoJSON format using QGIS as described <a href="https://gis.stackexchange.com/questions/354142/what-is-this-coordinate-system-from-esri-and-how-do-i-convert-it-to-regular-coor/354144?noredirect=1#comment584986_354144">here</a> and maintained in the "health_regions.json" file.
 
 The COVID-91 confirmed case and mortality data come from the <a href = "https://github.com/ishaberry/Covid19Canada">COVID-19 Canada Open Data Working Group</a> "cases.csv" and "mortality.csv" files. The working group gets this data from provincial COVID-91 reporting. 
 

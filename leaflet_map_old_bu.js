@@ -3,25 +3,15 @@
 // get case, mortality csv files from working group github repository
 // get health region lookup csv from my github repository
 
-var file_cases = "https://raw.githubusercontent.com/ishaberry/Covid19Canada/master/cases.csv"
-var file_mortality = "https://raw.githubusercontent.com/ishaberry/Covid19Canada/master/mortality.csv"
-var file_update_time = "https://raw.githubusercontent.com/ishaberry/Covid19Canada/master/update_time.txt"
-var file_hr_lookup = "https://raw.githubusercontent.com/sitrucp/canada_covid_health_regions/master/health_regions_lookup.csv"
+d3.queue()
+.defer(d3.csv, "https://raw.githubusercontent.com/ishaberry/Covid19Canada/master/cases.csv")
+.defer(d3.csv, "https://raw.githubusercontent.com/ishaberry/Covid19Canada/master/mortality.csv")
+.defer(d3.csv, "https://raw.githubusercontent.com/ishaberry/Covid19Canada/master/update_time.txt")
+.defer(d3.csv, "https://raw.githubusercontent.com/sitrucp/canada_covid_health_regions/master/health_regions_lookup.csv")
+.await(function(error, cases, mortalities, update_time, hr_lookup) {
+    //everthing else below is in d3.queue scope
 
-Promise.all([
-    d3.csv(file_cases),
-    d3.csv(file_mortality),
-    d3.csv(file_update_time),
-    d3.csv(file_hr_lookup)
-]).then(function(data) {
-
-    //everthing else below is in d3 promise scope
-    var cases = data[0];
-    var mortalities = data[1];
-    var update_time = data[2];
-    var hr_lookup = data[3];
-
-    // create new province + health_region concat field as unique index
+    // create new province + health_region concat field
     // counts by province and health_region
     cases.forEach(function(d) {
         d.prov_health_region_case = d.province + '|' + d.health_region
@@ -292,7 +282,7 @@ Promise.all([
     };
     infobox.addTo(map);
 
-//CREATE TABLE BELOW MAP=================================
+//CREATE TABLE=================================
     
     $(document).ready(function () {
         
@@ -325,7 +315,6 @@ Promise.all([
         }
     });
 
-    // add tablesorter js to allow user to sort table by column headers
     $(document).ready(function($){ 
         $("#covid_tabular").tablesorter();
     }); 
