@@ -2,7 +2,6 @@
 //GET DATA=================================
 // get case, mortality csv files from working group github repository
 // get health region lookup csv from my github repository
-
 var file_cases = "https://raw.githubusercontent.com/ishaberry/Covid19Canada/master/cases.csv"
 var file_mortality = "https://raw.githubusercontent.com/ishaberry/Covid19Canada/master/mortality.csv"
 var file_update_time = "https://raw.githubusercontent.com/ishaberry/Covid19Canada/master/update_time.txt"
@@ -14,12 +13,12 @@ Promise.all([
     d3.csv(file_update_time),
     d3.csv(file_hr_lookup)
 ]).then(function(data) {
-
     //everthing else below is in d3 promise scope
+    // get data sets from promise
     var cases = data[0];
     var mortalities = data[1];
-    var update_time = data[2];
-    var hr_lookup = data[3];
+    var updateTime = data[2];
+    var regionLookup = data[3];
 
     // create new province + health_region concat field as unique index
     // counts by province and health_region
@@ -30,18 +29,17 @@ Promise.all([
         d.prov_health_region_mort = d.province + '|' + d.health_region
     });
 
-    // get update time 
-    last_updated = update_time.columns[0];
+    // get update time from working group repository
+    lastUpdated = updateTime.columns[0];
 
     // summarize cases and mortalities counts overall
-    var case_total = cases.length;
-    var mort_total = mortalities.length;
+    var caseTotalCanada = cases.length;
+    var mortTotalCanada = mortalities.length;
     var div = document.getElementById('header');
-    div.innerHTML += 'Total cases: ' + case_total.toLocaleString() + ' Total mortalities: ' + mort_total.toLocaleString() + ' Date data updated: ' + last_updated;
+    div.innerHTML += 'Total cases: ' + caseTotalCanada.toLocaleString() + ' Total mortalities: ' + mortTotalCanada.toLocaleString() + ' Date data updated: ' + lastUpdated;
 
-    // summarize cases and mortalities counts 
-    // by province and health_region
-    var case_by_region = d3.nest()
+    // summarize cases and mortalities counts by province and health_region
+    var caseByRegion = d3.nest()
         .key(function(d) { return d.prov_health_region_case; })
         .rollup(function(v) { return v.length; })
         .entries(cases)
@@ -52,7 +50,7 @@ Promise.all([
             }
         });
 
-    var mort_by_region = d3.nest()
+    var mortByRegion = d3.nest()
         .key(function(d) { return d.prov_health_region_mort; })
         .rollup(function(v) { return v.length; })
         .entries(mortalities)
@@ -70,41 +68,38 @@ Promise.all([
     };
 
     // left join summarized case records to lookup
-    const case_by_region_lookup = equijoinWithDefault(
-        hr_lookup, case_by_region, 
+    const caseByRegionLookup = equijoinWithDefault(
+        regionLookup, caseByRegion, 
         "province_health_region", "case_prov_health_region", 
         ({province, authority_report_health_region, statscan_arcgis_health_region}, {case_prov_health_region, case_count}) => 
         ({province, authority_report_health_region, statscan_arcgis_health_region, case_prov_health_region, case_count}), 
         {case_count:0, case_prov_health_region: "ProvinceName|Not Reported"});
 
     // left join summarized mort records to lookup
-    const mort_by_region_lookup = equijoinWithDefault(
-        hr_lookup, mort_by_region, 
+    const mortByRegionLookup = equijoinWithDefault(
+        regionLookup, mortByRegion, 
         "province_health_region", "mort_prov_health_region", 
         ({province, authority_report_health_region, statscan_arcgis_health_region}, {mort_prov_health_region, mort_count}) => 
         ({province, authority_report_health_region, statscan_arcgis_health_region, mort_prov_health_region, mort_count}), 
         {mort_count:0, case_prov_health_region: "ProvinceName|Not Reported"});
     
     // add mortalities count value to cases array
-    const case_mort_by_region = equijoinWithDefault(case_by_region_lookup, mort_by_region_lookup, "case_prov_health_region", "mort_prov_health_region", ({case_prov_health_region, case_count}, {mort_count}) => ({case_prov_health_region, case_count, mort_count}), {mort_count:0});
-    
+    const caseMortByRegion = equijoinWithDefault(
+        caseByRegionLookup, mortByRegionLookup, 
+        "case_prov_health_region", "mort_prov_health_region", 
+        ({case_prov_health_region, case_count}, {mort_count}) => 
+        ({case_prov_health_region, case_count, mort_count}), 
+        {mort_count:0});
 
-    // join hr_lookup to cases & mortalities
-    // on the new province + health_region concat field
-    //const case_mort_by_region_final = equijoinWithDefault(case_mort_by_region, hr_lookup, "case_prov_health_region", "province_health_region", ({mort_count, case_count}, {province, authority_report_health_region, statscan_arcgis_health_region}) => ({province, authority_report_health_region, statscan_arcgis_health_region, case_count, mort_count}), {mort_count:0});
-
-    const case_mort_by_region_final = equijoinWithDefault(
-        hr_lookup, case_mort_by_region, 
+    const covidData = equijoinWithDefault(
+        regionLookup, caseMortByRegion, 
         "province_health_region", "case_prov_health_region", 
         ({province, authority_report_health_region, statscan_arcgis_health_region}, {mort_count, case_count}) => 
         ({province, authority_report_health_region, statscan_arcgis_health_region, case_count, mort_count}), 
         {province_health_region:null,case_count:0, mort_count:0});
 
-    //declare final covid dataset to put on map
-    var covid_data = case_mort_by_region_final;
-
 //CREATE MAP=================================
-    // now use covid_data obtained to populate map
+    // create and populate map with covidData from above
     var map = L.map('map',{ zoomControl: false }).setView(['53.145743','-95.424717'], 4);
     map.once('focus', function() { map.scrollWheelZoom.enable(); });
     L.control.zoom({ position: 'bottomright' }).addTo(map);
@@ -140,6 +135,7 @@ Promise.all([
         }
     }).addTo(map);
 
+    // action when user clicks on map boundary area
     function showRegionDetails(e) {
         var layer = e.target;
         // change region style when hover over
@@ -159,10 +155,13 @@ Promise.all([
         var mortCount = getMortCount(statscanRegion);
         var regionProvince = getProvince(statscanRegion);
         var regionAuthorityName = getAuthorityName(statscanRegion);
-
-        document.getElementById('region_details').innerHTML = '<p>Province:' + regionProvince + ': <br>' + 'Statscan Region Name: ' + statscanRegion + '<br>' + 'Prov Region Name: ' + regionAuthorityName + '<br>' +'Confirmed cases: ' + caseCount + '<br>' + 'Mortalities: ' + mortCount + '</p><p></p>';
+        var casePctCanada = parseFloat(caseCount / caseTotalCanada * 100).toFixed(1)+"%"
+        var mortPctCanada = parseFloat(mortCount / mortTotalCanada * 100).toFixed(1)+"%"
+        
+        document.getElementById('region_details').innerHTML = '<p>Province:' + regionProvince + ': <br>' + 'Statscan Region Name: ' + statscanRegion + '<br>' + 'Prov Region Name: ' + regionAuthorityName + '<br>' +'Confirmed cases: ' + caseCount + ' (' + casePctCanada + ' Canada)' + '<br>' + 'Mortalities: ' + mortCount + ' (' + mortPctCanada + ' Canada)' + '</p><p></p>';
     };
 
+    // action when user mouses over map
     function mouseOverActions(e) {
         var layer = e.target;
         // change region style when hover over
@@ -181,7 +180,10 @@ Promise.all([
         var caseCount = getCaseCount(regionName);
         var mortCount = getMortCount(regionName);
         var regionProvince = getProvince(regionName);
-        document.getElementsByClassName('infobox')[0].innerHTML = '<p>Province:' + regionProvince + ': <br>' + 'Health Region: ' + regionName + '<br>' + 'Confirmed cases: ' + caseCount + '<br>' + 'Mortalities: ' + mortCount + '</p>';
+        var casePctCanada = parseFloat(caseCount / caseTotalCanada * 100).toFixed(1)+"%"
+        var mortPctCanada = parseFloat(mortCount / mortTotalCanada * 100).toFixed(1)+"%"
+
+        document.getElementsByClassName('infobox')[0].innerHTML = '<p>Province:' + regionProvince + ': <br>' + 'Health Region: ' + regionName + '<br>' + 'Confirmed cases: ' + caseCount + ' (' + casePctCanada + ' Canada)' + '<br>' + 'Mortalities: ' + mortCount + ' (' + mortPctCanada + ' Canada)' + '</p><p></p>';
     };
 
     function mouseOutActions(e) {
@@ -190,14 +192,16 @@ Promise.all([
         document.getElementsByClassName('infobox')[0].innerHTML = '<p>Hover over health region to see name and counts. Scroll to zoom.</p>';
     }
 
+    // not currently used, was prev used on mouse scroll on map 
     function zoomToFeature(e) {
         map.fitBounds(e.target.getBounds());
     }
     
+    // get region name from working group data
     function getAuthorityName(statscanRegion) {
         var regionAuthorityName;
-        for(var i = 0; i < covid_data.length; i++) {
-            var obj = covid_data[i];
+        for(var i = 0; i < covidData.length; i++) {
+            var obj = covidData[i];
             if (obj.statscan_arcgis_health_region === statscanRegion) {
                 regionAuthorityName = obj.authority_report_health_region;
                 break;
@@ -206,11 +210,11 @@ Promise.all([
     return regionAuthorityName;
     }
 
-    // get case counts from covid_data.json file by health region 
+    // get case counts from working group data
     function getCaseCount(regionName) {
         var caseCount = 0;
-        for(var i = 0; i < covid_data.length; i++) {
-            var obj = covid_data[i];
+        for(var i = 0; i < covidData.length; i++) {
+            var obj = covidData[i];
             if (obj.statscan_arcgis_health_region === regionName) {
                 caseCount = obj.case_count;
                 break;
@@ -222,12 +226,13 @@ Promise.all([
     return caseCount;
     }
 
+    // get mortality counts from working group data
     getMortCount
-    // get mortality counts from covid_data.json file by health region 
+    // get mortality counts from covidData.json file by health region 
     function getMortCount(regionName) {
         var mortCount = 0;
-        for(var i = 0; i < covid_data.length; i++) {
-            var obj = covid_data[i];
+        for(var i = 0; i < covidData.length; i++) {
+            var obj = covidData[i];
             if (obj.statscan_arcgis_health_region === regionName) {
                 mortCount = obj.mort_count;
                 break;
@@ -239,11 +244,11 @@ Promise.all([
     return mortCount;
     }
 
-    // get health region province bc it isn't in Statscan boundary file 
+    // get province from working group data 
     function getProvince(regionName) {
         var regionProvince;
-        for(var i = 0; i < covid_data.length; i++) {
-            var obj = covid_data[i];
+        for(var i = 0; i < covidData.length; i++) {
+            var obj = covidData[i];
             if (obj.statscan_arcgis_health_region === regionName) {
                 regionProvince = obj.province;
                 break;
@@ -255,8 +260,8 @@ Promise.all([
     // case color for legend and health region shape
     function getRegionColor(regionName) {
         var regionColor;
-        for(var i = 0; i < covid_data.length; i++) {
-            var obj = covid_data[i];
+        for(var i = 0; i < covidData.length; i++) {
+            var obj = covidData[i];
             if (obj.statscan_arcgis_health_region === regionName) {
                 regionColor = getColor(obj.case_count);
                 break;
@@ -265,6 +270,7 @@ Promise.all([
         return regionColor;
     }
 
+    // get color based on case count
     function getColor(n) {
         return n > 3000 ? '#800026'
             : n > 2000 ? '#bd0026' 
@@ -307,7 +313,6 @@ Promise.all([
 //CREATE TABLE BELOW MAP=================================
     
     $(document).ready(function () {
-        
         var thead;
         var thead_tr;
         thead = $("<thead>");
@@ -320,13 +325,12 @@ Promise.all([
         thead_tr.append("</tr>");
         thead.append(thead_tr);
         $('table').append(thead);
-
         var tbody;
         var tbody_tr;
         tbody = $("<tbody>");
         $('table').append(tbody);
-        for(var i = 0; i < covid_data.length; i++) {
-            var obj = covid_data[i];
+        for(var i = 0; i < covidData.length; i++) {
+            var obj = covidData[i];
             tbody_tr = $('<tr/>');
             tbody_tr.append("<td>" + obj.province + "</td>");
             tbody_tr.append("<td>" + obj.authority_report_health_region + "</td>");
