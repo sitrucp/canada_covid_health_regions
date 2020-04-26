@@ -390,7 +390,7 @@ Promise.all([
     function mouseOutActions(e) {
         geojson.resetStyle(e.target);
         //geojsonUS.resetStyle(e.target);
-        document.getElementsByClassName('infobox')[0].innerHTML = '<p>Hover over health region to see name and counts. Scroll to zoom.</p>';
+        document.getElementsByClassName('infobox')[0].innerHTML = '<p>Hover mouse over region to see details here.<br> Click on region to show details in right side panel.<br> Scroll to zoom.</p>';
     }
 
     // not currently used, was prev used on mouse scroll on map 
@@ -506,7 +506,7 @@ Promise.all([
     infobox.onAdd = function (map) {
         var div = L.DomUtil.create('div', 'infobox');
         var infobox = document.getElementsByClassName('infobox')[0];
-        div.innerHTML = '<p>Hover over health region to see name and counts. Scroll to zoom.</p>';
+        div.innerHTML = '<p>Hover mouse over region to see details here.<br> Click on region to show details in right side panel.<br> Scroll to zoom.</p>';
         return div;
     };
     infobox.addTo(map);
