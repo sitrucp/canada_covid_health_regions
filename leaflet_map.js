@@ -296,8 +296,6 @@ Promise.all([
                 }
             };
             Plotly.newPlot('region_daily_cases_chart', caseChartData, caseChartLayout);
-        } else {
-            document.getElementById('region_daily_cases_chart').innerHTML = '<p class="small">No confirmed cases</p>';
         }
 
         // daily mort chart==================
@@ -357,8 +355,6 @@ Promise.all([
                 }
             };
             Plotly.newPlot('region_daily_morts_chart', mortChartData, mortChartLayout);
-        } else {
-            document.getElementById('region_daily_morts_chart').innerHTML = '<p class="small">No mortalities</p>';
         }
     };
 
