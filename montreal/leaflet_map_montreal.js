@@ -167,7 +167,7 @@ const dateLocal = new Date(now.getTime() - offsetMs);
 const last_updated = dateLocal.toISOString().slice(0, 19).replace("T", " ");
 
  var div = document.getElementById('header');
- div.innerHTML += 'Montreal total cases: ' + case_total.toLocaleString() + ' Date data updated: ' + last_updated.toLocaleString();
+ div.innerHTML += 'Montreal total cases: ' + case_total.toLocaleString() + ' Date data retrieved: ' + last_update_date;
 
  //CREATE TABLE=================================
     

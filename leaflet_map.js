@@ -135,33 +135,33 @@ Promise.all([
             layer.on({
                 mouseover: mouseOverActions,
                 mouseout: mouseOutActions,
-                click: zoomToFeature
+                click: showRegionDetails
             });
         }
     }).addTo(map);
 
-    /*
-    // add statscan health region boundaries to map
-    var geojsonUS = L.geoJson(us_counties, {
-        style: function (feature) {
-            return {
-                color: 'grey', //shape border color
-                dashArray: '3',
-                weight: 1,
-                opacity: 1,
-                fillColor: getRegionColor(feature.properties.NAME),
-                fillOpacity: .7
-            };
-        },
-        onEachFeature: function (feature, layer) {
-            layer.on({
-                mouseover: mouseOverActions,
-                mouseout: mouseOutActions,
-                click: zoomToFeature
-            });
+    function showRegionDetails(e) {
+        var layer = e.target;
+        // change region style when hover over
+        layer.setStyle({
+            color: 'black', //shape border color
+            dashArray: '',
+            weight: 2,
+            opacity: 1,
+            //fillColor: 'blue',
+            //fillOpacity: 0.3
+        });
+        if (!L.Browser.ie && !L.Browser.opera) {
+            layer.bringToFront();
         }
-    }).addTo(map);
-    */
+        var statscanRegion = layer.feature.properties.ENG_LABEL;
+        var caseCount = getCaseCount(statscanRegion);
+        var mortCount = getMortCount(statscanRegion);
+        var regionProvince = getProvince(statscanRegion);
+        var regionAuthorityName = getAuthorityName(statscanRegion);
+
+        document.getElementById('region_details').innerHTML = '<p>Province:' + regionProvince + ': <br>' + 'Statscan Region Name: ' + statscanRegion + '<br>' + 'Prov Region Name: ' + regionAuthorityName + '<br>' +'Confirmed cases: ' + caseCount + '<br>' + 'Mortalities: ' + mortCount + '</p><p></p>';
+    };
 
     function mouseOverActions(e) {
         var layer = e.target;
@@ -192,6 +192,18 @@ Promise.all([
 
     function zoomToFeature(e) {
         map.fitBounds(e.target.getBounds());
+    }
+    
+    function getAuthorityName(statscanRegion) {
+        var regionAuthorityName;
+        for(var i = 0; i < covid_data.length; i++) {
+            var obj = covid_data[i];
+            if (obj.statscan_arcgis_health_region === statscanRegion) {
+                regionAuthorityName = obj.authority_report_health_region;
+                break;
+            }
+        }
+    return regionAuthorityName;
     }
 
     // get case counts from covid_data.json file by health region 
@@ -331,4 +343,3 @@ Promise.all([
     }); 
 
 });
-
