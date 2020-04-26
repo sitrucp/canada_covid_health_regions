@@ -114,7 +114,7 @@ function getColor(n) {
         : n > 200 ? '#fd8d3c'
         : n > 100  ? '#feb24c'
         : n > 50  ? '#fed976'
-        : n > 25  ? '#ffeda0'
+        : n > 50  ? '#ffeda0'
         : n > 0  ? '#ffffcc'
         : '#ffffff';
 }
@@ -155,11 +155,9 @@ for(var i = 0; i < covid_data.length; i++) {
 }
 
 function cleanCaseCount(case_count) {
-    case_count_clean = parseInt(case_count.toString().replace(/\s/g, '').replace('<', ''));
+    case_count_clean = parseInt(case_count.toString().replace(' ', '').replace(/\s/g, '').replace('<', ''));
     return case_count_clean;
 }
-
-case_count_clean = obj.case_count.toString().replace(/\s/g, '').replace('<', '');
 
 const now = new Date();
 const offsetMs = now.getTimezoneOffset() * 60 * 1000;
@@ -191,7 +189,7 @@ const last_updated = dateLocal.toISOString().slice(0, 19).replace("T", " ");
         var obj = covid_data[i];
         tbody_tr = $('<tr/>');
         tbody_tr.append("<td>" + obj.website_name + "</td>");
-        tbody_tr.append("<td style='text-align: right';>" + obj.case_count + "</td>");
+        tbody_tr.append("<td style='text-align: right';>" + cleanCaseCount(obj.case_count) + "</td>");
         tbody.append(tbody_tr);
     }
 });
