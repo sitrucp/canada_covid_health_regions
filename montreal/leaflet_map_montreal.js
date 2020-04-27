@@ -177,6 +177,7 @@ const last_updated = dateLocal.toISOString().slice(0, 19).replace("T", " ");
     thead_tr = $("<tr/>");
     thead_tr.append("<th>Region Name</th>");
     thead_tr.append("<th style='text-align: right';>Case Count</th>");
+    thead_tr.append("<th style='text-align: right';>% Montreal Total</th>");
     thead_tr.append("</tr>");
     thead.append(thead_tr);
     $('table').append(thead);
@@ -190,6 +191,7 @@ const last_updated = dateLocal.toISOString().slice(0, 19).replace("T", " ");
         tbody_tr = $('<tr/>');
         tbody_tr.append("<td>" + obj.website_name + "</td>");
         tbody_tr.append("<td style='text-align: right';>" + cleanCaseCount(obj.case_count) + "</td>");
+        tbody_tr.append("<td style='text-align: right';>" + ((parseFloat(cleanCaseCount(obj.case_count)) / parseFloat(case_total)) * 100).toFixed(2) + "</td>");
         tbody.append(tbody_tr);
     }
 });

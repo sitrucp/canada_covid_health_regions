@@ -521,6 +521,8 @@ Promise.all([
         thead_tr.append("<th>Statscan Name</th>");
         thead_tr.append("<th style='text-align: right';>Case Count</th>");
         thead_tr.append("<th style='text-align: right';>Mortality Count</th>");
+        thead_tr.append("<th style='text-align: right';>Case % Canada</th>");
+        thead_tr.append("<th style='text-align: right';>Mort % Canada</th>");
         thead_tr.append("</tr>");
         thead.append(thead_tr);
         $('table').append(thead);
@@ -536,6 +538,9 @@ Promise.all([
             tbody_tr.append("<td>" + obj.statscan_arcgis_health_region + "</td>");
             tbody_tr.append("<td style='text-align: right';>" + obj.case_count + "</td>");
             tbody_tr.append("<td style='text-align: right';>" + obj.mort_count + "</td>");
+            tbody_tr.append("<td style='text-align: right';>" + parseFloat(obj.case_count / caseTotalCanada * 100).toFixed(2) + "</td>");
+            
+            tbody_tr.append("<td style='text-align: right';>" + parseFloat(obj.mort_count / caseTotalCanada * 100).toFixed(2) + "</td>");
             tbody.append(tbody_tr);
         }
     });
