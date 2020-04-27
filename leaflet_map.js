@@ -182,8 +182,8 @@ Promise.all([
         var mortCount = getMortCount(statscanRegion);
         var regionProvince = getProvince(statscanRegion);
         var regionAuthorityName = getAuthorityName(statscanRegion);
-        var casePctCanada = parseFloat(caseCount / caseTotalCanada * 100).toFixed(1)+"%"
-        var mortPctCanada = parseFloat(mortCount / mortTotalCanada * 100).toFixed(1)+"%"
+        var casePctCanada = parseFloat(caseCount / caseTotalCanada * 100).toFixed(2)+"%"
+        var mortPctCanada = parseFloat(mortCount / mortTotalCanada * 100).toFixed(2)+"%"
 
         // filter to case data to selected region
         var caseSelectedRegion = caseWithStatscan.filter(function(row) { 
@@ -381,8 +381,8 @@ Promise.all([
         var caseCount = getCaseCount(regionName);
         var mortCount = getMortCount(regionName);
         var regionProvince = getProvince(regionName);
-        var casePctCanada = parseFloat(caseCount / caseTotalCanada * 100).toFixed(1)+"%"
-        var mortPctCanada = parseFloat(mortCount / mortTotalCanada * 100).toFixed(1)+"%"
+        var casePctCanada = parseFloat(caseCount / caseTotalCanada * 100).toFixed(2)+"%"
+        var mortPctCanada = parseFloat(mortCount / mortTotalCanada * 100).toFixed(2)+"%"
 
         document.getElementsByClassName('infobox')[0].innerHTML = '<p">Province:' + regionProvince + ' <br>' + 'Health Region: ' + regionName + '<br>' + 'Confirmed cases: ' + caseCount + ' (' + casePctCanada + ' Canada)' + '<br>' + 'Mortalities: ' + mortCount + ' (' + mortPctCanada + ' Canada)' + '</p>';
     };
@@ -428,8 +428,6 @@ Promise.all([
     }
 
     // get mortality counts from working group data
-    getMortCount
-    // get mortality counts from covidData.json file by health region 
     function getMortCount(regionName) {
         var mortCount = 0;
         for(var i = 0; i < covidData.length; i++) {
