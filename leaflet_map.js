@@ -226,6 +226,7 @@ Promise.all([
                 case_count: group.value
             }
         });
+        console.log('caseRegionByDate ' + JSON.stringify(caseRegionByDate));
 
         // group mort counts by date to use in selected region chart
         var mortRegionByDate = d3.nest()
@@ -239,8 +240,23 @@ Promise.all([
             }
         });
 
+        // group case counts by date to use in selected region chart
+        var caseRegionByDateCum = d3.nest()
+        .key(function(d) { return d.report_date; })
+        .rollup(function(v) { 
+            return v.reduce(function(sum, d) {
+                return sum + parseInt(d.case_count);
+              }, 0);
+         })
+        .entries(caseRegionByDate)
+        .map(function(group) {
+            return {
+                report_date: group.key,
+                cum_case_count: group.value
+            }
+        });
+        console.log('caseRegionByDateCum ' + JSON.stringify(caseRegionByDateCum));
         //var parseDate = d3.timeParse("%m/%d/%Y");
-        /// d3.cumsum([{a: 1.3}, {a: 2.2}, {a: 3.0}], d => d.a)
         //.d3.time.format("%Y-%m-%d");
         
         // daily cases chart==================
@@ -253,8 +269,8 @@ Promise.all([
 
             for (var i=0; i<caseRegionByDate.length; i++) {
                 row = caseRegionByDate[i];
-                xCases.push( row['report_date'] );
-                yCases.push( row['case_count'] );
+                xCases.push( row['report_date']);
+                yCases.push( row['case_count']);
             }
             // set up plotly chart
             var casesDaily = {
