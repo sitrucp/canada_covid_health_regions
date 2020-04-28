@@ -178,12 +178,12 @@ Promise.all([
             layer.bringToFront();
         }
         var statscanRegion = layer.feature.properties.ENG_LABEL;
-        var caseCount = getCaseCount(statscanRegion);
-        var mortCount = getMortCount(statscanRegion);
+        var regionCaseCount = getCaseCount(statscanRegion);
+        var regionMortCount = getMortCount(statscanRegion);
         var regionProvince = getProvince(statscanRegion);
         var regionAuthorityName = getAuthorityName(statscanRegion);
-        var casePctCanada = parseFloat(caseCount / caseTotalCanada * 100).toFixed(2)+"%"
-        var mortPctCanada = parseFloat(mortCount / mortTotalCanada * 100).toFixed(2)+"%"
+        var casePctCanada = parseFloat(regionCaseCount / caseTotalCanada * 100).toFixed(2)+"%"
+        var mortPctCanada = parseFloat(regionMortCount / mortTotalCanada * 100).toFixed(2)+"%"
 
         // filter to case data to selected region
         var caseSelectedRegion = caseWithStatscan.filter(function(row) { 
@@ -210,7 +210,7 @@ Promise.all([
         maxMortDate = d3.max(mortDates.map(d=>d.report_date));
     
         // write region details to index page div
-        document.getElementById('region_details').innerHTML = '<p class="small">Province:' + regionProvince + ': <br>Statscan Region Name: ' + statscanRegion + '<br>Prov Region Name: ' + regionAuthorityName + '<br>Confirmed cases: ' + caseCount + ' (' + casePctCanada + ' Canada)' + '<br>Mortalities: ' + mortCount + ' (' + mortPctCanada + ' Canada)' + '<br>First case: ' + minCaseDate + '<br>First mortality: ' + minMortDate + '</p><p></p>';
+        document.getElementById('region_details').innerHTML = '<p class="small">Province:' + regionProvince + ': <br>Statscan Region Name: ' + statscanRegion + '<br>Prov Region Name: ' + regionAuthorityName + '<br>Confirmed cases: ' + regionCaseCount + ' (' + casePctCanada + ' Canada)' + '<br>Mortalities: ' + regionMortCount + ' (' + mortPctCanada + ' Canada)' + '<br>First case: ' + minCaseDate + '<br>First mortality: ' + minMortDate + '</p><p></p>';
         
         // write region details to index page div
         // document.getElementById('region_details').innerHTML = '<br>';
@@ -226,8 +226,7 @@ Promise.all([
                 case_count: group.value
             }
         });
-        console.log('caseRegionByDate ' + JSON.stringify(caseRegionByDate));
-
+ 
         // group mort counts by date to use in selected region chart
         var mortRegionByDate = d3.nest()
         .key(function(d) { return d.report_date; })
@@ -240,12 +239,13 @@ Promise.all([
             }
         });
 
+        /*
         // group case counts by date to use in selected region chart
         var caseRegionByDateCum = d3.nest()
         .key(function(d) { return d.report_date; })
         .rollup(function(v) { 
             return v.reduce(function(sum, d) {
-                return sum + parseInt(d.case_count);
+                return sum + d.case_count;
               }, 0);
          })
         .entries(caseRegionByDate)
@@ -255,37 +255,99 @@ Promise.all([
                 cum_case_count: group.value
             }
         });
-        console.log('caseRegionByDateCum ' + JSON.stringify(caseRegionByDateCum));
-        //var parseDate = d3.timeParse("%m/%d/%Y");
-        //.d3.time.format("%Y-%m-%d");
-        
-        // daily cases chart==================
+        */
+
+/// CREATE DAILY NEW CASES dataset and put onto chart with others
+/// could start zero at > 100 cases
+
+        // sort by report_date bc orig csv is not always in date order
+        var caseRegionByDateSorted = caseRegionByDate.sort(function(a, b) {
+            return new Date(a.report_date) - new Date(b.report_date);
+        });
+
+        // create cum case counts from sorted dataset
+        caseRegionByDateCum = 
+        caseRegionByDateSorted.reduce((acc, i, index) => {
+            acc[index] = {
+            report_date: i.report_date,
+            case_count: i.case_count + (index > 0 ? acc[index - 1].case_count : 0)
+            };
+            return acc;
+        }, []);
+
+        // sort by report_date bc orig csv is not always in date order
+        var mortRegionByDateSorted = mortRegionByDate.sort(function(a, b) {
+            return new Date(a.report_date) - new Date(b.report_date);
+        });
+
+        // create cum mort counts from sorted dataset
+        mortRegionByDateCum = 
+        mortRegionByDateSorted.reduce((acc, i, index) => {
+            acc[index] = {
+            report_date: i.report_date,
+            mort_count: i.mort_count + (index > 0 ? acc[index - 1].mort_count : 0)
+            };
+            return acc;
+        }, []);
+
+        // create daily cases chart==================
+        // https://plotly.com/javascript/reference/
         // get max case count for region for y axis
-        var maxCaseCount = d3.max(caseRegionByDate.map(d=>d.case_count));
-        if(maxCaseCount > 0) {
+        var regionMaxDailyCaseCount = d3.max(caseRegionByDate.map(d=>d.case_count));
+
+        if(regionMaxDailyCaseCount > 0) {
             // create x and y axis data sets
             var xCases = [];
             var yCases = [];
+            var xCasesCum = [];
+            var yCasesCum = [];
 
             for (var i=0; i<caseRegionByDate.length; i++) {
                 row = caseRegionByDate[i];
                 xCases.push( row['report_date']);
                 yCases.push( row['case_count']);
             }
+            for (var i=0; i<caseRegionByDateCum.length; i++) {
+                row = caseRegionByDateCum[i];
+                xCasesCum.push( row['report_date']);
+                yCasesCum.push( row['case_count']);
+            }
             // set up plotly chart
             var casesDaily = {
+                name: 'Daily',
                 x: xCases,
                 y: yCases,
                 type: 'bar',
             };
-            var caseChartData = [casesDaily];
+            var casesCum = {
+                name: 'Cumulative',
+                x: xCasesCum,
+                y: yCasesCum,
+                yaxis: 'y2',
+                type: 'scatter',
+                mode: 'line'
+            };
+            var caseChartData = [casesDaily, casesCum];
             var caseChartLayout = {
                 title: {
                     text:'Cases by day',
                     font: {
                         weight: "bold",
-                        size: 14
+                        size: 12
                     },
+                },
+                showlegend: true,
+                legend: {
+                    "orientation": "h",
+                    x: 0,
+                    xanchor: 'left',
+                    y: 1.3,
+                    bgcolor: 'rgba(0,0,0,0)',
+                    font: {
+                        //family: 'sans-serif',
+                        size: 10
+                        //color: '#000'
+                      },
                 },
                 autosize: false,
                 autoscale: false,
@@ -293,22 +355,40 @@ Promise.all([
                 height: 150,
                 margin: {
                     l: 30,
-                    r: 10,
-                    b: 50,
+                    r: 40,
+                    b: 30,
                     t: 25,
-                    pad: 5
+                    pad: 2
                 },
                 xaxis: { 
+                    mirror: 'allticks',
                     tickformat: "%b-%d",
+                    tickfont: {
+                        size: 10
+                    },
                     autorange: false, 
                     range:[
-                        new Date(minCaseDate).getTime(), 
+                        new Date(minCaseDate).getTime(),
                         new Date(maxCaseDate).getTime()
                     ]
                 },
                 yaxis: { 
-                autorange: false, 
-                    range:[0, maxCaseCount]
+                    //autorange: true, 
+                    tickfont: {
+                        size: 10
+                    },
+                    range:[0, regionMaxDailyCaseCount],
+                    showgrid: false
+                },
+                yaxis2 : {
+                    //autorange: true, 
+                    tickfont: {
+                        size: 10
+                    },
+                    range:[0, regionCaseCount],
+                    overlaying: 'y',
+                    side: 'right',
+                    showgrid: false
                 }
             };
             Plotly.newPlot('region_daily_cases_chart', caseChartData, caseChartLayout);
@@ -318,49 +398,75 @@ Promise.all([
 
         // daily mort chart==================
         // get max mort count for region for y axis
-        maxMortCount = d3.max(mortRegionByDate.map(d=>d.mort_count));
-        if(maxMortCount > 0) {
+        regionMaxDailyMortCount = d3.max(mortRegionByDate.map(d=>d.mort_count));
+
+        if(regionMaxDailyMortCount > 0) {
             // create x and y axis data sets
             var xMort = [];
             var yMort = [];
-
-            // get max case count for region for y axis
-            var maxMortCount = d3.max(mortRegionByDate.map(d=>d.mort_count));
+            var xMortCum = [];
+            var yMortCum = [];
 
             for (var i=0; i<mortRegionByDate.length; i++) {
                 row = mortRegionByDate[i];
                 xMort.push( row['report_date'] );
                 yMort.push( row['mort_count'] );
             }
+            for (var i=0; i<mortRegionByDateCum.length; i++) {
+                row = mortRegionByDateCum[i];
+                xMortCum.push( row['report_date']);
+                yMortCum.push( row['mort_count']);
+            }
             // set up plotly chart
             var mortsDaily = {
+                name: 'Daily',
                 x: xMort,
                 y: yMort,
-                //mode: 'lines',
                 type: 'bar',
             };
-            var mortChartData = [mortsDaily];
+            var mortsCum = {
+                name: 'Cumulative',
+                x: xMortCum,
+                y: yMortCum,
+                yaxis: 'y2',
+                mode: 'line',
+                type: 'scatter'
+            };
+            var mortChartData = [mortsDaily, mortsCum];
             var mortChartLayout = {
-                    title: {
-                        text:'Mortalities by day',
-                        font: {
-                            weight: "bold",
-                            size: 14
-                        },
+                title: {
+                    text:'Mortalities by day',
+                    font: {
+                        weight: "bold",
+                        size: 12
                     },
-                //autosize: false,
+                },
+                showlegend: false,
+                legend: {
+                    "orientation": "v",
+                    x: 0,
+                    xanchor: 'left',
+                    y: 1,
+                    font: {
+                        size: 10
+                    },
+                },
+                autosize: false,
                 autoscale: false,
                 width: 250,
                 height: 150,
                 margin: {
                     l: 30,
-                    r: 10,
+                    r: 35,
                     b: 50,
                     t: 25,
                     pad: 5
                 },
                 xaxis: { 
                         tickformat: "%b-%d",
+                        tickfont: {
+                            size: 10
+                        },
                         autorange: false, 
                         range:[
                             new Date(minCaseDate).getTime(), 
@@ -368,8 +474,22 @@ Promise.all([
                         ]
                 },
                 yaxis: { 
-                        autorange: false, 
-                    range:[0, maxMortCount]
+                    tickfont: {
+                        size: 10
+                    },
+                    autorange: false, 
+                    range:[0, regionMaxDailyMortCount],
+                    showgrid:false
+                },
+                yaxis2 : {
+                    tickfont: {
+                        size: 10
+                    },
+                    autorange: false, 
+                    range:[0, regionMortCount],
+                    overlaying: 'y',
+                    side: 'right',
+                    showgrid:false
                 }
             };
             Plotly.newPlot('region_daily_morts_chart', mortChartData, mortChartLayout);
@@ -394,13 +514,13 @@ Promise.all([
             layer.bringToFront();
         }
         var regionName = layer.feature.properties.ENG_LABEL;
-        var caseCount = getCaseCount(regionName);
-        var mortCount = getMortCount(regionName);
+        var regionCaseCount = getCaseCount(regionName);
+        var regionMortCount = getMortCount(regionName);
         var regionProvince = getProvince(regionName);
-        var casePctCanada = parseFloat(caseCount / caseTotalCanada * 100).toFixed(2)+"%"
-        var mortPctCanada = parseFloat(mortCount / mortTotalCanada * 100).toFixed(2)+"%"
+        var casePctCanada = parseFloat(regionCaseCount / caseTotalCanada * 100).toFixed(2)+"%"
+        var mortPctCanada = parseFloat(regionMortCount / mortTotalCanada * 100).toFixed(2)+"%"
 
-        document.getElementsByClassName('infobox')[0].innerHTML = '<p">Province:' + regionProvince + ' <br>' + 'Health Region: ' + regionName + '<br>' + 'Confirmed cases: ' + caseCount + ' (' + casePctCanada + ' Canada)' + '<br>' + 'Mortalities: ' + mortCount + ' (' + mortPctCanada + ' Canada)' + '</p>';
+        document.getElementsByClassName('infobox')[0].innerHTML = '<p">Province:' + regionProvince + ' <br>' + 'Health Region: ' + regionName + '<br>' + 'Confirmed cases: ' + regionCaseCount + ' (' + casePctCanada + ' Canada)' + '<br>' + 'Mortalities: ' + regionMortCount + ' (' + mortPctCanada + ' Canada)' + '</p>';
     };
 
     function mouseOutActions(e) {
@@ -429,34 +549,34 @@ Promise.all([
 
     // get case counts from working group data
     function getCaseCount(regionName) {
-        var caseCount = 0;
+        var regionCaseCount = 0;
         for(var i = 0; i < covidData.length; i++) {
             var obj = covidData[i];
             if (obj.statscan_arcgis_health_region === regionName) {
-                caseCount = obj.case_count;
+                regionCaseCount = obj.case_count;
                 break;
             }
         }
-        if (caseCount == null) {
-            caseCount = 0; 
+        if (regionCaseCount == null) {
+            regionCaseCount = 0; 
     }
-    return caseCount;
+    return regionCaseCount;
     }
 
     // get mortality counts from working group data
     function getMortCount(regionName) {
-        var mortCount = 0;
+        var regionMortCount = 0;
         for(var i = 0; i < covidData.length; i++) {
             var obj = covidData[i];
             if (obj.statscan_arcgis_health_region === regionName) {
-                mortCount = obj.mort_count;
+                regionMortCount = obj.mort_count;
                 break;
             }
         }
-        if (mortCount == null) {
-            mortCount = 0; 
+        if (regionMortCount == null) {
+            regionMortCount = 0; 
     }
-    return mortCount;
+    return regionMortCount;
     }
 
     // get province from working group data 
