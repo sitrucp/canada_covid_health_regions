@@ -294,7 +294,7 @@ Promise.all([
         // https://plotly.com/javascript/reference/
         // get max case count for region for y axis
         var regionMaxDailyCaseCount = d3.max(caseRegionByDate.map(d=>d.case_count));
-
+        
         if(regionMaxDailyCaseCount > 0) {
             // create x and y axis data sets
             var xCases = [];
@@ -362,15 +362,24 @@ Promise.all([
                 },
                 xaxis: { 
                     mirror: 'allticks',
+                    type: "date",
                     tickformat: "%b-%d",
                     tickfont: {
                         size: 10
                     },
-                    autorange: false, 
+                    tickangle: 0,
+                    autorange: false,
                     range:[
                         new Date(minCaseDate).getTime(),
                         new Date(maxCaseDate).getTime()
-                    ]
+                    ],
+                    //tickmode: 'auto',
+                    //nticks: 5,
+                    //tick0: '2020-03-05',
+                    //dtick: 1209600000.0,
+                    //autotick: false,
+                    //nticks: 5,
+                   // autorange: false,
                 },
                 yaxis: { 
                     //autorange: true, 
@@ -463,15 +472,25 @@ Promise.all([
                     pad: 5
                 },
                 xaxis: { 
-                        tickformat: "%b-%d",
-                        tickfont: {
-                            size: 10
-                        },
-                        autorange: false, 
-                        range:[
-                            new Date(minCaseDate).getTime(), 
-                            new Date(maxCaseDate).getTime()
-                        ]
+                    mirror: 'allticks',
+                    type: "date",
+                    tickformat: "%b-%d",
+                    tickfont: {
+                        size: 10
+                    },
+                    tickangle: 0,
+                    autorange: false,
+                    range:[
+                        new Date(minCaseDate).getTime(), 
+                        new Date(maxCaseDate).getTime()
+                    ],
+                    //tickmode: 'auto',
+                    //nticks: 5,
+                    //tick0: '2020-03-05',
+                    //dtick: 1209600000.0,
+                    //tickmode: 'linear',
+                    //tick0: '2020-03-05'
+                    //dtick: 432000000,
                 },
                 yaxis: { 
                     tickfont: {
