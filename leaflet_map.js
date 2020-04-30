@@ -275,6 +275,16 @@ Promise.all([
             return acc;
         }, []);
 
+        // create daily new case counts from sorted dataset
+        caseRegionByDateNew = 
+        caseRegionByDateSorted.reduce((acc, i, index) => {
+            acc[index] = {
+            report_date: i.report_date,
+            case_count: i.case_count + (index > 0 ? acc[index - 1].case_count : 0)
+            };
+            return acc;
+        }, []);
+
         // sort by report_date bc orig csv is not always in date order
         var mortRegionByDateSorted = mortRegionByDate.sort(function(a, b) {
             return new Date(a.report_date) - new Date(b.report_date);
@@ -290,11 +300,27 @@ Promise.all([
             return acc;
         }, []);
 
+        function log(x) {
+            return Math.log(x) / Math.LN10;
+        }
+
         // create daily cases chart==================
         // https://plotly.com/javascript/reference/
         // get max case count for region for y axis
         var regionMaxDailyCaseCount = d3.max(caseRegionByDate.map(d=>d.case_count));
+        var yaxis2_type = 'linear';
+        var yaxis2RangeMax = regionCaseCount;
         
+        // button to change scale to log
+        function changeY2scale() {
+            var yaxis2_type = 'log';
+            var yaxis2RangeMax = log(regionCaseCount);
+        }
+
+        //console.log('yaxis2_type ' + yaxis2_type + ' yaxis2RangeMax ' + yaxis2RangeMax);
+
+        //document.getElementById('region_daily_cases_chart').innerHTML = '<button onclick="changeY2scale()">Log</button>';
+
         if(regionMaxDailyCaseCount > 0) {
             // create x and y axis data sets
             var xCases = [];
@@ -391,10 +417,11 @@ Promise.all([
                 },
                 yaxis2 : {
                     //autorange: true, 
+                    type: yaxis2_type,
                     tickfont: {
                         size: 10
                     },
-                    range:[0, regionCaseCount],
+                    range:[0, yaxis2RangeMax],
                     overlaying: 'y',
                     side: 'right',
                     showgrid: false
