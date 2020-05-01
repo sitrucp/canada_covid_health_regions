@@ -23,8 +23,9 @@ tables = soup.find_all('table')
 table = tables[3]
 # read table into pandas dataframe
 df_table_data_all_cols = pd.read_html(str(table))[0]
+print(list(df_table_data_all_cols))
 # rename columns and only keep two first columns
-df_table_data_all_cols.columns = ['region_name', 'case_count','distribution','rate']
+df_table_data_all_cols.columns = ['region_name', 'case_count','case_percent','case_per_100k','mortalities', 'mort_per_100k']
 df_table_data = df_table_data_all_cols[['region_name','case_count']]
 # join lookup table on website name & region_name to get geojson_name field to use on map
 df_table_data_w_lookup = pd.merge(df_montreal_regions_lookup, df_table_data, left_on='website_name', right_on='region_name', how='left')
