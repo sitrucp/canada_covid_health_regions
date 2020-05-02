@@ -210,7 +210,7 @@ Promise.all([
         maxMortDate = d3.max(mortDates.map(d=>d.report_date));
     
         // write region details to index page div
-        document.getElementById('region_details').innerHTML = '<p class="small">Province:' + regionProvince + ': <br>Statscan Region Name: ' + statscanRegion + '<br>Prov Region Name: ' + regionAuthorityName + '<br>Confirmed cases: ' + regionCaseCount + ' (' + casePctCanada + ' Canada)' + '<br>Mortalities: ' + regionMortCount + ' (' + mortPctCanada + ' Canada)' + '<br>First case: ' + minCaseDate + '<br>First mortality: ' + minMortDate + '</p><p></p>';
+        document.getElementById('region_details').innerHTML = '<p class="small">Province:' + regionProvince + ': <br>Statscan Region Name: ' + statscanRegion + '<br>Prov Region Name: ' + regionAuthorityName + '<br>Confirmed cases: ' + regionCaseCount + ' (' + casePctCanada + ' Canada)' + '<br>Mortalities: ' + regionMortCount + ' (' + mortPctCanada + ' Canada)' + '<br>First case: ' + minCaseDate + '<br>First mortality: ' + minMortDate + '<br>Mort per case: ' + getRatioMortCase(regionMortCount,regionCaseCount) + '</p><p></p>';
         
         // write region details to index page div
         // document.getElementById('region_details').innerHTML = '<br>';
@@ -239,6 +239,14 @@ Promise.all([
             }
         });
 
+        function getRatioMortCase(numerator, denominator) {
+            if (denominator === 0 || isNaN(denominator)) {
+                    return null;
+            }
+            else {
+                    return (numerator / denominator).toFixed(3);
+            }
+        }
         /*
         // group case counts by date to use in selected region chart
         var caseRegionByDateCum = d3.nest()
@@ -258,7 +266,6 @@ Promise.all([
         */
 
 /// CREATE DAILY NEW CASES dataset and put onto chart with others
-/// could start zero at > 100 cases
 
         // sort by report_date bc orig csv is not always in date order
         var caseRegionByDateSorted = caseRegionByDate.sort(function(a, b) {
@@ -566,8 +573,17 @@ Promise.all([
         var casePctCanada = parseFloat(regionCaseCount / caseTotalCanada * 100).toFixed(2)+"%"
         var mortPctCanada = parseFloat(regionMortCount / mortTotalCanada * 100).toFixed(2)+"%"
 
-        document.getElementsByClassName('infobox')[0].innerHTML = '<p">Province:' + regionProvince + ' <br>' + 'Health Region: ' + regionName + '<br>' + 'Confirmed cases: ' + regionCaseCount + ' (' + casePctCanada + ' Canada)' + '<br>' + 'Mortalities: ' + regionMortCount + ' (' + mortPctCanada + ' Canada)' + '</p>';
+        document.getElementsByClassName('infobox')[0].innerHTML = '<p">Province:' + regionProvince + ' <br>' + 'Health Region: ' + regionName + '<br>' + 'Confirmed cases: ' + regionCaseCount + ' (' + casePctCanada + ' Canada)' + '<br>' + 'Mortalities: ' + regionMortCount + ' (' + mortPctCanada + ' Canada)<br>' + 'Mort per case: ' + getRatioMortCase(regionMortCount,regionCaseCount) + '</p>';
     };
+
+    function getRatioMortCase(numerator, denominator) {
+        if (denominator === 0 || isNaN(denominator)) {
+                return '0.000';
+        }
+        else {
+                return (numerator / denominator).toFixed(3);
+        }
+    }
 
     function mouseOutActions(e) {
         geojson.resetStyle(e.target);
@@ -705,6 +721,7 @@ Promise.all([
         thead_tr.append("<th style='text-align: right';>Mortality Count</th>");
         thead_tr.append("<th style='text-align: right';>Case % Canada</th>");
         thead_tr.append("<th style='text-align: right';>Mort % Canada</th>");
+        thead_tr.append("<th style='text-align: right';>Mort per Case</th>");
         thead_tr.append("</tr>");
         thead.append(thead_tr);
         $('table').append(thead);
@@ -723,6 +740,7 @@ Promise.all([
             tbody_tr.append("<td style='text-align: right';>" + parseFloat(obj.case_count / caseTotalCanada * 100).toFixed(2) + "</td>");
             
             tbody_tr.append("<td style='text-align: right';>" + parseFloat(obj.mort_count / caseTotalCanada * 100).toFixed(2) + "</td>");
+            tbody_tr.append("<td style='text-align: right';>" + getRatioMortCase(obj.mort_count, obj.case_count) + "</td>");
             tbody.append(tbody_tr);
         }
     });
