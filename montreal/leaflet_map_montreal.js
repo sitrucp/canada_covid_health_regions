@@ -29,7 +29,7 @@ var geojson = L.geoJson(montreal_regions, {
         layer.on({
             mouseover: mouseOverActions,
             mouseout: mouseOutActions,
-            click: zoomToFeature
+            click: showRegionDetails
         });
     }
 }).addTo(map);
@@ -66,6 +66,30 @@ function mouseOutActions(e) {
 function zoomToFeature(e) {
     map.fitBounds(e.target.getBounds());
 }
+
+function showRegionDetails(e) {
+    var layer = e.target;
+    // change region style when hover over
+    layer.setStyle({
+        color: 'black', //shape border color
+        dashArray: '',
+        weight: 2,
+        opacity: 1,
+        //fillColor: 'blue',
+        //fillOpacity: 0.3
+    });
+    if (!L.Browser.ie && !L.Browser.opera) {
+        layer.bringToFront();
+    }
+    var geojsonName = layer.feature.properties.district;
+    var caseCount = getCaseCount(geojsonName);
+    var mortCount = getMortCount(geojsonName);
+    var websiteName = getWebSiteName(geojsonName);
+    var casePct = ((parseFloat(cleanSiteValue(caseCount)) / parseFloat(case_total)) * 100).toFixed(2)
+    var mortPct = ((parseFloat(cleanSiteValue(mortCount)) / parseFloat(mort_total)) * 100).toFixed(2)
+    
+    document.getElementById('region_details').innerHTML = '<p>Montreal Region: ' + websiteName + '<br>' + 'Confirmed cases: ' + caseCount + ' (' + casePct + '% Montreal)' + '<br>' + 'Mortalities: ' + mortCount + ' (' + mortPct + '% Montreal)' + '</p>';
+};
 
 // count cases by health region 
 function getCaseCount(geojsonName) {
