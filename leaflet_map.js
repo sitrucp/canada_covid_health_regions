@@ -49,7 +49,7 @@ Promise.all([
         return xs.map(row => typeof iy.get(row[primary]) !== 'undefined' ? sel(row, iy.get(row[primary])): sel(row, def));
     };
 
-    // summarize cases and mortalities counts overall
+    // summarize cases and mortalities counts overall for header
     var caseTotalCanada = cases.length;
     var mortTotalCanada = mortalities.length;
     var div = document.getElementById('header');
@@ -71,7 +71,7 @@ Promise.all([
         ({date_death_report, report_date, province, authority_report_health_region, statscan_arcgis_health_region}), 
         {province_health_region:null});
 
-    // summarize cases and mortalities counts by province and health_region
+    // summarize case counts by prov | health_region concat
     var caseByRegion = d3.nest()
         .key(function(d) { return d.prov_health_region_case; })
         .rollup(function(v) { return v.length; })
@@ -82,7 +82,8 @@ Promise.all([
             case_count: group.value
             }
         });
-
+    
+    // summarize mortality counts by prov | health_region concat
     var mortByRegion = d3.nest()
         .key(function(d) { return d.prov_health_region_mort; })
         .rollup(function(v) { return v.length; })
@@ -209,12 +210,9 @@ Promise.all([
         minMortDate = d3.min(mortDates.map(d=>d.report_date));
         maxMortDate = d3.max(mortDates.map(d=>d.report_date));
     
-        // write region details to index page div
+        // write region details to index page region_details div
         document.getElementById('region_details').innerHTML = '<p class="small">Province:' + regionProvince + ': <br>Statscan Region Name: ' + statscanRegion + '<br>Prov Region Name: ' + regionAuthorityName + '<br>Confirmed cases: ' + regionCaseCount + ' (' + casePctCanada + ' Canada)' + '<br>Mortalities: ' + regionMortCount + ' (' + mortPctCanada + ' Canada)' + '<br>First case: ' + minCaseDate + '<br>First mortality: ' + minMortDate + '<br>Mort per case: ' + getRatioMortCase(regionMortCount,regionCaseCount) + '</p><p></p>';
         
-        // write region details to index page div
-        // document.getElementById('region_details').innerHTML = '<br>';
-
         // group case counts by date to use in selected region chart
         var caseRegionByDate = d3.nest()
         .key(function(d) { return d.report_date; })
@@ -247,27 +245,8 @@ Promise.all([
                     return (numerator / denominator).toFixed(3);
             }
         }
-        /*
-        // group case counts by date to use in selected region chart
-        var caseRegionByDateCum = d3.nest()
-        .key(function(d) { return d.report_date; })
-        .rollup(function(v) { 
-            return v.reduce(function(sum, d) {
-                return sum + d.case_count;
-              }, 0);
-         })
-        .entries(caseRegionByDate)
-        .map(function(group) {
-            return {
-                report_date: group.key,
-                cum_case_count: group.value
-            }
-        });
-        */
 
-/// CREATE DAILY NEW CASES dataset and put onto chart with others
-
-        // sort by report_date bc orig csv is not always in date order
+        // sort array by report_date bc orig csv is not always in date order
         var caseRegionByDateSorted = caseRegionByDate.sort(function(a, b) {
             return new Date(a.report_date) - new Date(b.report_date);
         });
@@ -292,7 +271,7 @@ Promise.all([
             return acc;
         }, []);
 
-        // sort by report_date bc orig csv is not always in date order
+        // sort array by report_date bc orig csv is not always in date order
         var mortRegionByDateSorted = mortRegionByDate.sort(function(a, b) {
             return new Date(a.report_date) - new Date(b.report_date);
         });
@@ -307,25 +286,23 @@ Promise.all([
             return acc;
         }, []);
 
+        // not used by could be used to transform daily counts to log
         function log(x) {
             return Math.log(x) / Math.LN10;
         }
 
         // create daily cases chart==================
-        // https://plotly.com/javascript/reference/
         // get max case count for region for y axis
         var regionMaxDailyCaseCount = d3.max(caseRegionByDate.map(d=>d.case_count));
         var yaxis2_type = 'linear';
         var yaxis2RangeMax = regionCaseCount;
         
-        // button to change scale to log
+        // not used but could be used to change y2 scale to log
         function changeY2scale() {
             var yaxis2_type = 'log';
             var yaxis2RangeMax = log(regionCaseCount);
         }
-
-        //console.log('yaxis2_type ' + yaxis2_type + ' yaxis2RangeMax ' + yaxis2RangeMax);
-
+        
         //document.getElementById('region_daily_cases_chart').innerHTML = '<button onclick="changeY2scale()">Log</button>';
 
         if(regionMaxDailyCaseCount > 0) {
@@ -657,6 +634,7 @@ Promise.all([
     // case color for legend and health region shape
     function getRegionColor(regionName) {
         var regionColor;
+        var useCaseOrMort = 'case_count';
         for(var i = 0; i < covidData.length; i++) {
             var obj = covidData[i];
             if (obj.statscan_arcgis_health_region === regionName) {
