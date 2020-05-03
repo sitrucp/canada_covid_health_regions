@@ -717,7 +717,7 @@ Promise.all([
             tbody_tr.append("<td style='text-align: right';>" + obj.mort_count + "</td>");
             tbody_tr.append("<td style='text-align: right';>" + parseFloat(obj.case_count / caseTotalCanada * 100).toFixed(2) + "</td>");
             
-            tbody_tr.append("<td style='text-align: right';>" + parseFloat(obj.mort_count / caseTotalCanada * 100).toFixed(2) + "</td>");
+            tbody_tr.append("<td style='text-align: right';>" + parseFloat(obj.mort_count / mortTotalCanada * 100).toFixed(2) + "</td>");
             tbody_tr.append("<td style='text-align: right';>" + getRatioMortCase(obj.mort_count, obj.case_count) + "</td>");
             tbody.append(tbody_tr);
         }
