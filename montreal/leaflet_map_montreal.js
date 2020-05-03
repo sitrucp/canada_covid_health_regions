@@ -54,8 +54,16 @@ function mouseOverActions(e) {
     var websiteName = getWebSiteName(geojsonName);
     var casePct = ((parseFloat(cleanSiteValue(caseCount)) / parseFloat(case_total)) * 100).toFixed(2)
     var mortPct = ((parseFloat(cleanSiteValue(mortCount)) / parseFloat(mort_total)) * 100).toFixed(2)
-    
-    document.getElementsByClassName('infobox')[0].innerHTML = '<p>Province: Quebec <br>' + 'Montreal Region: ' + websiteName + '<br>' + 'Confirmed cases: ' + caseCount + ' (' + casePct + '% Montreal)' + '<br>' + 'Mortalities: ' + mortCount + ' (' + mortPct + '% Montreal)<br>' + ' Mort per case: ' + getRatioMortCase(mortCount,caseCount) + '</p>';
+    var casePer100k = getCasePer100k(geojsonName);
+    var mortPer100k = getMortPer100k(geojsonName);
+
+    document.getElementsByClassName('infobox')[0].innerHTML = 
+    '<p>Montreal Region: ' + websiteName + 
+    '<br>Confirmed cases: ' + caseCount + ' (' + casePct + '% Montreal)' + '<br>Mortalities: ' + mortCount + ' (' + mortPct + '% Montreal)' + 
+    '<br>Mort per case: ' + getRatioMortCase(mortCount, caseCount) + 
+    '<br>Case per 100k: ' + casePer100k + 
+    '<br>Mort per 100k: ' + mortPer100k + 
+    '</p>';
 };
 
 function mouseOutActions(e) {
@@ -87,8 +95,16 @@ function showRegionDetails(e) {
     var websiteName = getWebSiteName(geojsonName);
     var casePct = ((parseFloat(cleanSiteValue(caseCount)) / parseFloat(case_total)) * 100).toFixed(2)
     var mortPct = ((parseFloat(cleanSiteValue(mortCount)) / parseFloat(mort_total)) * 100).toFixed(2)
-    
-    document.getElementById('region_details').innerHTML = '<p>Montreal Region: ' + websiteName + '<br>' + 'Confirmed cases: ' + caseCount + ' (' + casePct + '% Montreal)<br>' + 'Mortalities: ' + mortCount + ' (' + mortPct + '% Montreal)<br>' + ' Mort per case: ' + getRatioMortCase(mortCount,caseCount) + '</p>';
+    var casePer100k = getCasePer100k(geojsonName);
+    var mortPer100k = getMortPer100k(geojsonName);
+
+    document.getElementById('region_details').innerHTML = 
+    '<p>Montreal Region: ' + websiteName + 
+    '<br>Confirmed cases: ' + caseCount + ' (' + casePct + '% Montreal)' + '<br>Mortalities: ' + mortCount + ' (' + mortPct + '% Montreal)' + 
+    '<br>Mort per case: ' + getRatioMortCase(mortCount, caseCount) + 
+    '<br>Case per 100k: ' + cleanSiteValue(casePer100k) + 
+    '<br>Mort per 100k: ' + cleanSiteValue(mortPer100k) + 
+    '</p>';
 };
 
 function getRatioMortCase(numerator, denominator) {
@@ -99,6 +115,39 @@ function getRatioMortCase(numerator, denominator) {
             return (numerator / denominator).toFixed(3);
     }
 }
+
+// case per 100k by health region 
+function getCasePer100k(geojsonName) {
+    var casePer100k = 0;
+    for(var i = 0; i < covid_data.length; i++) {
+        var obj = covid_data[i];
+        if (obj.geojson_name === geojsonName) {
+            casePer100k = cleanSiteValue(obj.case_per_100k);
+            break;
+         }
+    }
+    if (casePer100k == null || casePer100k === '') {
+        casePer100k = 0; 
+   }
+   return casePer100k;
+}
+
+// mort per 100k by health region 
+function getMortPer100k(geojsonName) {
+    var mortPer100k = 0;
+    for(var i = 0; i < covid_data.length; i++) {
+        var obj = covid_data[i];
+        if (obj.geojson_name === geojsonName) {
+            mortPer100k = cleanSiteValue(obj.mort_per_100k);
+            break;
+         }
+    }
+    if (mortPer100k == null || mortPer100k === 'NaN') {
+        mortPer100k = 0; 
+   }
+   return mortPer100k;
+}
+
 
 // count cases by health region 
 function getCaseCount(geojsonName) {
@@ -137,7 +186,6 @@ function getRegionColor(geojsonName) {
     var regionColor;
     for(var i = 0; i < covid_data.length; i++) {
         var obj = covid_data[i];
-        //console.log('obj.geojson_name ' + obj.geojson_name + ' geojsonName ' + geojsonName);
         if (obj.geojson_name === geojsonName) {
             regionColor = getColor(cleanSiteValue(obj.case_count));
             break;
@@ -218,7 +266,7 @@ for(var i = 0; i < covid_data.length; i++) {
 
 function cleanSiteValue(site_value) {
     if (site_value !== undefined) {
-        clean_count = parseInt((site_value).toString().replace(' ', '').replace(/\s/g, '').replace('<', ''));
+        clean_count = parseInt((site_value).toString().replace('NaN', '0').replace('-', '0').replace(' ', '').replace(/\s/g, '').replace('<', '').replace(/\*/g, '').replace('n.p.', '0'));
         return clean_count;
     }
 }
@@ -245,6 +293,8 @@ const last_updated = dateLocal.toISOString().slice(0, 19).replace("T", " ");
     thead_tr.append("<th style='text-align: right';>Case % Montreal</th>");
     thead_tr.append("<th style='text-align: right';>Mort % Montreal</th>");
     thead_tr.append("<th style='text-align: right';>Mort per Case</th>");
+    thead_tr.append("<th style='text-align: right';>Case per 100k</th>");
+    thead_tr.append("<th style='text-align: right';>Mort per 100k</th>");
     thead_tr.append("</tr>");
     thead.append(thead_tr);
     $('table').append(thead);
@@ -262,6 +312,8 @@ const last_updated = dateLocal.toISOString().slice(0, 19).replace("T", " ");
         tbody_tr.append("<td style='text-align: right';>" + ((parseFloat(cleanSiteValue(obj.case_count)) / parseFloat(case_total)) * 100).toFixed(2) + "</td>");
         tbody_tr.append("<td style='text-align: right';>" + ((parseFloat(cleanSiteValue(obj.mort_count)) / parseFloat(mort_total)) * 100).toFixed(2) + "</td>");
         tbody_tr.append("<td style='text-align: right';>" + getRatioMortCase(parseFloat(cleanSiteValue(obj.mort_count)), parseFloat(cleanSiteValue(obj.case_count))) + "</td>");
+        tbody_tr.append("<td style='text-align: right';>" + cleanSiteValue(obj.case_per_100k) + "</td>");
+        tbody_tr.append("<td style='text-align: right';>" + cleanSiteValue(obj.mort_per_100k) + "</td>");
         tbody.append(tbody_tr);
     }
 });
