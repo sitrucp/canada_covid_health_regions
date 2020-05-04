@@ -2,10 +2,10 @@
 //GET DATA=================================
 // get case, mortality csv files from working group github repository
 // get health region lookup csv from my github repository
-var file_cases = "https://raw.githubusercontent.com/ishaberry/Covid19Canada/master/cases.csv"
-var file_mortality = "https://raw.githubusercontent.com/ishaberry/Covid19Canada/master/mortality.csv"
-var file_update_time = "https://raw.githubusercontent.com/ishaberry/Covid19Canada/master/update_time.txt"
-var file_hr_lookup = "https://raw.githubusercontent.com/sitrucp/canada_covid_health_regions/master/health_regions_lookup.csv"
+var file_cases = "https://raw.githubusercontent.com/ishaberry/Covid19Canada/master/cases.csv";
+var file_mortality = "https://raw.githubusercontent.com/ishaberry/Covid19Canada/master/mortality.csv";
+var file_update_time = "https://raw.githubusercontent.com/ishaberry/Covid19Canada/master/update_time.txt";
+var file_hr_lookup = "https://raw.githubusercontent.com/sitrucp/canada_covid_health_regions/master/health_regions_lookup.csv";
 
 Promise.all([
     d3.csv(file_cases),

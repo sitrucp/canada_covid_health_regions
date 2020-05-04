@@ -41,12 +41,11 @@ str_total_case_new = df_table_data_final[df_table_data_final['website_name'].str
 
 str_total_mort_new = df_table_data_final[df_table_data_final['website_name'].str.contains("total", case=False)]["mort_count"].to_string(index=False)
 
-print('new case total:', str_total_case_new, 'prev case total:', str_total_case_prev)
-
 # only write to file if data is new
 if str_total_case_prev == str_total_case_new:
     print('no change, case total is still same as prev')
 else:
+    print('new cases found:', str_total_case_new, 'prev case total:', str_total_case_prev)
     # transform pandas dataframe into dictionary to write as json
     json_table = df_table_data_final.to_dict('records')
     # write updated montreal data json with variable name into new json file
