@@ -4,13 +4,16 @@ import requests
 from bs4 import BeautifulSoup
 from datetime import datetime
 import pandas as pd
+import os
 
+script_dir = os.path.dirname(__file__) #<-- absolute dir the script is in
 today_date = datetime.today().strftime('%Y-%m-%d %I:%M %p').lstrip("0").replace(" 0", " ")
 json_file = 'montreal_covid_data.json'
-df_montreal_regions_lookup = pd.read_csv('montreal_regions_lookup.csv')
+
+df_montreal_regions_lookup = pd.read_csv(os.path.join(script_dir, 'montreal_regions_lookup.csv'))
 
 # get last update case total to compare to new total
-file_total_case = open("total_case.txt","r")
+file_total_case = open(os.path.join(script_dir, "total_case.txt"),"r")
 str_total_case_prev = file_total_case.read()
 
 # get health montreal webpage html
