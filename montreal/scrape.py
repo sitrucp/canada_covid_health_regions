@@ -21,15 +21,10 @@ def main():
     df_montreal_regions_lookup = pd.read_csv(os.path.join(script_dir, 'montreal_regions_lookup.csv'))
 
     # get prev case total to compare to new case total
-    #file_total_case_prev = open(os.path.join(script_dir, "uploads/total_case_prev.txt"),"r")
-    #str_total_case_prev = file_total_case_prev.read()
-    #str_total_case_prev = file_total_case_prev.read()
     with open('uploads/montreal_covid_data.json') as f:
         string = f.read()
         string = string.replace('var covid_data = ', '')
         json_string = json.loads(string)
-    #df_montreal_covid_data = pd.read_json('montreal_covid_data.json')
-    #df_montreal_covid_data = pd.read_json(json_string)
     df_montreal_covid_data = pd.DataFrame.from_dict(json_string, orient='columns')
     df_total_row = df_montreal_covid_data[df_montreal_covid_data['website_name'].str.contains('total', regex=False, case=False, na=False)]
     str_total_case_prev = df_total_row['case_count'].values[0]
@@ -38,35 +33,28 @@ def main():
     url = 'https://santemontreal.qc.ca/en/public/coronavirus-covid-19/'
     page = requests.get(url)
     soup = BeautifulSoup(page.content, 'html.parser')
-
     # get all tables on webpage
     tables = soup.find_all('table')
     # select 4th table in list of tables on webpage
     table = tables[3]
-
     # read table into pandas dataframe
     df_table_data_all_cols = pd.read_html(str(table))[0]
-
-    # rename columns and only keep two first columns
+    # rename columns 
     df_table_data_all_cols.columns = ['region_name', 'case_count','case_percent','case_per_100k','mort_count', 'mort_per_100k']
-
     df_table_data = df_table_data_all_cols[['region_name','case_count','case_percent','case_per_100k','mort_count', 'mort_per_100k']]
 
-    # join lookup table on website name & region_name to get geojson_name field to use on map
+    # join lookup table to scrape data to get geojson_name field to use on map
     df_table_data_w_lookup = pd.merge(df_montreal_regions_lookup, df_table_data, left_on='website_name', right_on='region_name', how='left')
     df_table_data_final = df_table_data_w_lookup[['website_name', 'region_name', 'geojson_name', 'case_count','case_percent','case_per_100k','mort_count', 'mort_per_100k']]
 
-    # get case total to compare to prev total
-    str_total_case_new = df_table_data_final[df_table_data_final['website_name'].str.contains("total", case=False)]["case_count"].to_string(index=False)
-    # get mort total
-    #str_total_mort_new = df_table_data_final[df_table_data_final['website_name'].str.contains("total", case=False)]["mort_count"].to_string(index=False)
+    # get new case total to compare to prev total
+    str_total_case_new = df_table_data_final[df_table_data_final['website_name'].str.contains("total", case=False)]["case_count"].to_string(index=False).strip()
 
-    print('str_total_case_prev ', str_total_case_prev, ' str_total_case_new', str_total_case_new)
     # if new is diff from prev, update files and upload to aws
     if str_total_case_prev == str_total_case_new:
         scrape_result = 'no change, case total is still same as prev case total: ' + str_total_case_prev
-        upload_to_aws()
     else:
+        # create scrape result string to print to cron log
         scrape_result = 'new cases found: ' + str_total_case_new + ' prev case total: ' + str_total_case_prev
         # transform pandas dataframe into dictionary to write as json
         json_table = df_table_data_final.to_dict('records')
@@ -83,18 +71,18 @@ def main():
             json.dump(todays_date, f)
         upload_to_aws()
 
-    ## write success to cron log
+    ## write success scrape result to cron log
     print(datetime.now().strftime('%Y-%m-%d %H:%M ') + scrape_result)
     
 def upload_to_aws():
-    # get config details
+    # get config details for aws upload
     from config import config_details
     upload_path = config_details['upload_path']
     key_path = config_details['key_path']
     sys.path.insert(0, key_path)
     from aws_keys import canada_covid_aws_keys
 
-    ## create aws S3 connection and bucket
+    ## create aws S3 connection
     conn = S3Connection(canada_covid_aws_keys['AWS_KEY'], canada_covid_aws_keys['AWS_SECRET'])
     bucket = conn.get_bucket('canada-covid-data')
     
