@@ -13,15 +13,26 @@ from os.path import isfile, join
 import sys
 
 def main():
+    # set variables
     script_dir = os.path.dirname(__file__) 
-    today_date = datetime.today().strftime('%Y-%m-%d %I:%M %p').lstrip("0").replace(" 0", " ")
-    json_file = 'montreal_covid_data.json'
+    todays_date = datetime.today().strftime('%Y-%m-%d %I:%M %p').lstrip("0").replace(" 0", " ")
 
+    # get lookup file to join to web scrape data
     df_montreal_regions_lookup = pd.read_csv(os.path.join(script_dir, 'montreal_regions_lookup.csv'))
 
-    # get last update case total to compare to new total
-    file_total_case = open(os.path.join(script_dir, "uploads/total_case.txt"),"r")
-    str_total_case_prev = file_total_case.read()
+    # get prev case total to compare to new case total
+    #file_total_case_prev = open(os.path.join(script_dir, "uploads/total_case_prev.txt"),"r")
+    #str_total_case_prev = file_total_case_prev.read()
+    #str_total_case_prev = file_total_case_prev.read()
+    with open('uploads/montreal_covid_data.json') as f:
+        string = f.read()
+        string = string.replace('var covid_data = ', '')
+        json_string = json.loads(string)
+    #df_montreal_covid_data = pd.read_json('montreal_covid_data.json')
+    #df_montreal_covid_data = pd.read_json(json_string)
+    df_montreal_covid_data = pd.DataFrame.from_dict(json_string, orient='columns')
+    df_total_row = df_montreal_covid_data[df_montreal_covid_data['website_name'].str.contains('total', regex=False, case=False, na=False)]
+    str_total_case_prev = df_total_row['case_count'].values[0]
 
     # get health montreal webpage html
     url = 'https://santemontreal.qc.ca/en/public/coronavirus-covid-19/'
@@ -35,7 +46,6 @@ def main():
 
     # read table into pandas dataframe
     df_table_data_all_cols = pd.read_html(str(table))[0]
-    # print(list(df_table_data_all_cols))
 
     # rename columns and only keep two first columns
     df_table_data_all_cols.columns = ['region_name', 'case_count','case_percent','case_per_100k','mort_count', 'mort_per_100k']
@@ -46,65 +56,59 @@ def main():
     df_table_data_w_lookup = pd.merge(df_montreal_regions_lookup, df_table_data, left_on='website_name', right_on='region_name', how='left')
     df_table_data_final = df_table_data_w_lookup[['website_name', 'region_name', 'geojson_name', 'case_count','case_percent','case_per_100k','mort_count', 'mort_per_100k']]
 
-    # get total value to compare to old value to see if data is updated 
+    # get case total to compare to prev total
     str_total_case_new = df_table_data_final[df_table_data_final['website_name'].str.contains("total", case=False)]["case_count"].to_string(index=False)
+    # get mort total
+    #str_total_mort_new = df_table_data_final[df_table_data_final['website_name'].str.contains("total", case=False)]["mort_count"].to_string(index=False)
 
-    str_total_mort_new = df_table_data_final[df_table_data_final['website_name'].str.contains("total", case=False)]["mort_count"].to_string(index=False)
-
-    # only write to file if data is new
+    print('str_total_case_prev ', str_total_case_prev, ' str_total_case_new', str_total_case_new)
+    # if new is diff from prev, update files and upload to aws
     if str_total_case_prev == str_total_case_new:
         scrape_result = 'no change, case total is still same as prev case total: ' + str_total_case_prev
+        upload_to_aws()
     else:
         scrape_result = 'new cases found: ' + str_total_case_new + ' prev case total: ' + str_total_case_prev
         # transform pandas dataframe into dictionary to write as json
         json_table = df_table_data_final.to_dict('records')
-        # write updated montreal data json with variable name into new json file
-        with open(json_file, 'w') as f:
+        # write new montreal covid_data to json file for map to use
+        with open('uploads/montreal_covid_data.json', 'w') as f:
             f.write('var covid_data = \n')
             json.dump(json_table, f, ensure_ascii=True)
-        # write new total for next time
-        with open('uploads/total_case.txt', 'w') as f:
+        # write new total to use in next run comparison
+        with open('uploads/total_case_prev.txt', 'w') as f:
             f.write(str_total_case_new)
-        with open('uploads/total_mort.txt', 'w') as f:
-            f.write(str_total_mort_new)
             # write today's date to use in index page as last updated date
         with open('uploads/last_update_date.json', 'w') as f:
             f.write('var last_update_date = \n')
-            json.dump(today_date, f)
+            json.dump(todays_date, f)
         upload_to_aws()
 
     ## write success to cron log
     print(datetime.now().strftime('%Y-%m-%d %H:%M ') + scrape_result)
     
 def upload_to_aws():
-    #upload_path = 'C:/Users/bb/OneDrive - 009co/www/cron/covid_mtl_scrape/uploads/'
-    upload_path = '/home/sitrucp/cron/covid_mtl_scrape/uploads/'
-    #upload_file = 'montreal_covid_data.json'
-    #upload_file_path = join(upload_path, upload_file)
-
-    #sys.path.insert(0, 'C:/Users/bb/OneDrive - 009co/env_vars/')
-    sys.path.insert(0, '/home/sitrucp/config/')
+    # get config details
+    from config import config_details
+    upload_path = config_details['upload_path']
+    key_path = config_details['key_path']
+    sys.path.insert(0, key_path)
     from aws_keys import canada_covid_aws_keys
 
-    ## create aws S3 connection
+    ## create aws S3 connection and bucket
     conn = S3Connection(canada_covid_aws_keys['AWS_KEY'], canada_covid_aws_keys['AWS_SECRET'])
     bucket = conn.get_bucket('canada-covid-data')
-
-    # delete exisiting s3 file
-    #bucket.delete_key(upload_file)
-    #k = bucket.new_key(upload_file)
-    #k.set_contents_from_filename(upload_file)
-
+    
+    # identify files to be uploaded to aws
     upload_files = [f for f in listdir(upload_path) if isfile(join(upload_path, f))]
 
-    # delete existing files in bucket
+    # delete existing files from bucket
     for key in bucket.list():
         bucket.delete_key(key)
-        
+
+    # write new files to bucket 
     for file in upload_files:
         k = Key(bucket)
         k.key = file
-        print(file)
         k.set_contents_from_filename(upload_path + file)
 
 if __name__ == "__main__":
