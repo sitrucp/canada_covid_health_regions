@@ -3,6 +3,7 @@ import csv
 import requests
 from bs4 import BeautifulSoup
 from datetime import datetime
+from pytz import timezone
 import pandas as pd
 from boto.s3.connection import S3Connection
 from boto.s3.key import Key
@@ -15,7 +16,9 @@ import sys
 def main():
     # set variables
     script_dir = os.path.dirname(__file__) 
-    todays_date = datetime.today().strftime('%Y-%m-%d %I:%M %p').lstrip("0").replace(" 0", " ")
+    eastern = timezone('US/Eastern')
+    todays_date = datetime.now(timezone('US/Eastern')).strftime('%Y-%m-%d %I:%M %p').lstrip("0").replace(" 0", " ")
+    print(todays_date)
 
     # get lookup file to join to web scrape data
     df_montreal_regions_lookup = pd.read_csv(os.path.join(script_dir, 'montreal_regions_lookup.csv'))
