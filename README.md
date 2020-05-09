@@ -19,5 +19,11 @@ To address boundary naming variance issues above, a lookup or mapping table was 
 
 Edit: As of April 9 the map now retrieves COVID-19 Canada Open Data Working Group data  automatically directly from working group Github repository when the map web page is opened or refreshed in browser by using D3.js to get and transform data from cases.csv and mortaliy.csv files. This code is included in "leaflet_map.js" file. Previously, the  data manipulation was done manually using Excel Power Query to retrieve and transform data files to create map "covid_data" json dataset.
 
-Montreal Map: A separate map was created for Montreal as it is Canada's "covid hotspot". The boundaries used on the Montreal map are Montreal island neighbourhood or linked cities. The confirmed cases counts come from the <a href = "https://santemontreal.qc.ca/en/public/coronavirus-covid-19/">Quebec Health Montreal website</a>. As of April 9 the Montreal map data uses server based cron job using Python BeautifulSoup4, Requests, Pandas to retrieve and transform webpage table data and create the json data file "montreal_confirmed_cases.json".
+**Montreal Confirmed COVID-19 Cases By City Neighbourhoods**
+
+A separate map was created for Montreal as it is Canada's "covid hotspot". The boundaries used on the Montreal map are Montreal island neighbourhood or linked cities. The confirmed cases counts come from the <a href = "https://santemontreal.qc.ca/en/public/coronavirus-covid-19/">Quebec Health Montreal website</a>. 
+
+The Montreal map data is automatically retrieved from Health Montreal web page using web server based cron job and Python BeautifulSoup4, Requests, and Pandas to retrieve and transform webpage table data and create the json data file "montreal_confirmed_cases.json". 
+
+The Montreal map data web scraping code is in another repository <a href = "https://github.com/sitrucp/covid_montreal_scrape_data">https://github.com/sitrucp/covid_montreal_scrape_data</a>.
 
