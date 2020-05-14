@@ -208,14 +208,14 @@ function getWebSiteName(geojsonName) {
     }
 
 function getColor(n) {
-    return n > 1000 ? '#800026'
-        : n > 800 ? '#bd0026' 
-        : n > 600 ? '#e31a1c' 
-        : n > 400 ? '#fc4e2a' 
-        : n > 300 ? '#fd8d3c'
-        : n > 200  ? '#feb24c'
-        : n > 100  ? '#fed976'
-        : n > 50  ? '#ffeda0'
+    return n > 1500 ? '#800026'
+        : n > 1300 ? '#bd0026' 
+        : n > 1100 ? '#e31a1c' 
+        : n > 900 ? '#fc4e2a' 
+        : n > 700 ? '#fd8d3c'
+        : n > 500  ? '#feb24c'
+        : n > 300  ? '#fed976'
+        : n > 100  ? '#ffeda0'
         : n > 0  ? '#ffffcc'
         : '#ffffff';
 }
@@ -224,7 +224,7 @@ function getColor(n) {
 var legend = L.control({position: 'topright'});
 legend.onAdd = function (map) {
     var div = L.DomUtil.create('div', 'infobox legend'),
-        grades = [0, 50, 100, 200, 300, 400, 600, 800, 1000],
+        grades = [0, 100, 300, 500, 700, 900, 1100, 1300, 1500],
         labels = [];
     // loop through our density intervals and generate a label with a colored square for each interval
     for (var i = 0; i < grades.length; i++) {

@@ -49,12 +49,6 @@ Promise.all([
         return xs.map(row => typeof iy.get(row[primary]) !== 'undefined' ? sel(row, iy.get(row[primary])): sel(row, def));
     };
 
-    // summarize cases and mortalities counts overall for header
-    var caseTotalCanada = cases.length;
-    var mortTotalCanada = mortalities.length;
-    var div = document.getElementById('header');
-    div.innerHTML += 'Total cases: ' + caseTotalCanada.toLocaleString() + ' Total mortalities: ' + mortTotalCanada.toLocaleString() + ' Date data updated: ' + lastUpdated;
-
     // left join lookup to case to get statscan region name
     const caseWithStatscan = equijoinWithDefault(
         cases, regionLookup, 
@@ -71,120 +65,8 @@ Promise.all([
         ({date_death_report, report_date, province, authority_report_health_region, statscan_arcgis_health_region}), 
         {province_health_region:null});
 
-    // summarize case counts by prov | health_region concat
-    var caseByRegion = d3.nest()
-        .key(function(d) { return d.prov_health_region_case; })
-        .rollup(function(v) { return v.length; })
-        .entries(cases)
-        .map(function(group) {
-            return {
-            case_prov_health_region: group.key,
-            case_count: group.value
-            }
-        });
-    
-    // summarize mortality counts by prov | health_region concat
-    var mortByRegion = d3.nest()
-        .key(function(d) { return d.prov_health_region_mort; })
-        .rollup(function(v) { return v.length; })
-        .entries(mortalities)
-        .map(function(group) {
-            return {
-            mort_prov_health_region: group.key,
-            mort_count: group.value
-            }
-        });
-
-    // left join summarized case records to lookup
-    const caseByRegionLookup = equijoinWithDefault(
-        regionLookup, caseByRegion, 
-        "province_health_region", "case_prov_health_region", 
-        ({province, authority_report_health_region, statscan_arcgis_health_region}, {case_prov_health_region, case_count}) => 
-        ({province, authority_report_health_region, statscan_arcgis_health_region, case_prov_health_region, case_count}), 
-        {case_count:0, case_prov_health_region: "ProvinceName|Not Reported"});
-
-    // left join summarized mort records to lookup
-    const mortByRegionLookup = equijoinWithDefault(
-        regionLookup, mortByRegion, 
-        "province_health_region", "mort_prov_health_region", 
-        ({province, authority_report_health_region, statscan_arcgis_health_region}, {mort_prov_health_region, mort_count}) => 
-        ({province, authority_report_health_region, statscan_arcgis_health_region, mort_prov_health_region, mort_count}), 
-        {mort_count:0, case_prov_health_region: "ProvinceName|Not Reported"});
-    
-    // add mortalities count value to cases array
-    const caseMortByRegion = equijoinWithDefault(
-        caseByRegionLookup, mortByRegionLookup, 
-        "case_prov_health_region", "mort_prov_health_region", 
-        ({case_prov_health_region, case_count}, {mort_count}) => 
-        ({case_prov_health_region, case_count, mort_count}), 
-        {mort_count:0});
-
-    const covidData = equijoinWithDefault(
-        regionLookup, caseMortByRegion, 
-        "province_health_region", "case_prov_health_region", 
-        ({province, authority_report_health_region, statscan_arcgis_health_region}, {mort_count, case_count}) => 
-        ({province, authority_report_health_region, statscan_arcgis_health_region, case_count, mort_count}), 
-        {province_health_region:null,case_count:0, mort_count:0});
-
-//CREATE MAP=================================
-    // create and populate map with covidData from above
-    var map = L.map('map',{ zoomControl: false }).setView(['53.145743','-95.424717'], 4);
-    map.once('focus', function() { map.scrollWheelZoom.enable(); });
-    L.control.zoom({ position: 'bottomright' }).addTo(map);
-
-    L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
-        maxZoom: 18,
-        attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
-            '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
-            'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-        id: 'mapbox/light-v9',
-        tileSize: 512,
-        zoomOffset: -1
-    }).addTo(map);
-
-    // add statscan health region boundaries to map
-    var geojson = L.geoJson(health_regions, {
-        style: function (feature) {
-            return {
-                color: 'grey', //shape border color
-                dashArray: '3',
-                weight: 1,
-                opacity: 1,
-                fillColor: getRegionColor(feature.properties.ENG_LABEL),
-                fillOpacity: .7
-            };
-        },
-        onEachFeature: function (feature, layer) {
-            layer.on({
-                mouseover: mouseOverActions,
-                mouseout: mouseOutActions,
-                click: showRegionDetails
-            });
-        }
-    }).addTo(map);
-
-    // action when user clicks on map boundary area
-    function showRegionDetails(e) {
-        var layer = e.target;
-        // change region style when hover over
-        layer.setStyle({
-            color: 'black', //shape border color
-            dashArray: '',
-            weight: 2,
-            opacity: 1,
-            //fillColor: 'blue',
-            //fillOpacity: 0.3
-        });
-        if (!L.Browser.ie && !L.Browser.opera) {
-            layer.bringToFront();
-        }
-        var statscanRegion = layer.feature.properties.ENG_LABEL;
-        var regionCaseCount = getCaseCount(statscanRegion);
-        var regionMortCount = getMortCount(statscanRegion);
-        var regionProvince = getProvince(statscanRegion);
-        var regionAuthorityName = getAuthorityName(statscanRegion);
-        var casePctCanada = parseFloat(regionCaseCount / caseTotalCanada * 100).toFixed(2)+"%"
-        var mortPctCanada = parseFloat(regionMortCount / mortTotalCanada * 100).toFixed(2)+"%"
+///// from here loop through regions and create each 
+///// trace datasets
 
         // filter to case data to selected region
         var caseSelectedRegion = caseWithStatscan.filter(function(row) { 
@@ -195,23 +77,6 @@ Promise.all([
         var mortSelectedRegion = mortWithStatscan.filter(function(d) { 
             return d.statscan_arcgis_health_region === statscanRegion; 
         });
-
-        // get min and max case dates for region details 
-        caseDates = caseSelectedRegion.map(function(d) {
-            return {"report_date": d.report_date};
-        });
-        minCaseDate = d3.min(caseDates.map(d=>d.report_date));
-        maxCaseDate = d3.max(caseDates.map(d=>d.report_date));
-    
-        // get min and max mort dates for region details 
-        mortDates = mortSelectedRegion.map(function(d) {
-            return {"report_date": d.report_date};
-        });
-        minMortDate = d3.min(mortDates.map(d=>d.report_date));
-        maxMortDate = d3.max(mortDates.map(d=>d.report_date));
-    
-        // write region details to index page region_details div
-        document.getElementById('region_details').innerHTML = '<p class="small">Province:' + regionProvince + ': <br>Statscan Region Name: ' + statscanRegion + '<br>Prov Region Name: ' + regionAuthorityName + '<br>Confirmed cases: ' + regionCaseCount + ' (' + casePctCanada + ' Canada)' + '<br>Mortalities: ' + regionMortCount + ' (' + mortPctCanada + ' Canada)' + '<br>First case: ' + minCaseDate + '<br>First mortality: ' + minMortDate + '<br>Mort per case: ' + getRatioMortCase(regionMortCount,regionCaseCount) + '</p><p></p>';
         
         // group case counts by date to use in selected region chart
         var caseRegionByDate = d3.nest()
@@ -224,7 +89,6 @@ Promise.all([
                 case_count: group.value
             }
         });
-        console.log(JSON.stringify(caseRegionByDate))
  
         // group mort counts by date to use in selected region chart
         var mortRegionByDate = d3.nest()
@@ -237,81 +101,43 @@ Promise.all([
                 mort_count: group.value
             }
         });
-
-        function getRatioMortCase(numerator, denominator) {
-            if (denominator === 0 || isNaN(denominator)) {
-                    return null;
-            }
-            else {
-                    return (numerator / denominator).toFixed(3);
-            }
-        }
-
+        
         // sort array by report_date bc orig csv is not always in date order
         var caseRegionByDateSorted = caseRegionByDate.sort(function(a, b) {
             return new Date(a.report_date) - new Date(b.report_date);
         });
-
-        // create cum case counts from sorted dataset
-        caseRegionByDateCum = 
-        caseRegionByDateSorted.reduce((acc, i, index) => {
-            acc[index] = {
-            report_date: i.report_date,
-            case_count: i.case_count + (index > 0 ? acc[index - 1].case_count : 0)
-            };
-            return acc;
-        }, []);
-
-        // create daily new case counts from sorted dataset
-        caseRegionByDateNew = 
-        caseRegionByDateSorted.reduce((acc, i, index) => {
-            acc[index] = {
-            report_date: i.report_date,
-            case_count: i.case_count + (index > 0 ? acc[index - 1].case_count : 0)
-            };
-            return acc;
-        }, []);
 
         // sort array by report_date bc orig csv is not always in date order
         var mortRegionByDateSorted = mortRegionByDate.sort(function(a, b) {
             return new Date(a.report_date) - new Date(b.report_date);
         });
 
-        // create cum mort counts from sorted dataset
-        mortRegionByDateCum = 
-        mortRegionByDateSorted.reduce((acc, i, index) => {
-            acc[index] = {
-            report_date: i.report_date,
-            mort_count: i.mort_count + (index > 0 ? acc[index - 1].mort_count : 0)
-            };
-            return acc;
-        }, []);
+    //// data now ready for use in loop to create charts
+    /// still need list of regions for loop
+    /// ideally group regions by province but that is another loop for later
+    var regions = get all regions from cases to loop through below;
+    var traces = [];
 
-        // not used by could be used to transform daily counts to log
-        function log(x) {
-            return Math.log(x) / Math.LN10;
-        }
-
-        // create daily cases chart==================
-        // get max case count for region for y axis
-        var regionMaxDailyCaseCount = d3.max(caseRegionByDate.map(d=>d.case_count));
-        var yaxis2_type = 'linear';
-        var yaxis2RangeMax = regionCaseCount;
-        
-        // not used but could be used to change y2 scale to log
-        function changeY2scale() {
-            var yaxis2_type = 'log';
-            var yaxis2RangeMax = log(regionCaseCount);
-        }
-        
-        //document.getElementById('region_daily_cases_chart').innerHTML = '<button onclick="changeY2scale()">Log</button>';
-
-        if(regionMaxDailyCaseCount > 0) {
+    for region in regions {
+        // filter to case data to selected region
+        var caseSelectedRegion = caseWithStatscan.filter(function(row) { 
+            return row.cases === region; 
+        });
+    
             // create x and y axis data sets
             var xCases = [];
             var yCases = [];
             var xCasesCum = [];
             var yCasesCum = [];
+
+            var dict = []; // create an empty array
+
+            dict.push({
+                key:   "keyName",
+                value: "the value"
+            });
+
+
 
             for (var i=0; i<caseRegionByDate.length; i++) {
                 row = caseRegionByDate[i];
