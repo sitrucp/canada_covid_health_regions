@@ -224,8 +224,7 @@ Promise.all([
                 case_count: group.value
             }
         });
-        console.log(JSON.stringify(caseRegionByDate))
- 
+         
         // group mort counts by date to use in selected region chart
         var mortRegionByDate = d3.nest()
         .key(function(d) { return d.report_date; })
@@ -329,6 +328,7 @@ Promise.all([
                 x: xCases,
                 y: yCases,
                 type: 'bar',
+                width: 1000*3600*24
             };
             var casesCum = {
                 name: 'Cumulative',
@@ -336,7 +336,7 @@ Promise.all([
                 y: yCasesCum,
                 yaxis: 'y2',
                 type: 'scatter',
-                mode: 'line'
+                mode: 'lines'
             };
             var caseChartData = [casesDaily, casesCum];
             var caseChartLayout = {
@@ -372,6 +372,7 @@ Promise.all([
                     pad: 2
                 },
                 xaxis: { 
+                    autotick: true,
                     mirror: 'allticks',
                     type: "date",
                     tickformat: "%b-%d",
@@ -379,7 +380,7 @@ Promise.all([
                         size: 10
                     },
                     tickangle: 0,
-                    autorange: false,
+                    //autorange: false,
                     range:[
                         new Date(minCaseDate).getTime(),
                         new Date(maxCaseDate).getTime()
@@ -444,14 +445,15 @@ Promise.all([
                 x: xMort,
                 y: yMort,
                 type: 'bar',
+                width: 1000*3600*24
             };
             var mortsCum = {
                 name: 'Cumulative',
                 x: xMortCum,
                 y: yMortCum,
                 yaxis: 'y2',
-                mode: 'line',
-                type: 'scatter'
+                type: 'scatter',
+                mode: 'lines',
             };
             var mortChartData = [mortsDaily, mortsCum];
             var mortChartLayout = {
@@ -484,6 +486,7 @@ Promise.all([
                     pad: 5
                 },
                 xaxis: { 
+                    autotick: true,
                     mirror: 'allticks',
                     type: "date",
                     tickformat: "%b-%d",
@@ -491,7 +494,6 @@ Promise.all([
                         size: 10
                     },
                     tickangle: 0,
-                    autorange: false,
                     range:[
                         new Date(minCaseDate).getTime(), 
                         new Date(maxCaseDate).getTime()
@@ -508,6 +510,7 @@ Promise.all([
                     tickfont: {
                         size: 10
                     },
+                    tickformat: ',d',
                     autorange: false, 
                     range:[0, regionMaxDailyMortCount],
                     showgrid:false
@@ -516,6 +519,7 @@ Promise.all([
                     tickfont: {
                         size: 10
                     },
+                    tickformat: ',d',
                     autorange: false, 
                     range:[0, regionMortCount],
                     overlaying: 'y',
