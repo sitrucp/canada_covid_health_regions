@@ -5,7 +5,7 @@
 
 html, body {
     height: 100%;
-    margin:10px;  
+    margin: 10px;  
     font-family: Arial, Helvetica, sans-serif;
 }
 
@@ -26,9 +26,31 @@ td {
     border-bottom: 1px solid #ddd;
 }
 
+#region_details {
+    padding: 5px;
+    margin: 5px;
+}
+
+#project_details {
+    padding: 5px;
+    margin: 5px;
+}
+
+.total-box {
+    font: 18px/20px;
+    font-weight: 500;
+    color: #023858;
+    background: white;
+    border: 1px solid;
+    border-color: rgba(0,0,0,0.2);
+    text-align: center;
+    padding: 5px;
+    margin: 5px;
+}
+
 .infobox {
     padding: 6px 8px;
-    font: 14px/16px Arial, Helvetica, sans-serif;
+    font: 14px/16px;
     background: white;
     background: rgba(255,255,255,0.8);
     box-shadow: 0 0 15px rgba(0,0,0,0.2);
@@ -54,3 +76,34 @@ td {
 }
 
 
+/* clear fix */
+.grid:after {
+    content: '';
+    display: block;
+    clear: both;
+  }
+  
+  .grid-item {
+    position: relative;
+    float: left;
+    width: 220;
+    height: 50px;
+    margin: 10px;
+    padding: 0px;
+  }
+  
+  .btn{margin-bottom:10px;}
+  
+  .text-div {
+      word-wrap: break-word;
+  }
+  
+  .grid-item > * {
+      margin: 0;
+      padding: 0;
+    }
+  
+  .chart-text {
+      font-size: 10px;
+     
+  }

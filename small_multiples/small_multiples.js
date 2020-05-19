@@ -96,11 +96,12 @@ Promise.all([
         var maxRegionCases = d3.max(y);
         var maxRegionCaseDate = d3.max(x);
         var minRegionCaseDate = d3.min(x);
-        const timeDiff = (new Date(lastUpdated)) - (new Date(maxRegionCaseDate));
-        const daysLastCase = parseInt(Math.round((timeDiff / (1000 * 60 * 60 * 24)-1)));
-        var daysColor = '';
-        var colorWord = '';
+        var timeDiff = (new Date(lastUpdated)) - (new Date(maxRegionCaseDate));
+        var daysLastCase = parseInt(Math.round((timeDiff / (1000 * 60 * 60 * 24)-1)));
+
         function fillColor(days) {
+            var daysColor = '';
+            var colorWord = '';
             if (days === 0) {
                 var daysColor = '#ff6666'; // red
                 var colorWord = 'red';

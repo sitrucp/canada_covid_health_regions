@@ -207,18 +207,19 @@ function getWebSiteName(geojsonName) {
     return webSiteName;
     }
 
-function getColor(n) {
-    return n > 1500 ? '#800026'
-        : n > 1300 ? '#bd0026' 
-        : n > 1100 ? '#e31a1c' 
-        : n > 900 ? '#fc4e2a' 
-        : n > 700 ? '#fd8d3c'
-        : n > 500  ? '#feb24c'
-        : n > 300  ? '#fed976'
-        : n > 100  ? '#ffeda0'
-        : n > 0  ? '#ffffcc'
-        : '#ffffff';
-}
+    // get color based on case count
+    function getColor(n) {
+        return n > 1500 ? '#023858'
+            : n > 1300 ? '#045a8d' 
+            : n > 1100 ? '#0570b0' 
+            : n > 900 ? '#3690c0'
+            : n > 700  ? '#74a9cf'
+            : n > 500  ? '#a6bddb'
+            : n > 300  ? '#d0d1e6'
+            : n > 100  ? '#ece7f2'
+            : n > 0  ? '#fff7fb'
+            : '#ffffff';
+    }
 
 // add legend with color gradients by case count
 var legend = L.control({position: 'topright'});

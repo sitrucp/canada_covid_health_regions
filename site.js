@@ -52,9 +52,13 @@ Promise.all([
     // summarize cases and mortalities counts overall for header
     var caseTotalCanada = cases.length;
     var mortTotalCanada = mortalities.length;
-    var div = document.getElementById('header');
-    div.innerHTML += 'Total cases: ' + caseTotalCanada.toLocaleString() + ' Total mortalities: ' + mortTotalCanada.toLocaleString() + ' Date data updated: ' + lastUpdated;
-
+    //var div_total_cases = document.getElementById('total_cases');
+    document.getElementById('total_cases').innerHTML += caseTotalCanada.toLocaleString();
+    document.getElementById('total_morts').innerHTML += mortTotalCanada.toLocaleString();
+    document.getElementById('new_cases').innerHTML += caseTotalCanada.toLocaleString();
+    document.getElementById('new_morts').innerHTML += mortTotalCanada.toLocaleString();
+    document.getElementById('title').innerHTML += ' <small class="text-muted">Last updated: ' + lastUpdated + '</small>';
+     
     // left join lookup to case to get statscan region name
     const caseWithStatscan = equijoinWithDefault(
         cases, regionLookup, 
@@ -183,9 +187,9 @@ Promise.all([
         var regionMortCount = getMortCount(statscanRegion);
         var regionProvince = getProvince(statscanRegion);
         var regionAuthorityName = getAuthorityName(statscanRegion);
-        var casePctCanada = parseFloat(regionCaseCount / caseTotalCanada * 100).toFixed(2)+"%"
-        var mortPctCanada = parseFloat(regionMortCount / mortTotalCanada * 100).toFixed(2)+"%"
-
+        var casePctCanada = parseFloat(regionCaseCount / caseTotalCanada * 100).toFixed(2)+"%";
+        var mortPctCanada = parseFloat(regionMortCount / mortTotalCanada * 100).toFixed(2)+"%";
+        
         // filter to case data to selected region
         var caseSelectedRegion = caseWithStatscan.filter(function(row) { 
             return row.statscan_arcgis_health_region === statscanRegion; 
@@ -210,8 +214,26 @@ Promise.all([
         minMortDate = d3.min(mortDates.map(d=>d.report_date));
         maxMortDate = d3.max(mortDates.map(d=>d.report_date));
     
+        var timeDiff = (new Date(lastUpdated)) - (new Date(maxCaseDate));
+        var daysLastCase = parseInt(Math.round((timeDiff / (1000 * 60 * 60 * 24)-1)));
+
+        function fillColor(days) {
+            var daysColor = '';
+            if (days === 0) {
+                var daysColor = '#ff6666'; // red
+                var colorWord = 'red';
+            } else if (days < 8) {
+                var daysColor = '#ffc266'; // orange
+                var colorWord = 'orange';
+            } else {
+                var daysColor = '#99e699'; // green
+                var colorWord = 'green';
+            }
+            return daysColor
+        }
+
         // write region details to index page region_details div
-        document.getElementById('region_details').innerHTML = '<p class="small">Province:' + regionProvince + ': <br>Statscan Region Name: ' + statscanRegion + '<br>Prov Region Name: ' + regionAuthorityName + '<br>Confirmed cases: ' + regionCaseCount + ' (' + casePctCanada + ' Canada)' + '<br>Mortalities: ' + regionMortCount + ' (' + mortPctCanada + ' Canada)' + '<br>First case: ' + minCaseDate + '<br>First mortality: ' + minMortDate + '<br>Mort per case: ' + getRatioMortCase(regionMortCount,regionCaseCount) + '</p><p></p>';
+        document.getElementById('region_details').innerHTML = '<small><p><strong>' + regionProvince + '<br>' + statscanRegion + '</strong><br>Cases: ' + regionCaseCount.toLocaleString() + ' (' + casePctCanada + ' Canada)' + '<br>Mortalities: ' + regionMortCount.toLocaleString() + ' (' + mortPctCanada + ' Canada)' + '<br>First case: ' + minCaseDate + '<br>First mortality: ' + minMortDate + '<br>Mort per case: ' + getRatioMortCase(regionMortCount,regionCaseCount)  + '<br>Days since last case: <span style="font-weight:bold; color:' + fillColor(daysLastCase) + '";>' + daysLastCase + '</span></p></small>';
         
         // group case counts by date to use in selected region chart
         var caseRegionByDate = d3.nest()
@@ -328,7 +350,14 @@ Promise.all([
                 x: xCases,
                 y: yCases,
                 type: 'bar',
-                width: 1000*3600*24
+                width: 1000*3600*24,
+                marker: {
+                    color: 'rgb(54,144,192)',
+                    line: {
+                      color: 'rgb(4,90,141)',
+                      width: 1
+                    }
+                  }
             };
             var casesCum = {
                 name: 'Cumulative',
@@ -445,7 +474,14 @@ Promise.all([
                 x: xMort,
                 y: yMort,
                 type: 'bar',
-                width: 1000*3600*24
+                width: 1000*3600*24,
+                marker: {
+                    color: 'rgb(54,144,192)',
+                    line: {
+                      color: 'rgb(4,90,141)',
+                      width: 1
+                    }
+                  }
             };
             var mortsCum = {
                 name: 'Cumulative',
@@ -552,10 +588,10 @@ Promise.all([
         var regionCaseCount = getCaseCount(regionName);
         var regionMortCount = getMortCount(regionName);
         var regionProvince = getProvince(regionName);
-        var casePctCanada = parseFloat(regionCaseCount / caseTotalCanada * 100).toFixed(2)+"%"
-        var mortPctCanada = parseFloat(regionMortCount / mortTotalCanada * 100).toFixed(2)+"%"
+        var casePctCanada = parseFloat(regionCaseCount / caseTotalCanada * 100).toFixed(2)+"%";
+        var mortPctCanada = parseFloat(regionMortCount / mortTotalCanada * 100).toFixed(2)+"%";
 
-        document.getElementsByClassName('infobox')[0].innerHTML = '<p">Province:' + regionProvince + ' <br>' + 'Health Region: ' + regionName + '<br>' + 'Confirmed cases: ' + regionCaseCount + ' (' + casePctCanada + ' Canada)' + '<br>' + 'Mortalities: ' + regionMortCount + ' (' + mortPctCanada + ' Canada)<br>' + 'Mort per case: ' + getRatioMortCase(regionMortCount,regionCaseCount) + '</p>';
+        document.getElementsByClassName('infobox')[0].innerHTML = '<p">Province:' + regionProvince + ' <br>' + 'Health Region: ' + regionName + '<br>' + 'Confirmed cases: ' + regionCaseCount.toLocaleString() + ' (' + casePctCanada + ' Canada)' + '<br>' + 'Mortalities: ' + regionMortCount.toLocaleString() + ' (' + mortPctCanada + ' Canada)<br>' + 'Mort per case: ' + getRatioMortCase(regionMortCount,regionCaseCount) + '</p>';
     };
 
     function getRatioMortCase(numerator, denominator) {
@@ -652,15 +688,15 @@ Promise.all([
 
     // get color based on case count
     function getColor(n) {
-        return n > 3000 ? '#800026'
-            : n > 2000 ? '#bd0026' 
-            : n > 1000 ? '#e31a1c' 
-            : n > 500 ? '#fc4e2a'
-            : n > 250  ? '#fd8d3c'
-            : n > 100  ? '#feb24c'
-            : n > 50  ? '#fed976'
-            : n > 10  ? '#ffeda0'
-            : n > -1  ? '#ffffcc'
+        return n > 3000 ? '#023858'
+            : n > 2000 ? '#045a8d' 
+            : n > 1000 ? '#0570b0' 
+            : n > 500 ? '#3690c0'
+            : n > 250  ? '#74a9cf'
+            : n > 100  ? '#a6bddb'
+            : n > 50  ? '#d0d1e6'
+            : n > 10  ? '#ece7f2'
+            : n > -1  ? '#fff7fb'
             : '#ffffff';
     }
 
