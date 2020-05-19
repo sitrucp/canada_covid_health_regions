@@ -96,15 +96,15 @@ Promise.all([
         var maxRegionCases = d3.max(y);
         var maxRegionCaseDate = d3.max(x);
         var minRegionCaseDate = d3.min(x);
-        const timeDiff = (new Date()) - (new Date(maxRegionCaseDate));
-        const daysLastCase = parseInt(Math.round((timeDiff / (1000 * 60 * 60 * 24)-2)));
+        const timeDiff = (new Date(lastUpdated)) - (new Date(maxRegionCaseDate));
+        const daysLastCase = parseInt(Math.round((timeDiff / (1000 * 60 * 60 * 24)-1)));
         var daysColor = '';
         var colorWord = '';
         function fillColor(days) {
             if (days === 0) {
                 var daysColor = '#ff6666'; // red
                 var colorWord = 'red';
-            } else if (days < 7) {
+            } else if (days < 8) {
                 var daysColor = '#ffc266'; // orange
                 var colorWord = 'orange';
             } else {
