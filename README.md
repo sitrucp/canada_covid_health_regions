@@ -27,3 +27,6 @@ The Montreal map data is automatically retrieved from Health Montreal web page u
 
 The Montreal map data web scraping code is in another repository <a href = "https://github.com/sitrucp/covid_montreal_scrape_data">https://github.com/sitrucp/covid_montreal_scrape_data</a>.
 
+**Interactive sort & filter small multiple charts**
+This uses same data as above but visualizes each health region as separate small area chart using Plotly.js for charting and Isotope.js to present small multiples in responsive, interactive grid that can be sorted and filtered.
+
