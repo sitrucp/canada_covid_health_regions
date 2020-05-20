@@ -255,8 +255,16 @@ Promise.all([
             return daysColor
         }
 
+        function checkNull(variable) {
+            if (variable){
+                return variable
+            } else {
+                return 'na'
+            }
+        }
+
         // write region details to index page region_details div
-        document.getElementById('region_details').innerHTML = '<small><p><strong>' + regionProvince + '<br>' + statscanRegion + '</strong><br>Cases: ' + regionCaseCount.toLocaleString() + ' (' + casePctCanada + ' Canada)' + '<br>Mortalities: ' + regionMortCount.toLocaleString() + ' (' + mortPctCanada + ' Canada)' + '<br>First case: ' + minCaseDate + '<br>Last case: ' + maxCaseDate + '<br>Days since last case: ' + daysLastCase + '<br>First mortality: ' + minMortDate + '<br>Mort per case: ' + getRatioMortCase(regionMortCount,regionCaseCount) + '</p></small>';
+        document.getElementById('region_details').innerHTML = '<small><p><strong>' + regionProvince + '<br>' + statscanRegion + '</strong><br>Cases: ' + regionCaseCount.toLocaleString() + ' (' + casePctCanada + ' Canada)' + '<br>Mortalities: ' + regionMortCount.toLocaleString() + ' (' + mortPctCanada + ' Canada)' + '<br>First case: ' + checkNull(minCaseDate) + '<br>Last case: ' + checkNull(maxCaseDate) + '<br>Days since last case: ' + checkNull(daysLastCase) + '<br>First mortality: ' + checkNull(minMortDate) + '<br>Mort per case: ' + checkNull(getRatioMortCase(regionMortCount,regionCaseCount)) + '</p></small>';
         
         // group case counts by date to use in selected region chart
         var caseRegionByDate = d3.nest()
