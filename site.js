@@ -237,8 +237,19 @@ Promise.all([
         minMortDate = d3.min(mortDates.map(d=>d.report_date));
         maxMortDate = d3.max(mortDates.map(d=>d.report_date));
     
-        var timeDiff = (new Date(lastUpdated)) - (new Date(maxCaseDate));
-        var daysLastCase = parseInt(Math.round((timeDiff / (1000 * 60 * 60 * 24)-1))).toString();
+        if (maxCaseDate) {
+            var caseTimeDiff = (new Date(lastUpdated)) - (new Date(maxCaseDate));
+            var daysLastCase = parseInt(Math.round((caseTimeDiff / (1000 * 60 * 60 * 24)-1))).toString();
+        } else {
+            daysLastCase = null;
+        }
+
+        if (maxMortDate) {
+            var mortTimeDiff = (new Date(lastUpdated)) - (new Date(maxMortDate));
+            var daysLastMort = parseInt(Math.round((mortTimeDiff / (1000 * 60 * 60 * 24)-1))).toString();
+        } else {
+            daysLastMort = null;
+        }
 
         function fillColor(days) {
             var daysColor = '';
@@ -264,7 +275,7 @@ Promise.all([
         }
 
         // write region details to index page region_details div
-        document.getElementById('region_details').innerHTML = '<small><p><strong>' + regionProvince + '<br>' + statscanRegion + '</strong><br>Cases: ' + regionCaseCount.toLocaleString() + ' (' + casePctCanada + ' Canada)' + '<br>Mortalities: ' + regionMortCount.toLocaleString() + ' (' + mortPctCanada + ' Canada)' + '<br>First case: ' + checkNull(minCaseDate) + '<br>Last case: ' + checkNull(maxCaseDate) + '<br>Days since last case: ' + checkNull(daysLastCase) + '<br>First mortality: ' + checkNull(minMortDate) + '<br>Mort per case: ' + checkNull(getRatioMortCase(regionMortCount,regionCaseCount)) + '</p></small>';
+        document.getElementById('region_details').innerHTML = '<small><p><strong>' + regionProvince + '<br>' + statscanRegion + '</strong><br>Cases: ' + regionCaseCount.toLocaleString() + ' (' + casePctCanada + ' Canada)' + '<br>Mortalities: ' + regionMortCount.toLocaleString() + ' (' + mortPctCanada + ' Canada)' + '<br>Case: First ' + checkNull(minCaseDate) + ' Last ' + checkNull(maxCaseDate) + '<br>Mort: First ' + checkNull(minMortDate) + ' Last ' + checkNull(maxMortDate) + '<br>Days since last case: ' + checkNull(daysLastCase) + '<br>Days since last mort: ' + checkNull(daysLastMort) + '<br>Mort per case: ' + checkNull(getRatioMortCase(regionMortCount,regionCaseCount)) + '</p></small>';
         
         // group case counts by date to use in selected region chart
         var caseRegionByDate = d3.nest()
