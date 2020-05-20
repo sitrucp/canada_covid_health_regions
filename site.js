@@ -238,7 +238,7 @@ Promise.all([
         maxMortDate = d3.max(mortDates.map(d=>d.report_date));
     
         var timeDiff = (new Date(lastUpdated)) - (new Date(maxCaseDate));
-        var daysLastCase = parseInt(Math.round((timeDiff / (1000 * 60 * 60 * 24)-1)));
+        var daysLastCase = parseInt(Math.round((timeDiff / (1000 * 60 * 60 * 24)-1))).toString();
 
         function fillColor(days) {
             var daysColor = '';
@@ -256,10 +256,10 @@ Promise.all([
         }
 
         function checkNull(variable) {
-            if (variable){
-                return variable
-            } else {
+            if (variable == null){
                 return 'na'
+            } else {
+                return variable
             }
         }
 
