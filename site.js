@@ -49,16 +49,32 @@ Promise.all([
         return xs.map(row => typeof iy.get(row[primary]) !== 'undefined' ? sel(row, iy.get(row[primary])): sel(row, def));
     };
 
-    // summarize cases and mortalities counts overall for header
+    // count cases and mortalities overall for header
     var caseTotalCanada = cases.length;
     var mortTotalCanada = mortalities.length;
-    //var div_total_cases = document.getElementById('total_cases');
-    document.getElementById('total_cases').innerHTML += caseTotalCanada.toLocaleString();
-    document.getElementById('total_morts').innerHTML += mortTotalCanada.toLocaleString();
-    document.getElementById('new_cases').innerHTML += caseTotalCanada.toLocaleString();
-    document.getElementById('new_morts').innerHTML += mortTotalCanada.toLocaleString();
-    document.getElementById('title').innerHTML += ' <small class="text-muted">Last updated: ' + lastUpdated + '</small>';
-     
+
+    // get min and max case dates overall
+    caseAllDates = cases.map(function(d) {
+        return {"report_date": d.report_date};
+    });
+    // get min and max case dates overall
+    mortAllDates = mortalities.map(function(d) {
+        return {"report_date": d.report_date};
+    });
+    maxOverallCaseDate = d3.max(caseAllDates.map(d=>d.report_date));
+    maxOverallMortDate = d3.max(mortAllDates.map(d=>d.report_date));
+
+    // get new cases and mortalities to count new 
+    var casesMaxDate = caseAllDates.filter(function(row) { 
+        return row.report_date === maxOverallCaseDate; 
+    });
+    var mortsMaxDate = mortAllDates.filter(function(d) { 
+        return d.report_date === maxOverallMortDate; 
+    });
+    // count new cases and mortalities overall for header
+    var caseNewCanada = casesMaxDate.length;
+    var mortNewCanada = mortsMaxDate.length;
+
     // left join lookup to case to get statscan region name
     const caseWithStatscan = equijoinWithDefault(
         cases, regionLookup, 
@@ -129,6 +145,13 @@ Promise.all([
         ({province, authority_report_health_region, statscan_arcgis_health_region}, {mort_count, case_count}) => 
         ({province, authority_report_health_region, statscan_arcgis_health_region, case_count, mort_count}), 
         {province_health_region:null,case_count:0, mort_count:0});
+        
+    // put page header numbers 
+    document.getElementById('total_cases').innerHTML += caseTotalCanada.toLocaleString();
+    document.getElementById('total_morts').innerHTML += mortTotalCanada.toLocaleString();
+    document.getElementById('new_cases').innerHTML += caseNewCanada.toLocaleString();
+    document.getElementById('new_morts').innerHTML += mortNewCanada.toLocaleString();
+    document.getElementById('title').innerHTML += ' <small class="text-muted">Last updated: ' + lastUpdated + '</small>';
 
 //CREATE MAP=================================
     // create and populate map with covidData from above
@@ -206,7 +229,7 @@ Promise.all([
         });
         minCaseDate = d3.min(caseDates.map(d=>d.report_date));
         maxCaseDate = d3.max(caseDates.map(d=>d.report_date));
-    
+  
         // get min and max mort dates for region details 
         mortDates = mortSelectedRegion.map(function(d) {
             return {"report_date": d.report_date};
@@ -233,7 +256,7 @@ Promise.all([
         }
 
         // write region details to index page region_details div
-        document.getElementById('region_details').innerHTML = '<small><p><strong>' + regionProvince + '<br>' + statscanRegion + '</strong><br>Cases: ' + regionCaseCount.toLocaleString() + ' (' + casePctCanada + ' Canada)' + '<br>Mortalities: ' + regionMortCount.toLocaleString() + ' (' + mortPctCanada + ' Canada)' + '<br>First case: ' + minCaseDate + '<br>First mortality: ' + minMortDate + '<br>Mort per case: ' + getRatioMortCase(regionMortCount,regionCaseCount)  + '<br>Days since last case: <span style="font-weight:bold; color:' + fillColor(daysLastCase) + '";>' + daysLastCase + '</span></p></small>';
+        document.getElementById('region_details').innerHTML = '<small><p><strong>' + regionProvince + '<br>' + statscanRegion + '</strong><br>Cases: ' + regionCaseCount.toLocaleString() + ' (' + casePctCanada + ' Canada)' + '<br>Mortalities: ' + regionMortCount.toLocaleString() + ' (' + mortPctCanada + ' Canada)' + '<br>First case: ' + minCaseDate + '<br>Last case: ' + maxCaseDate + '<br>Days since last case: ' + daysLastCase + '<br>First mortality: ' + minMortDate + '<br>Mort per case: ' + getRatioMortCase(regionMortCount,regionCaseCount) + '</p></small>';
         
         // group case counts by date to use in selected region chart
         var caseRegionByDate = d3.nest()
