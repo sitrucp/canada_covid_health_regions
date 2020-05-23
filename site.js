@@ -2,8 +2,10 @@
 //GET DATA=================================
 // get case, mortality csv files from working group github repository
 // get health region lookup csv from my github repository
-var file_cases = "https://raw.githubusercontent.com/ishaberry/Covid19Canada/master/cases.csv";
-var file_mortality = "https://raw.githubusercontent.com/ishaberry/Covid19Canada/master/mortality.csv";
+var file_cases = "https://raw.githubusercontent.com/ishaberry/Covid19Canada/master/timeseries_hr/cases_timeseries_hr.csv";
+var file_mortality = "https://raw.githubusercontent.com/ishaberry/Covid19Canada/master/timeseries_hr/mortality_timeseries_hr.csv";
+//var file_cases = "https://raw.githubusercontent.com/ishaberry/Covid19Canada/master/cases.csv";
+//var file_mortality = "https://raw.githubusercontent.com/ishaberry/Covid19Canada/master/mortality.csv";
 var file_update_time = "https://raw.githubusercontent.com/ishaberry/Covid19Canada/master/update_time.txt";
 var file_hr_lookup = "https://raw.githubusercontent.com/sitrucp/canada_covid_health_regions/master/health_regions_lookup.csv";
 
@@ -50,8 +52,10 @@ Promise.all([
     };
 
     // count cases and mortalities overall for header
-    var caseTotalCanada = cases.length;
-    var mortTotalCanada = mortalities.length;
+    //var caseTotalCanada = cases.length;
+    //var mortTotalCanada = mortalities.length;
+    var caseTotalCanada = cases.reduce((a, b) => +a + +b.cases, 0);
+    var mortTotalCanada = mortalities.reduce((a, b) => +a + +b.deaths, 0);
 
     // get min and max case dates overall
     caseAllDates = cases.map(function(d) {
@@ -74,27 +78,28 @@ Promise.all([
     // count new cases and mortalities overall for header
     var caseNewCanada = casesMaxDate.length;
     var mortNewCanada = mortsMaxDate.length;
-
+    
     // left join lookup to case to get statscan region name
     const caseWithStatscan = equijoinWithDefault(
         cases, regionLookup, 
         "prov_health_region_case", "province_health_region", 
-        ({date_report, report_date}, {province, authority_report_health_region, statscan_arcgis_health_region}, ) => 
-        ({date_report, report_date, province, authority_report_health_region, statscan_arcgis_health_region}), 
+        ({date_report, report_date, cases, cumulative_cases}, {province, authority_report_health_region, statscan_arcgis_health_region}, ) => 
+        ({date_report, report_date, province, authority_report_health_region, statscan_arcgis_health_region, cases, cumulative_cases}), 
         {province_health_region:null});
 
     //left join lookup to mortalities to get statscan region name
     const mortWithStatscan = equijoinWithDefault(
         mortalities, regionLookup, 
         "prov_health_region_mort", "province_health_region", 
-        ({date_death_report, report_date}, {province, authority_report_health_region, statscan_arcgis_health_region}) => 
-        ({date_death_report, report_date, province, authority_report_health_region, statscan_arcgis_health_region}), 
+        ({date_death_report, report_date, deaths, cumulative_deaths}, {province, authority_report_health_region, statscan_arcgis_health_region}) => 
+        ({date_death_report, report_date, province, authority_report_health_region, statscan_arcgis_health_region, deaths, cumulative_deaths}), 
         {province_health_region:null});
 
     // summarize case counts by prov | health_region concat
     var caseByRegion = d3.nest()
         .key(function(d) { return d.prov_health_region_case; })
-        .rollup(function(v) { return v.length; })
+        //.rollup(function(v) { return v.length; })
+        .rollup(function(v) { return d3.sum(v, function(d) { return d.cases; }); })
         .entries(cases)
         .map(function(group) {
             return {
@@ -106,7 +111,8 @@ Promise.all([
     // summarize mortality counts by prov | health_region concat
     var mortByRegion = d3.nest()
         .key(function(d) { return d.prov_health_region_mort; })
-        .rollup(function(v) { return v.length; })
+        //.rollup(function(v) { return v.length; })
+        .rollup(function(v) { return d3.sum(v, function(d) { return d.deaths; }); })
         .entries(mortalities)
         .map(function(group) {
             return {
@@ -280,7 +286,8 @@ Promise.all([
         // group case counts by date to use in selected region chart
         var caseRegionByDate = d3.nest()
         .key(function(d) { return d.report_date; })
-        .rollup(function(v) { return v.length; })
+        //.rollup(function(v) { return v.length; })
+        .rollup(function(v) { return d3.sum(v, function(d) { return d.cases; }); })
         .entries(caseSelectedRegion)
         .map(function(group) {
             return {
@@ -292,7 +299,8 @@ Promise.all([
         // group mort counts by date to use in selected region chart
         var mortRegionByDate = d3.nest()
         .key(function(d) { return d.report_date; })
-        .rollup(function(v) { return v.length; })
+        //.rollup(function(v) { return v.length; })
+        .rollup(function(v) { return d3.sum(v, function(d) { return d.deaths; }); })
         .entries(mortSelectedRegion)
         .map(function(group) {
             return {
@@ -354,17 +362,41 @@ Promise.all([
         function log(x) {
             return Math.log(x) / Math.LN10;
         }
-
+        
+        // moving average function
+        function movingAverage(values, N) {
+            let i = 0;
+            let sum = 0;
+            const means = new Float64Array(values.length).fill(NaN);
+            for (let n = Math.min(N - 1, values.length); i < n; ++i) {
+                sum += values[i];
+            }
+            for (let n = values.length; i < n; ++i) {
+                sum += values[i];
+                means[i] = sum / N;
+                sum -= values[i - N + 1];
+            }
+            return means;
+        }
+        
         // create daily cases chart==================
         // get max case count for region for y axis
-        var regionMaxDailyCaseCount = d3.max(caseRegionByDate.map(d=>d.case_count));
-        var yaxis2_type = 'linear';
-        var yaxis2RangeMax = regionCaseCount;
+        if(d3.max(caseRegionByDate.map(d=>d.case_count)) > 5) {
+            var regionMaxDailyCaseCount = d3.max(caseRegionByDate.map(d=>d.case_count));
+        } else {
+            var regionMaxDailyCaseCount = 5;
+        }
         
+        if (regionCaseCount > 5) {
+            var yAxis2RangeMaxCase = regionCaseCount;
+        } else {
+            var yAxis2RangeMaxCase = 5;
+        }
         // not used but could be used to change y2 scale to log
+        var yaxis2_type = 'linear';
         function changeY2scale() {
             var yaxis2_type = 'log';
-            var yaxis2RangeMax = log(regionCaseCount);
+            var yAxis2RangeMaxCase = log(regionCaseCount);
         }
         
         //document.getElementById('region_daily_cases_chart').innerHTML = '<button onclick="changeY2scale()">Log</button>';
@@ -381,7 +413,7 @@ Promise.all([
                 xCases.push( row['report_date']);
                 yCases.push( row['case_count']);
             }
-            for (var i=0; i<caseRegionByDateCum.length; i++) {
+            for (var i=0; i<caseRegionByDateSorted.length; i++) {
                 row = caseRegionByDateCum[i];
                 xCasesCum.push( row['report_date']);
                 yCasesCum.push( row['case_count']);
@@ -394,9 +426,9 @@ Promise.all([
                 type: 'bar',
                 width: 1000*3600*24,
                 marker: {
-                    color: 'rgb(54,144,192)',
+                    color: 'rgb(240,240,240)',
                     line: {
-                      color: 'rgb(4,90,141)',
+                      color: 'rgb(189,189,189)',
                       width: 1
                     }
                   }
@@ -407,12 +439,32 @@ Promise.all([
                 y: yCasesCum,
                 yaxis: 'y2',
                 type: 'scatter',
-                mode: 'lines'
+                mode: 'lines',
+                line: {
+                    shape: 'spline',
+                    color: 'rgb(64,64,64)',
+                    width: 2
+                },
+                connectgaps: true
             };
-            var caseChartData = [casesDaily, casesCum];
+            var casesMA = {
+                name: '5D MA',
+                x: xCases,
+                y: movingAverage(yCases, 5),
+                yaxis: 'y',
+                type: 'scatter',
+                mode: 'lines',
+                line: {
+                    shape: 'spline',
+                    color: 'rgb(5,113,176)',
+                    width: 2
+                },
+                connectgaps: true
+            };
+            var caseChartData = [casesDaily, casesCum, casesMA];
             var caseChartLayout = {
                 title: {
-                    text:'Cases by day',
+                    text:'Cases',
                     font: {
                         weight: "bold",
                         size: 12
@@ -423,7 +475,7 @@ Promise.all([
                     "orientation": "h",
                     x: 0,
                     xanchor: 'left',
-                    y: 1.3,
+                    y: 1,
                     bgcolor: 'rgba(0,0,0,0)',
                     font: {
                         //family: 'sans-serif',
@@ -478,7 +530,7 @@ Promise.all([
                     tickfont: {
                         size: 10
                     },
-                    range:[0, yaxis2RangeMax],
+                    range:[0, yAxis2RangeMaxCase],
                     overlaying: 'y',
                     side: 'right',
                     showgrid: false
@@ -491,8 +543,19 @@ Promise.all([
 
         // daily mort chart==================
         // get max mort count for region for y axis
-        regionMaxDailyMortCount = d3.max(mortRegionByDate.map(d=>d.mort_count));
-
+        
+        if(d3.max(mortRegionByDate.map(d=>d.mort_count)) > 5) {
+            var regionMaxDailyMortCount = d3.max(mortRegionByDate.map(d=>d.mort_count));
+        } else {
+            var regionMaxDailyMortCount = 5;
+        }
+        
+        if (regionMortCount > 5) {
+            var yAxis2RangeMaxMort = regionMortCount;
+        } else {
+            var yAxis2RangeMaxMort = 5;
+        }
+        
         if(regionMaxDailyMortCount > 0) {
             // create x and y axis data sets
             var xMort = [];
@@ -510,6 +573,7 @@ Promise.all([
                 xMortCum.push( row['report_date']);
                 yMortCum.push( row['mort_count']);
             }
+            
             // set up plotly chart
             var mortsDaily = {
                 name: 'Daily',
@@ -518,9 +582,9 @@ Promise.all([
                 type: 'bar',
                 width: 1000*3600*24,
                 marker: {
-                    color: 'rgb(54,144,192)',
+                    color: 'rgb(240,240,240)',
                     line: {
-                      color: 'rgb(4,90,141)',
+                      color: 'rgb(189,189,189)',
                       width: 1
                     }
                   }
@@ -532,11 +596,32 @@ Promise.all([
                 yaxis: 'y2',
                 type: 'scatter',
                 mode: 'lines',
+                line: {
+                    shape: 'spline',
+                    color: 'rgb(64,64,64)',
+                    width: 2
+                },
+                
+                connectgaps: true
             };
-            var mortChartData = [mortsDaily, mortsCum];
+            var mortsMA = {
+                name: '5D MA',
+                x: xMort,
+                y: movingAverage(yMort, 5),
+                yaxis: 'y',
+                type: 'scatter',
+                mode: 'lines',
+                line: {
+                    shape: 'spline',
+                    color: 'rgb(5,113,176)',
+                    width: 2
+                },
+                connectgaps: true
+            };
+            var mortChartData = [mortsDaily, mortsCum, mortsMA];
             var mortChartLayout = {
                 title: {
-                    text:'Mortalities by day',
+                    text:'Mortalities',
                     font: {
                         weight: "bold",
                         size: 12
@@ -599,7 +684,7 @@ Promise.all([
                     },
                     tickformat: ',d',
                     autorange: false, 
-                    range:[0, regionMortCount],
+                    range:[0, yAxis2RangeMaxMort],
                     overlaying: 'y',
                     side: 'right',
                     showgrid:false

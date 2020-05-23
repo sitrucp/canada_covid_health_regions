@@ -64,7 +64,7 @@ Promise.all([
     caseWithStatscan.sort(function (a, b) {
         return d3.ascending(a.province_health_region, b.province_health_region) || d3.ascending(a.report_date, b.report_date) ;
     });
-
+    
     // group case counts by date to use in selected region chart
     var caseRegionByDate = d3.nest()
     .key(function(d) { return d.province_health_region; })
@@ -106,19 +106,35 @@ Promise.all([
                 var daysColor = '#ff6666'; // red
                 var colorWord = 'red';
             } else if (days < 8) {
-                var daysColor = '#ffc266'; // orange
+                var daysColor = '#ef9000'; // orange
                 var colorWord = 'orange';
             } else {
-                var daysColor = '#99e699'; // green
+                var daysColor = '#259625'; // green
                 var colorWord = 'green';
             }
             return daysColor
         }
+
+        function movingAverage(values, N) {
+            let i = 0;
+            let sum = 0;
+            const means = new Float64Array(values.length).fill(NaN);
+            for (let n = Math.min(N - 1, values.length); i < n; ++i) {
+                sum += values[i];
+            }
+            for (let n = values.length; i < n; ++i) {
+                sum += values[i];
+                means[i] = sum / N;
+                sum -= values[i - N + 1];
+            }
+            return means;
+        }
+        yRoll = movingAverage(y, 5);
         
         // create trace i
         var data = {
             x:x,
-            y:y,
+            y:yRoll,
             type:'scatter',
             mode: 'lines',
             line: {

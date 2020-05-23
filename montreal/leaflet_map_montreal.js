@@ -252,7 +252,7 @@ var case_total = 0;
 for(var i = 0; i < covid_data.length; i++) {
     var obj = covid_data[i];
     if( obj.website_name.includes("Total") ) {
-        console.log(obj.case_total);
+        //console.log(obj.case_total);
         case_total += cleanSiteValue(obj.case_count);
     }
 }
