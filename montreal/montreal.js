@@ -56,7 +56,7 @@ function mouseOverActions(e) {
     var mortPct = ((parseFloat(cleanSiteValue(mortCount)) / parseFloat(mort_total)) * 100).toFixed(2)
     var casePer100k = getCasePer100k(geojsonName);
     var mortPer100k = getMortPer100k(geojsonName);
-
+    
     document.getElementsByClassName('infobox')[0].innerHTML = 
     '<p>Montreal Region: ' + websiteName + 
     '<br>Confirmed cases: ' + caseCount + ' (' + casePct + '% Montreal)' + '<br>Mortalities: ' + mortCount + ' (' + mortPct + '% Montreal)' + 
@@ -66,9 +66,13 @@ function mouseOverActions(e) {
     '</p>';
 };
 
+function getInfoText() {
+    return '<p>Hover over map region to see details here. Click map region to see details in right side panel. Scroll to zoom.</p>';
+}
+
 function mouseOutActions(e) {
     geojson.resetStyle(e.target);
-    document.getElementsByClassName('infobox')[0].innerHTML = '<p>Hover over region to see name and counts. Scroll to zoom.</p>';
+    document.getElementsByClassName('infobox')[0].innerHTML = getInfoText();
 }
 
 function zoomToFeature(e) {
@@ -242,7 +246,7 @@ var infobox = L.control({position: 'topleft'});
 infobox.onAdd = function (map) {
     var div = L.DomUtil.create('div', 'infobox');
     var infobox = document.getElementsByClassName('infobox')[0];
-    div.innerHTML = '<p>Hover over region to see name and counts. Scroll to zoom.</p>';
+    div.innerHTML = getInfoText();
     return div;
 };
 infobox.addTo(map);

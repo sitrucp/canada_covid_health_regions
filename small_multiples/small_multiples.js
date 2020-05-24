@@ -145,7 +145,7 @@ Promise.all([
         };
         var layout = {
             //title: {
-            //    text: provRegion + ' F:' + minRegionCaseDate + ' L:' + maxRegionCaseDate + ' MD:' + maxRegionCases + ' DL:' + daysLastCase,
+            //    text: ''
             //    font: {
             //        size: 10,
             //      },
