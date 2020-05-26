@@ -129,7 +129,7 @@ Promise.all([
             }
             return means;
         }
-        yRoll = movingAverage(y, 5);
+        yRoll = movingAverage(y, 7);
         
         // create trace i
         var data = {

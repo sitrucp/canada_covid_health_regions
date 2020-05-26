@@ -9,6 +9,14 @@ html, body {
     font-family: Arial, Helvetica, sans-serif;
 }
 
+table tbody tr td {
+    font-size: 12px;
+}
+
+table thead tr th {
+    font-size: 12px;
+}
+
 .modebar{
     display: none !important;
 }
@@ -27,8 +35,8 @@ td {
 }
 
 #region_details {
-    padding: 5px;
-    margin: 5px;
+    padding: 2px;
+  
 }
 
 #project_details {
@@ -52,6 +60,7 @@ td {
     padding: 6px 8px;
     font: 14px/16px;
     background: white;
+    width: 100%;
     background: rgba(255,255,255,0.8);
     box-shadow: 0 0 15px rgba(0,0,0,0.2);
     border-radius: 5px;

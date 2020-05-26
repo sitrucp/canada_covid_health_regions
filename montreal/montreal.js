@@ -103,12 +103,12 @@ function showRegionDetails(e) {
     var mortPer100k = getMortPer100k(geojsonName);
 
     document.getElementById('region_details').innerHTML = 
-    '<p>Montreal Region: ' + websiteName + 
+    '<small><p>Montreal Region: ' + websiteName + 
     '<br>Confirmed cases: ' + caseCount + ' (' + casePct + '% Montreal)' + '<br>Mortalities: ' + mortCount + ' (' + mortPct + '% Montreal)' + 
     '<br>Mort per case: ' + getRatioMortCase(mortCount, caseCount) + 
     '<br>Case per 100k: ' + cleanSiteValue(casePer100k) + 
     '<br>Mort per 100k: ' + cleanSiteValue(mortPer100k) + 
-    '</p>';
+    '</p></small>';
 };
 
 function getRatioMortCase(numerator, denominator) {
