@@ -150,8 +150,9 @@ Promise.all([
     document.getElementById('total_morts').innerHTML += mortTotalCanada.toLocaleString();
     document.getElementById('new_cases').innerHTML += caseNewCanada.toLocaleString();
     document.getElementById('new_morts').innerHTML += mortNewCanada.toLocaleString();
-    document.getElementById('title').innerHTML += ' <small class="text-muted">Last updated: ' + lastUpdated + '</small>';
     */
+
+   document.getElementById('title').innerHTML += ' <small class="text-muted">Last updated: ' + lastUpdated + '</small>';
 
 //CREATE MAP=================================
 
@@ -524,8 +525,8 @@ Promise.all([
                 type: 'scatter',
                 mode: 'lines',
                 line: {
-                    shape: 'spline', 
-                    smoothing: 1.3,
+                    shape: 'linear', 
+
                     color: 'rgb(64,64,64)',
                     width: 2
                 },
@@ -539,8 +540,8 @@ Promise.all([
                 type: 'scatter',
                 mode: 'lines',
                 line: {
-                    shape: 'spline', 
-                    smoothing: 1.3,
+                    shape: 'linear', 
+
                     color: 'rgb(5,113,176)',
                     width: 2
                 },
@@ -679,8 +680,8 @@ Promise.all([
                 type: 'scatter',
                 mode: 'lines',
                 line: {
-                    shape: 'spline',
-                    smoothing: 1.3,
+                    shape: 'linear',
+
                     color: 'rgb(64,64,64)',
                     width: 2
                 },
@@ -695,8 +696,8 @@ Promise.all([
                 type: 'scatter',
                 mode: 'lines',
                 line: {
-                    shape: 'spline',
-                    smoothing: 1.3,
+                    shape: 'linear',
+
                     color: 'rgb(5,113,176)',
                     width: 2
                 },

@@ -211,6 +211,7 @@ function getWebSiteName(geojsonName) {
     return webSiteName;
     }
 
+    /*
     // get color based on case count
     function getColor(n) {
         return n > 1500 ? '#023858'
@@ -224,18 +225,28 @@ function getWebSiteName(geojsonName) {
             : n > 0  ? '#fff7fb'
             : '#ffffff';
     }
+    */
+
+    // get color based on case count
+    function getColor(n) {
+        var scaleClasses = [0,100,300,500,800,1000,1500,2000];
+        var hex = ['deebf7','08306b'];
+        var mapScale = chroma.scale(hex).classes(scaleClasses);
+        var regionColor = mapScale(n);
+        return regionColor
+    }
 
 // add legend with color gradients by case count
 var legend = L.control({position: 'topright'});
 legend.onAdd = function (map) {
-    var div = L.DomUtil.create('div', 'infobox legend'),
-        grades = [0, 100, 300, 500, 700, 900, 1100, 1300, 1500],
+    var div = L.DomUtil.create('div', 'infobox legend')
+    var scaleClasses = [0,100,300,500,800,1000,1500,2000];
         labels = [];
     // loop through our density intervals and generate a label with a colored square for each interval
-    for (var i = 0; i < grades.length; i++) {
+    for (var i = 0; i < scaleClasses.length; i++) {
         div.innerHTML +=
-            '<i style="background:' + getColor(grades[i] + 1) + '"></i> ' +
-            grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
+            '<i style="background:' + getColor(scaleClasses[i] + 1) + '"></i> ' +
+            scaleClasses[i] + (scaleClasses[i + 1] ? '&ndash;' + scaleClasses[i + 1] + '<br>' : '+');
     }
     return div;
 };
