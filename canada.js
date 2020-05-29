@@ -217,7 +217,10 @@ Promise.all([
         }).addTo(map);
 
         // remove existing legend if exists
-        document.getElementsByClassName('legend')[0].remove();
+        var legends = document.getElementsByClassName('legend');
+        for(var i = 0; i < legends.length; i++){
+            legends[i].remove();
+        }
 
         // add updated legend
         var legend = L.control({position: 'topright'});
