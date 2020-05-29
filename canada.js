@@ -287,7 +287,10 @@ Promise.all([
         var statscanRegion = 'Canada'
         createCharts(statscanRegion);
         // remove existing legend
-        document.getElementsByClassName('legend')[0].remove();
+        var legends = document.getElementsByClassName('legend');
+        for(var i = 0; i < legends.length; i++){
+            legends[i].remove();
+        }
         btnCase(); 
     };
 
