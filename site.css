@@ -74,6 +74,13 @@ td {
 .legend {
     line-height: 20px;
     color: #555;
+    padding: 6px 8px;
+    font: 14px/16px;
+    background: white;
+    width: 100%;
+    background: rgba(255,255,255,0.8);
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    border-radius: 5px;
 }
 
 .legend i {
