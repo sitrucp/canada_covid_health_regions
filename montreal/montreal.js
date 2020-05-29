@@ -1,20 +1,4 @@
-// create chroma and legend color variables
-var colorRange = ['deebf7','08306b'];
-var valueRange = [0, 2200];
-var legendN = 9;
 
-function scaleClasses(end, step) {
-    increment = Math.ceil(end/step);
-    arr = [];
-    for (i = 0; i < step; i++) {
-        val = Math.floor((i*increment) / 100) * 100;
-        arr.push(val); 
-      }
-    return arr
-}
-var scaleClasses = scaleClasses(valueRange[1],legendN);
-
-// create map 
 var map = L.map('map',{ zoomControl: false }).setView(['45.504613', '-73.634624'], 10);
 map.once('focus', function() { map.scrollWheelZoom.enable(); });
 L.control.zoom({ position: 'bottomright' }).addTo(map);
@@ -79,7 +63,7 @@ function mouseOverActions(e) {
     '<br>Mort per case: ' + getRatioMortCase(mortCount, caseCount) + 
     '<br>Case per 100k: ' + casePer100k + 
     '<br>Mort per 100k: ' + mortPer100k + 
-    '<br><strong>Click map region to show detail on left.</strong></p>';
+    '</p>';
 };
 
 function getInfoText() {
@@ -201,34 +185,6 @@ function getMortCount(geojsonName) {
    return mortCount;
 }
 
-// get health region province bc it isn't in Statscan boundary file 
-function getWebSiteName(geojsonName) {
-    var webSiteName;
-    for(var i = 0; i < covid_data.length; i++) {
-        var obj = covid_data[i];
-        if (obj.geojson_name === geojsonName) {
-            webSiteName = obj.website_name;
-            break;
-        }
-    }
-    return webSiteName;
-}
-
-// add legend with color gradients by case count
-var legend = L.control({position: 'topright'});
-legend.onAdd = function (map) {
-    var div = L.DomUtil.create('div', 'infobox legend')
-    var labels = [];
-    // loop to generate label with colored square for each
-    for (var i = 0; i < scaleClasses.length; i++) {
-        div.innerHTML +=
-            '<i style="background:' + getColor(scaleClasses[i] + 1) + '"></i> ' +
-            scaleClasses[i] + (scaleClasses[i + 1] ? '&ndash;' + scaleClasses[i + 1] + '<br>' : '+');
-    }
-    return div;
-};
-legend.addTo(map);
-
 // case color for legend and health region shape
 function getRegionColor(geojsonName) {
     var regionColor;
@@ -242,12 +198,59 @@ function getRegionColor(geojsonName) {
     return regionColor;
 }
 
-// get color based on case count
-function getColor(n) {
-    var mapScale = chroma.scale(colorRange).domain(valueRange);
-    var regionColor = mapScale(n);
-    return regionColor
-}
+// get health region province bc it isn't in Statscan boundary file 
+function getWebSiteName(geojsonName) {
+    var webSiteName;
+    for(var i = 0; i < covid_data.length; i++) {
+        var obj = covid_data[i];
+        if (obj.geojson_name === geojsonName) {
+            webSiteName = obj.website_name;
+            break;
+        }
+    }
+    return webSiteName;
+    }
+
+    /*
+    // get color based on case count
+    function getColor(n) {
+        return n > 1500 ? '#023858'
+            : n > 1300 ? '#045a8d' 
+            : n > 1100 ? '#0570b0' 
+            : n > 900 ? '#3690c0'
+            : n > 700  ? '#74a9cf'
+            : n > 500  ? '#a6bddb'
+            : n > 300  ? '#d0d1e6'
+            : n > 100  ? '#ece7f2'
+            : n > 0  ? '#fff7fb'
+            : '#ffffff';
+    }
+    */
+
+    // get color based on case count
+    function getColor(n) {
+        var scaleClasses = [0,100,300,500,800,1000,1500,2000];
+        var hex = ['deebf7','08306b'];
+        var mapScale = chroma.scale(hex).classes(scaleClasses);
+        var regionColor = mapScale(n);
+        return regionColor
+    }
+
+// add legend with color gradients by case count
+var legend = L.control({position: 'topright'});
+legend.onAdd = function (map) {
+    var div = L.DomUtil.create('div', 'infobox legend')
+    var scaleClasses = [0,100,300,500,800,1000,1500,2000];
+        labels = [];
+    // loop through our density intervals and generate a label with a colored square for each interval
+    for (var i = 0; i < scaleClasses.length; i++) {
+        div.innerHTML +=
+            '<i style="background:' + getColor(scaleClasses[i] + 1) + '"></i> ' +
+            scaleClasses[i] + (scaleClasses[i + 1] ? '&ndash;' + scaleClasses[i + 1] + '<br>' : '+');
+    }
+    return div;
+};
+legend.addTo(map);
 
 // control that shows state info on hover
 var infobox = L.control({position: 'topleft'});
@@ -259,7 +262,7 @@ infobox.onAdd = function (map) {
 };
 infobox.addTo(map);
 
-// summarize cases counts overall and add to header
+ // summarize cases counts overall and add to header
 var case_total = 0;
 for(var i = 0; i < covid_data.length; i++) {
     var obj = covid_data[i];
@@ -270,14 +273,14 @@ for(var i = 0; i < covid_data.length; i++) {
 }
 
 
-// summarize mort counts overall and add to header
-var mort_total = 0;
-for(var i = 0; i < covid_data.length; i++) {
-    var obj = covid_data[i];
-    if( obj.website_name.includes("Total") ) {
+ // summarize mort counts overall and add to header
+ var mort_total = 0;
+ for(var i = 0; i < covid_data.length; i++) {
+     var obj = covid_data[i];
+     if( obj.website_name.includes("Total") ) {
         mort_total += cleanSiteValue(obj.mort_count);
-    }
-}
+     }
+ }
 
 function cleanSiteValue(site_value) {
     if (site_value !== undefined) {
@@ -291,11 +294,13 @@ const offsetMs = now.getTimezoneOffset() * 60 * 1000;
 const dateLocal = new Date(now.getTime() - offsetMs);
 const last_updated = dateLocal.toISOString().slice(0, 19).replace("T", " ");
 
-var div = document.getElementById('header');
-div.innerHTML += '<p>Montreal totals: Confirmed cases: ' + case_total.toLocaleString() + ' Mortalities: ' + mort_total.toLocaleString() + ' Date data retrieved: ' + last_update_date + '</p>';
+ var div = document.getElementById('header');
+ div.innerHTML += '<p>Montreal totals: Confirmed cases: ' + case_total.toLocaleString() + ' Mortalities: ' + mort_total.toLocaleString() + ' Date data retrieved: ' + last_update_date + '</p>';
 
  //CREATE TABLE=================================
+    
  $(document).ready(function () {
+        
     var thead;
     var thead_tr;
     thead = $("<thead>");

@@ -46,35 +46,35 @@ Promise.all([
     // create new case & mort count value where report date = max report date 
     cases.forEach(function(d) {
         if (d.report_date === maxOverallCaseDate) {
-            d.case_new_count = d.cases
+            d.new_case_count = d.cases
         } else {
-            d.case_new_count = 0
+            d.new_case_count = 0
         }
     });
     mortalities.forEach(function(d) {
         if (d.report_date === maxOverallCaseDate) {
-            d.mort_new_count = d.deaths
+            d.new_mort_count = d.deaths
         } else {
-            d.mort_new_count = 0
+            d.new_mort_count = 0
         }
     });
-    var caseNewCanada = cases.reduce((a, b) => +a + +b.case_new_count, 0);
-    var mortNewCanada = mortalities.reduce((a, b) => +a + +b.mort_new_count, 0);
+    var caseNewCanada = cases.reduce((a, b) => +a + +b.new_case_count, 0);
+    var mortNewCanada = mortalities.reduce((a, b) => +a + +b.new_mort_count, 0);
 
     // left join lookup to case to get statscan region name
     const caseWithStatscan = equijoinWithDefault(
         cases, regionLookup, 
         "prov_health_region_case", "province_health_region", 
-        ({date_report, report_date, cases, cumulative_cases, case_new_count}, {province, authority_report_health_region, statscan_arcgis_health_region}, ) => 
-        ({date_report, report_date, province, authority_report_health_region, statscan_arcgis_health_region, cases, cumulative_cases, case_new_count}), 
+        ({date_report, report_date, cases, cumulative_cases, new_case_count}, {province, authority_report_health_region, statscan_arcgis_health_region}, ) => 
+        ({date_report, report_date, province, authority_report_health_region, statscan_arcgis_health_region, cases, cumulative_cases, new_case_count}), 
         {province_health_region:null});
 
     //left join lookup to morts to get statscan region name
     const mortWithStatscan = equijoinWithDefault(
         mortalities, regionLookup, 
         "prov_health_region_mort", "province_health_region", 
-        ({date_death_report, report_date, deaths, cumulative_deaths, mort_new_count}, {province, authority_report_health_region, statscan_arcgis_health_region}) => 
-        ({date_death_report, report_date, province, authority_report_health_region, statscan_arcgis_health_region, deaths, cumulative_deaths, mort_new_count}), 
+        ({date_death_report, report_date, deaths, cumulative_deaths, new_mort_count}, {province, authority_report_health_region, statscan_arcgis_health_region}) => 
+        ({date_death_report, report_date, province, authority_report_health_region, statscan_arcgis_health_region, deaths, cumulative_deaths, new_mort_count}), 
         {province_health_region:null});
 
     // summarize case counts by prov | health_region concat
@@ -82,7 +82,7 @@ Promise.all([
         .key(function(d) { return d.prov_health_region_case; })
         .rollup(function(v) {return {
             case_count: d3.sum(v, function(d) { return d.cases; }),
-            case_new_count: d3.sum(v, function(d) { return d.case_new_count; }) 
+            new_case_count: d3.sum(v, function(d) { return d.new_case_count; }) 
             };
         })
         .entries(cases)
@@ -90,7 +90,7 @@ Promise.all([
             return {
             case_prov_health_region: group.key,
             case_count: group.value.case_count,
-            case_new_count: group.value.case_new_count
+            new_case_count: group.value.new_case_count
             }
         });
     
@@ -100,7 +100,7 @@ Promise.all([
         .rollup(function(v) {
             return {
                 mort_count: d3.sum(v, function(d) { return d.deaths; }),
-                mort_new_count: d3.sum(v, function(d) { return d.mort_new_count; })
+                new_mort_count: d3.sum(v, function(d) { return d.new_mort_count; })
             }; 
         })
         .entries(mortalities)
@@ -108,7 +108,7 @@ Promise.all([
             return {
             mort_prov_health_region: group.key,
             mort_count: group.value.mort_count,
-            mort_new_count: group.value.mort_new_count
+            new_mort_count: group.value.new_mort_count
             }
         });
 
@@ -116,84 +116,74 @@ Promise.all([
     const caseByRegionLookup = equijoinWithDefault(
         regionLookup, caseByRegion, 
         "province_health_region", "case_prov_health_region", 
-        ({province, authority_report_health_region, statscan_arcgis_health_region}, {case_prov_health_region, case_count, case_new_count}) => 
-        ({province, authority_report_health_region, statscan_arcgis_health_region, case_prov_health_region, case_count, case_new_count}), 
-        {case_count:0, case_new_count:0, case_prov_health_region: "ProvinceName|Not Reported"});
+        ({province, authority_report_health_region, statscan_arcgis_health_region}, {case_prov_health_region, case_count, new_case_count}) => 
+        ({province, authority_report_health_region, statscan_arcgis_health_region, case_prov_health_region, case_count, new_case_count}), 
+        {case_count:0, new_case_count:0, case_prov_health_region: "ProvinceName|Not Reported"});
 
     // left join summarized mort records to lookup
     const mortByRegionLookup = equijoinWithDefault(
         regionLookup, mortByRegion, 
         "province_health_region", "mort_prov_health_region", 
-        ({province, authority_report_health_region, statscan_arcgis_health_region}, {mort_prov_health_region, mort_count, mort_new_count}) => 
-        ({province, authority_report_health_region, statscan_arcgis_health_region, mort_prov_health_region, mort_count, mort_new_count}), 
-        {mort_count:0, mort_new_count:0, case_prov_health_region: "ProvinceName|Not Reported"});
+        ({province, authority_report_health_region, statscan_arcgis_health_region}, {mort_prov_health_region, mort_count, new_mort_count}) => 
+        ({province, authority_report_health_region, statscan_arcgis_health_region, mort_prov_health_region, mort_count, new_mort_count}), 
+        {mort_count:0, new_mort_count:0, case_prov_health_region: "ProvinceName|Not Reported"});
     
     // add mortalities count value to cases array
     const caseMortByRegion = equijoinWithDefault(
         caseByRegionLookup, mortByRegionLookup, 
         "case_prov_health_region", "mort_prov_health_region", 
-        ({case_prov_health_region, case_count, case_new_count}, {mort_count, mort_new_count}) => 
-        ({case_prov_health_region, case_count, case_new_count, mort_count, mort_new_count}), 
-        {province_health_region:null,case_count:0, case_new_count:0, mort_count:0, mort_new_count:0});
+        ({case_prov_health_region, case_count, new_case_count}, {mort_count, new_mort_count}) => 
+        ({case_prov_health_region, case_count, new_case_count, mort_count, new_mort_count}), 
+        {province_health_region:null,case_count:0, new_case_count:0, mort_count:0, new_mort_count:0});
 
     // create covid data set used in map
     const covidData = equijoinWithDefault(
         regionLookup, caseMortByRegion, 
         "province_health_region", "case_prov_health_region", 
-        ({province, authority_report_health_region, statscan_arcgis_health_region}, {case_count, cum_case_count, case_new_count, mort_count, cum_mort_count, mort_new_count}) => 
-        ({province, authority_report_health_region, statscan_arcgis_health_region, case_count, case_new_count, mort_count, mort_new_count}), 
-        {province_health_region:null,case_count:0, case_new_count:0, mort_count:0, mort_new_count:0});
+        ({province, authority_report_health_region, statscan_arcgis_health_region}, {case_count, cum_case_count, new_case_count, mort_count, cum_mort_count, new_mort_count}) => 
+        ({province, authority_report_health_region, statscan_arcgis_health_region, case_count, new_case_count, mort_count, new_mort_count}), 
+        {province_health_region:null,case_count:0, new_case_count:0, mort_count:0, new_mort_count:0});
     
-    // get case and mort date max dates to get new counts
-    maxCaseByRegion = d3.max(covidData.map(d=>d.case_count));
-    maxMortByRegion = d3.max(covidData.map(d=>d.mort_count));
-    maxNewCaseByRegion = d3.max(covidData.map(d=>d.case_new_count));
-    maxNewMortByRegion = d3.max(covidData.map(d=>d.mort_new_count));
+    /*
+    // create page header summary 
+    document.getElementById('total_cases').innerHTML += caseTotalCanada.toLocaleString();
+    document.getElementById('total_morts').innerHTML += mortTotalCanada.toLocaleString();
+    document.getElementById('new_cases').innerHTML += caseNewCanada.toLocaleString();
+    document.getElementById('new_morts').innerHTML += mortNewCanada.toLocaleString();
+    */
 
    document.getElementById('title').innerHTML += ' <small class="text-muted">Last updated: ' + lastUpdated + '</small>';
 
 //CREATE MAP=================================
 
-    // set default map, chroma, chart and region detail variables
     var statscanRegion = 'Canada'
-    var mapMetric = 'case_count';
-    var colorRange = ['deebf7','08306b'];
-    var scaleClasses = [0,50,100,250,500,1000,2000,3000,6000,9000];
-     var zoomCenter = ['53.145743','-95.424717'];
-     var zoomMag = 4;
-     // create and populate map with covidData from above
-     var map = L.map('map',{ zoomControl: false }).setView(zoomCenter, zoomMag);
-     map.once('focus', function() { map.scrollWheelZoom.enable(); });
-     L.control.zoom({ position: 'bottomright' }).addTo(map);
-     L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
-         maxZoom: 18,
-         attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
-             '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
-             'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-         id: 'mapbox/light-v9',
-         tileSize: 512,
-         zoomOffset: -1
-     }).addTo(map);
-
-    // create charts default to all canada
     createCharts(statscanRegion);
+    var mapMetric = 'case_count';
+    var scaleClasses = [0,50,100,250,500,1000,2000,3000,6000,9000];
+    createMap(mapMetric,scaleClasses);
+   
+    function createMap(mapMetric,scaleClasses) {
+        mapmetric = mapMetric;
+        scaleClasses = scaleClasses;
+        var zoomCenter = ['53.145743','-95.424717'];
+        var zoomMag = 4;
+        // create and populate map with covidData from above
+        var map = L.map('map',{ zoomControl: false }).setView(zoomCenter, zoomMag);
+        map.once('focus', function() { map.scrollWheelZoom.enable(); });
+        L.control.zoom({ position: 'bottomright' }).addTo(map);
 
-    // default info box content on mouseover action
-    var infoBoxDefaultText = '<p>Hover mouse over region to see details here.<br> Click on region to show details in left side panel.<br> Scroll to zoom.</p>';
+        L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+            maxZoom: 18,
+            attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
+                '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+                'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+            id: 'mapbox/light-v9',
+            tileSize: 512,
+            zoomOffset: -1
+        }).addTo(map);
 
-    // create info box control
-    var infobox = L.control({position: 'topleft'});
-    infobox.onAdd = function (map) {
-        var div = L.DomUtil.create('div', 'infobox');
-        div.innerHTML = infoBoxDefaultText;
-        return div;
-    };
-    infobox.addTo(map);
+        var mapInfoBoxText = '<p>Hover mouse over region to see details here.<br> Click on region to show details in left side panel.<br> Scroll to zoom.</p>';
 
-     // initialize with default variables
-    updateMap(mapMetric,scaleClasses,colorRange);
-    // update map, called by initial above, and map metric buttons
-    function updateMap(mapMetric,scaleClasses,colorRange) {
         // add statscan health region boundaries to map
         var layer_hr = L.geoJson(health_regions, {
             style: function (feature) {
@@ -202,7 +192,7 @@ Promise.all([
                     dashArray: '3',
                     weight: 1,
                     opacity: 1,
-                    fillColor: getRegionCount(mapMetric,feature.properties.ENG_LABEL,scaleClasses,colorRange),
+                    fillColor: getRegionCount(feature.properties.ENG_LABEL, scaleClasses),
                     fillOpacity: .7
                 };
             },
@@ -210,154 +200,141 @@ Promise.all([
                 layer.on({
                     mouseover: mouseOverActions,
                     mouseout: function (e) {layer_hr.resetStyle(e.target);
-                    document.getElementsByClassName('infobox')[0].innerHTML = infoBoxDefaultText; },
+                    document.getElementsByClassName('infobox')[0].innerHTML = mapInfoBoxText; },
                     click: showRegionDetails
                 });
             }
         }).addTo(map);
 
-        // remove existing legend if exists
-        var legends = document.getElementsByClassName('legend');
-        for(var i = 0; i < legends.length; i++){
-            legends[i].remove();
-        }
-
-        // add updated legend
+        // add legend with color gradients by case count
         var legend = L.control({position: 'topright'});
         legend.onAdd = function (map) {
-            var div = L.DomUtil.create('div', 'legend');
-            // assign color scale ranges baesd on metric
-            div.innerHTML +='<span>' + mapMetric.replace(/_/g,' ') + '</span><br>';
+            var div = L.DomUtil.create('div', 'infobox legend')
+        // assign color scale ranges baesd on metric
+            var labels = [];
+            // loop through density intervals and generate label with colored square for each interval
             for (var i = 0; i < scaleClasses.length; i++) {
                 div.innerHTML +=
-                '<i style="background:' + getColor(scaleClasses[i] + 1, scaleClasses,colorRange) + '"></i> ' +
+                '<i style="background:' + getColor(scaleClasses[i] + 1, scaleClasses) + '"></i> ' +
                 scaleClasses[i] + (scaleClasses[i + 1] ? '&ndash;' + scaleClasses[i + 1] + '<br>' : '+');
             }
             return div;
         };
         legend.addTo(map);
+
+        // control that shows state info on hover
+        var infobox = L.control({position: 'topleft'});
+        infobox.onAdd = function (map) {
+            var div = L.DomUtil.create('div', 'infobox');
+            var infobox = document.getElementsByClassName('infobox')[0];
+            div.innerHTML = mapInfoBoxText;
+            return div;
+        };
+        infobox.addTo(map);
+
+        // btnReset
+        document.getElementById("btnReset").addEventListener("click", e => btnReset(e));
+        const btnReset = e => {
+            var lat = '53.145743'; 
+            var lon = '-95.424717';
+            var mag = 4;
+            map.setView(new L.LatLng(lat, lon), mag);
+            var statscanRegion = 'Canada'
+            createCharts(statscanRegion);
+        };
+
+        // btnBC
+        document.getElementById("btnBC").addEventListener("click", e => btnBC(e));
+        const btnBC = e => {
+            var lat = '54.125813'; 
+            var lon = '-123.335386';
+            var mag = 5;
+            map.setView(new L.LatLng(lat, lon), mag);
+        };
+
+        // btnPraries
+        document.getElementById("btnPrairies").addEventListener("click", e => btnPrairies(e));
+        const btnPrairies = e => {
+            var lat = '54.125813'; 
+            var lon = '-107.283329';
+            var mag = 5;
+            map.setView(new L.LatLng(lat, lon), mag);
+        };
+
+        // btnOntario
+        document.getElementById("btnOntario").addEventListener("click", e => btnOntario(e));
+        const btnOntario = e => {
+            var lat = '45.348652';
+            var lon = '-80.855413';
+            var mag = 6;
+            map.setView(new L.LatLng(lat, lon), mag);
+        };
+
+        // btnQuebec
+        document.getElementById("btnQuebec").addEventListener("click", e => btnQuebec(e));
+        const btnQuebec = e => { 
+            var lat = '47.370079';  
+            var lon = '-73.720318';
+            var mag = 6;
+            map.setView(new L.LatLng(lat, lon), mag);
+        };
+
+        // btnMaritimes
+        document.getElementById("btnMaritimes").addEventListener("click", e => btnMaritimes(e));
+        const btnMaritimes = e => {
+            var lat = '47.002607';
+            var lon = '-63.052471';
+            var mag = 6;
+            map.setView(new L.LatLng(lat, lon), mag);
+        };
+
+        /*
+        // btnCaseTotal
+        document.getElementById("btnCaseTotal").addEventListener("click", e => mapCaseTotal(e));
+        const mapCaseTotal = e => {
+        var mapMetric = 'case_count';
+        var scaleClasses = [0,50,100,250,500,1000,2000,3000,6000,9000];
+    
+        document.getElementById('map').outerHTML = "<div id='map' class='map';'></div>";
+        createMap(mapMetric,scaleClasses);
+        };
+
+        // btnCaseNew
+        document.getElementById("btnCaseNew").addEventListener("click", e => mapCaseNew(e));
+        const mapCaseNew = e => {
+        var mapMetric = 'new_case_count';
+        var scaleClasses = [0,10,20,50,80,100,150,200,400];
+        
+        document.getElementById('map').outerHTML = "<div id='map' class='map';'></div>";
+        createMap(mapMetric,scaleClasses);
+        };
+
+        // btnMortTotal
+
+        // btnMortNew
+        */
+
     }
     
-    // buttons to select map metrics
-    // btnCaseTotal
-    document.getElementById("btnCase").addEventListener("click", e => mapCaseTotal(e));
-    const mapCaseTotal = e => {
-       btnCase();
-    };
-    function btnCase() {
-       var mapMetric = 'case_count';
-       var scaleClasses = [0,50,100,250,500,1000,2000,3000,6000,9000];
-       var colorRange = ['#deebf7','#08306b']; // blue
-       updateMap(mapMetric,scaleClasses,colorRange);
-    }
-
-    // btnCaseNew
-    document.getElementById("btnCaseNew").addEventListener("click", e => mapCaseNew(e));
-    const mapCaseNew = e => {
-        var mapMetric = 'case_new_count';
-        var scaleClasses = [0,5,15,20,30,50,75,100,200];
-        var colorRange = ['#efedf5','#3f007d']; // purple
-        updateMap(mapMetric,scaleClasses,colorRange);
-    };
-
-    // btnMortTotal
-    document.getElementById("btnMort").addEventListener("click", e => mapMortTotal(e));
-    const mapMortTotal = e => {
-        var mapMetric = 'mort_count';
-        var scaleClasses = [0,10,20,50,100,200,300,400,500];
-        var colorRange = ['#fee0d2','#a50f15']; // red
-        updateMap(mapMetric,scaleClasses,colorRange);
-    };
-
-    // btnMortNew
-    document.getElementById("btnMortNew").addEventListener("click", e => mapMortNew(e));
-    const mapMortNew = e => {
-        var mapMetric = 'mort_new_count';
-        var scaleClasses = [0,1,5,7,10,15,20,25,30];
-        var colorRange = ['#fee6ce','#7f2704']; // orange
-        var map;
-        updateMap(mapMetric,scaleClasses,colorRange);
-    };
-
-    // buttons to change map focus by canada region
-    // btnReset
-    document.getElementById("btnReset").addEventListener("click", e => btnReset(e));
-    const btnReset = e => {
-        var lat = '53.145743'; 
-        var lon = '-95.424717';
-        var mag = 4;
-        map._resetView(new L.LatLng(lat, lon), mag);
-        var statscanRegion = 'Canada'
-        createCharts(statscanRegion);
-        // remove existing legend
-        var legends = document.getElementsByClassName('legend');
-        for(var i = 0; i < legends.length; i++){
-            legends[i].remove();
-        }
-        btnCase(); 
-    };
-
-    // btnBC
-    document.getElementById("btnBC").addEventListener("click", e => btnBC(e));
-    const btnBC = e => {
-        var lat = '54.125813'; 
-        var lon = '-123.335386';
-        var mag = 5;
-        map._resetView(new L.LatLng(lat, lon), mag);
-    };
-
-    // btnPraries
-    document.getElementById("btnPrairies").addEventListener("click", e => btnPrairies(e));
-    const btnPrairies = e => {
-        var lat = '54.125813'; 
-        var lon = '-107.283329';
-        var mag = 5;
-        map._resetView(new L.LatLng(lat, lon), mag);
-    };
-
-    // btnOntario
-    document.getElementById("btnOntario").addEventListener("click", e => btnOntario(e));
-    const btnOntario = e => {
-        var lat = '45.348652';
-        var lon = '-80.855413';
-        var mag = 6;
-        map._resetView(new L.LatLng(lat, lon), mag);
-    };
-
-    // btnQuebec
-    document.getElementById("btnQuebec").addEventListener("click", e => btnQuebec(e));
-    const btnQuebec = e => { 
-        var lat = '47.370079';  
-        var lon = '-73.720318';
-        var mag = 6;
-        map._resetView(new L.LatLng(lat, lon), mag);
-    };
-
-    // btnMaritimes
-    document.getElementById("btnMaritimes").addEventListener("click", e => btnMaritimes(e));
-    const btnMaritimes = e => {
-        var lat = '47.002607';
-        var lon = '-63.052471';
-        var mag = 6;
-        map._resetView(new L.LatLng(lat, lon), mag);
-    };
-    
-    // get color for legend and health region shape
-    function getRegionCount(mapMetric,regionName,scaleClasses,colorRange) {
+    // case color for legend and health region shape
+    function getRegionCount(regionName,scaleClasses) {
         var regionColor;
+        //var mapMetric;
         for(var i = 0; i < covidData.length; i++) {
-            //var obj = covidData[i];
-            if (covidData[i]['statscan_arcgis_health_region'] === regionName) {
-                regionColor = getColor(covidData[i][mapMetric],scaleClasses,colorRange);
+            var obj = covidData[i];
+            if (obj.statscan_arcgis_health_region === regionName) {
+                regionColor = getColor(obj.case_count,scaleClasses);
                 break;
             }
         }
         return regionColor;
     }
     
-    // get color based on map metric
-    function getColor(n,scaleClasses,colorRange) {
-        var mapScale = chroma.scale(colorRange).classes(scaleClasses);
+    // get color based on case count
+    function getColor(n,scaleClasses) {
+        //var scaleClasses = [0,50,100,250,500,1000,2000,3000,6000,9000];
+        var hex = ['#deebf7','#08306b'];
+        var mapScale = chroma.scale(hex).classes(scaleClasses);
         var regionColor = mapScale(n);
         return regionColor
     }
@@ -371,7 +348,9 @@ Promise.all([
                 color: 'black', //shape border color
                 dashArray: '',
                 weight: 2,
-                opacity: 1
+                opacity: 1,
+                //fillColor: 'blue',
+                //fillOpacity: 0.3
             });
             if (!L.Browser.ie && !L.Browser.opera) {
                 layer.bringToFront();
@@ -381,9 +360,12 @@ Promise.all([
         }
     };
 
-    // create charts
     function createCharts(statscanRegion) {
         // create region details and charts
+
+        //var selectedRegion = covidData.filter(function(item) { return item.name === statscanRegion; });
+        // if use above to get array, then could generalize getCaseCount, etc to check for null and return zero, etc
+
         var regionCaseCount = getCaseCount(statscanRegion);
         var regionMortCount = getMortCount(statscanRegion);
         var regionProvince = getProvince(statscanRegion);
@@ -425,10 +407,10 @@ Promise.all([
         var mortsMaxDate = mortSelectedRegion.filter(function(d) { 
             return d.report_date === maxMortDate; 
         });
-        var regionCaseNewCount = casesMaxDate.reduce((a, b) => +a + +b.cases, 0);
-        var regionMortNewCount = mortsMaxDate.reduce((a, b) => +a + +b.deaths, 0);
-        var caseNewPctCanada = parseFloat(regionCaseNewCount / caseNewCanada * 100).toFixed(2)+"%";
-        var mortNewPctCanada = parseFloat(regionMortNewCount / mortNewCanada * 100).toFixed(2)+"%";
+        var regionNewCaseCount = casesMaxDate.reduce((a, b) => +a + +b.cases, 0);
+        var regionNewMortCount = mortsMaxDate.reduce((a, b) => +a + +b.deaths, 0);
+        var caseNewPctCanada = parseFloat(regionNewCaseCount / caseNewCanada * 100).toFixed(2)+"%";
+        var mortNewPctCanada = parseFloat(regionNewMortCount / mortNewCanada * 100).toFixed(2)+"%";
 
         // create count of days since last case for selected region
         if (maxCaseDate) {
@@ -448,8 +430,8 @@ Promise.all([
 
         // create region details for left side region_details div
         document.getElementById('region_details').innerHTML = '<small><p><strong>' + regionProvince + '<br>' + statscanRegion + 
-        '</strong><br>Total Cases: ' + regionCaseCount.toLocaleString() + ' (' + casePctCanada + ' Can)<br>New Cases: ' + regionCaseNewCount.toLocaleString() + ' (' + caseNewPctCanada + ' Can)' +
-        '<br>Total Mortalities: ' + regionMortCount.toLocaleString() + ' (' + mortPctCanada + ' Can)<br>New Mortalities: ' + regionMortNewCount.toLocaleString() + ' (' + mortNewPctCanada + ' Can)' +  '<br>First: Case ' + checkNull(minCaseDate) + ' Mort ' + checkNull(minMortDate) + '<br>Last: Case ' + checkNull(maxCaseDate) + ' Mort ' + checkNull(maxMortDate) + '<br>Days since last: Case: ' + checkNull(daysLastCase) + ' Mort: ' + checkNull(daysLastMort) + '<br>Mort per case: ' + checkNull(getRatioMortCase(regionMortCount,regionCaseCount)) + '</p></small>';
+        '</strong><br>Total Cases: ' + regionCaseCount.toLocaleString() + ' (' + casePctCanada + ' Can)<br>New Cases: ' + regionNewCaseCount.toLocaleString() + ' (' + caseNewPctCanada + ' Can)' +
+        '<br>Total Mortalities: ' + regionMortCount.toLocaleString() + ' (' + mortPctCanada + ' Can)<br>New Mortalities: ' + regionNewMortCount.toLocaleString() + ' (' + mortNewPctCanada + ' Can)' +  '<br>First: Case ' + checkNull(minCaseDate) + ' Mort ' + checkNull(minMortDate) + '<br>Last: Case ' + checkNull(maxCaseDate) + ' Mort ' + checkNull(maxMortDate) + '<br>Days since last: Case: ' + checkNull(daysLastCase) + ' Mort: ' + checkNull(daysLastMort) + '<br>Mort per case: ' + checkNull(getRatioMortCase(regionMortCount,regionCaseCount)) + '</p></small>';
         
         // group case counts by date to use in selected region chart
         var caseRegionByDate = d3.nest()
@@ -827,10 +809,10 @@ Promise.all([
     // calculate mort to case ratio value
     function getRatioMortCase(numerator, denominator) {
         if (denominator === 0 || isNaN(denominator)) {
-            return null;
+                return null;
         }
         else {
-            return (numerator / denominator).toFixed(3);
+                return (numerator / denominator).toFixed(3);
         }
     }
 
@@ -873,26 +855,25 @@ Promise.all([
         var regionName = layer.feature.properties.ENG_LABEL;
         var regionCaseCount = getCaseCount(regionName);
         var regionMortCount = getMortCount(regionName);
-        var regionCaseNewCount = getCaseNewCount(regionName);
-        var regionMortNewCount = getMortNewCount(regionName);
         var regionProvince = getProvince(regionName);
         var casePctCanada = parseFloat(regionCaseCount / caseTotalCanada * 100).toFixed(2)+"%";
         var mortPctCanada = parseFloat(regionMortCount / mortTotalCanada * 100).toFixed(2)+"%";
-        var caseNewPctCanada = parseFloat(regionCaseNewCount / caseNewCanada * 100).toFixed(2)+"%";
-        var mortNewPctCanada = parseFloat(regionMortNewCount / mortNewCanada * 100).toFixed(2)+"%";
 
-        document.getElementsByClassName('infobox')[0].innerHTML = '<p">' + regionProvince + ' <br>' + regionName + '<br>Total Cases: ' + regionCaseCount.toLocaleString() + ' (' + casePctCanada + ' Can)<br>New Cases: ' + regionCaseNewCount.toLocaleString() + ' (' + caseNewPctCanada + ' Can)' +
-        '<br>Total Mortalities: ' + regionMortCount.toLocaleString() + ' (' + mortPctCanada + ' Can)<br>New Mortalities: ' + regionMortNewCount.toLocaleString() + ' (' + mortNewPctCanada + ' Can)</p><p><strong>Click map region to show detail on left.</strong></p>';
+        document.getElementsByClassName('infobox')[0].innerHTML = '<p">Province:' + regionProvince + ' <br>' + 'Health Region: ' + regionName + '<br>' + 'Confirmed cases: ' + regionCaseCount.toLocaleString() + ' (' + casePctCanada + ' Canada)' + '<br>' + 'Mortalities: ' + regionMortCount.toLocaleString() + ' (' + mortPctCanada + ' Canada)</p><p><strong>Click map region to show detail on left.</strong></p>';
     };
 
-    // calculate mort to case ratio
     function getRatioMortCase(numerator, denominator) {
         if (denominator === 0 || isNaN(denominator)) {
-            return '0.000';
+                return '0.000';
         }
         else {
-            return (numerator / denominator).toFixed(3);
+                return (numerator / denominator).toFixed(3);
         }
+    }
+
+    // not currently used, was prev used on mouse scroll on map
+    function zoomToFeature(e) {
+        map.fitBounds(e.target.getBounds());
     }
     
     // get case counts from working group data
@@ -913,46 +894,6 @@ Promise.all([
             regionCaseCount = 0; 
     }
     return regionCaseCount;
-    }
-
-    // get new case counts from working group data
-    function getCaseNewCount(regionName) {
-        var regionCaseNewCount = 0;
-        if (regionName === 'Canada') {
-            regionCaseNewCount = caseTotalCanada;
-        } else {
-            for(var i = 0; i < covidData.length; i++) {
-                var obj = covidData[i];
-                if (obj.statscan_arcgis_health_region === regionName) {
-                    regionCaseNewCount = obj.case_new_count;
-                    break;
-                }
-            }
-        }
-        if (regionCaseNewCount == null) {
-            regionCaseNewCount = 0; 
-    }
-    return regionCaseNewCount;
-    }
-
-    // get new mort counts from working group data
-    function getMortNewCount(regionName) {
-        var regionMortNewCount = 0;
-        if (regionName === 'Canada') {
-            regionMortNewCount = mortTotalCanada;
-        } else {
-            for(var i = 0; i < covidData.length; i++) {
-                var obj = covidData[i];
-                if (obj.statscan_arcgis_health_region === regionName) {
-                    regionMortNewCount = obj.mort_new_count;
-                    break;
-                }
-            }
-        }
-        if (regionMortNewCount == null) {
-            regionMortNewCount = 0; 
-    }
-    return regionMortNewCount;
     }
 
     // get mortality counts from working group data
@@ -993,6 +934,7 @@ Promise.all([
     }
 
 //CREATE TABLE BELOW MAP=================================
+    
     $(document).ready(function () {
         var thead;
         var thead_tr;
@@ -1028,10 +970,10 @@ Promise.all([
             tbody_tr.append("<td style='text-align: right';>" + parseFloat(obj.mort_count / mortTotalCanada * 100).toFixed(2) + "</td>");
             tbody_tr.append("<td style='text-align: right';>" + getRatioMortCase(obj.mort_count, obj.case_count) + "</td>");
             tbody.append(tbody_tr);
-            tbody_tr.append("<td style='text-align: right';>" + obj.case_new_count + "</td>");
-            tbody_tr.append("<td style='text-align: right';>" + obj.mort_new_count + "</td>");
-            tbody_tr.append("<td style='text-align: right';>" + parseFloat(obj.case_new_count / caseNewCanada * 100).toFixed(2) + "</td>");
-            tbody_tr.append("<td style='text-align: right';>" + parseFloat(obj.mort_new_count / mortNewCanada * 100).toFixed(2) + "</td>");
+            tbody_tr.append("<td style='text-align: right';>" + obj.new_case_count + "</td>");
+            tbody_tr.append("<td style='text-align: right';>" + obj.new_mort_count + "</td>");
+            tbody_tr.append("<td style='text-align: right';>" + parseFloat(obj.new_case_count / caseNewCanada * 100).toFixed(2) + "</td>");
+            tbody_tr.append("<td style='text-align: right';>" + parseFloat(obj.new_mort_count / mortNewCanada * 100).toFixed(2) + "</td>");
         }
     });
 
