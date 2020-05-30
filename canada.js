@@ -203,7 +203,7 @@ Promise.all([
                     weight: 1,
                     opacity: 1,
                     fillColor: getRegionCount(mapMetric,feature.properties.ENG_LABEL,classBreaks,colorHex),
-                    fillOpacity: .9
+                    fillOpacity: 1
                 };
             },
             onEachFeature: function (feature, layer) {
