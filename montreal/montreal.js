@@ -288,6 +288,30 @@
         updateMap(mapMetric,classBreaks,colorHex);
     };
 
+    // btnCase100k
+    document.getElementById("btnCase100k").addEventListener("click", e => mapCase100k(e));
+    const mapCase100k = e => {
+        btnCase100k();
+    };
+    function btnCase100k() {
+       var mapMetric = 'case_per_100k';
+       var classBreaks = [1,100,300,500,800,1000,1500,2000];
+       var colorHex = ['#efedf5','#3f007d']; // purple
+       updateMap(mapMetric,classBreaks,colorHex);
+    }
+
+    // btnMort100k
+    document.getElementById("btnMort100k").addEventListener("click", e => mapMort100k(e));
+    const mapMort100k = e => {
+        btnMort100k();
+    };
+    function btnMort100k() {
+       var mapMetric = 'mort_per_100k';
+       var classBreaks = [1,10,20,50,100,200,300,400];
+       var colorHex = ['#d4b9da','#67001f']; // pink
+       updateMap(mapMetric,classBreaks,colorHex);
+    }
+
     // summarize cases counts overall and add to header
     var case_total = 0;
     for(var i = 0; i < covid_data.length; i++) {
