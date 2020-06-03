@@ -159,28 +159,27 @@ Promise.all([
     var mapMetric = 'case_count';
     var colorHex = ['#deebf7','#08306b'];
     var classBreaks = [1,50,100,250,500,1000,2000,3000,6000,9000];
-     var zoomCenter = ['53.145743','-95.424717'];
-     var zoomMag = 4;
-     // create and populate map with covidData from above
-     var map = L.map('map',{ zoomControl: false }).setView(zoomCenter, zoomMag);
-     map.once('focus', function() { map.scrollWheelZoom.enable(); });
-     L.control.zoom({ position: 'bottomright' }).addTo(map);
-     L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
-         maxZoom: 18,
-         attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
-             '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
-             'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-         id: 'mapbox/light-v9',
-         tileSize: 512,
-         zoomOffset: -1
-     }).addTo(map);
+    var zoomCenter = ['53.145743','-95.424717'];
+    var zoomMag = 4;
+    // create and populate map with covidData from above
+    var map = L.map('map',{ zoomControl: false }).setView(zoomCenter, zoomMag);
+    map.once('focus', function() { map.scrollWheelZoom.enable(); });
+    L.control.zoom({ position: 'bottomright' }).addTo(map);
+    L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+        maxZoom: 18,
+        attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
+            '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+            'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+        id: 'mapbox/light-v9',
+        tileSize: 512,
+        zoomOffset: -1
+    }).addTo(map);
 
     // create charts default to all canada
     createCharts(statscanRegion);
 
     // default info box content on mouseover action
     var infoBoxDefaultText = '<p>Hover mouse over region to see details here.<br> Click on region to show details in left side panel.<br> Scroll to zoom.</p>';
-
     // create info box control
     var infobox = L.control({position: 'topleft'});
     infobox.onAdd = function (map) {
@@ -287,7 +286,7 @@ Promise.all([
     };
 
     // buttons to change map focus by canada region
-    // btnReset
+    // btnCanada
     document.getElementById("btnCanada").addEventListener("click", e => btnCanada(e));
     const btnCanada = e => {
         var lat = '53.145743'; 
