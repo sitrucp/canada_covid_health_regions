@@ -6,12 +6,14 @@ var file_cases = "https://raw.githubusercontent.com/ishaberry/Covid19Canada/mast
 var file_mortality = "https://raw.githubusercontent.com/ishaberry/Covid19Canada/master/mortality.csv";
 var file_update_time = "https://raw.githubusercontent.com/ishaberry/Covid19Canada/master/update_time.txt";
 var file_hr_lookup = "https://raw.githubusercontent.com/sitrucp/canada_covid_health_regions/master/health_regions_lookup.csv";
+//var file_case_days = "https://canada-covid-data.s3.amazonaws.com/case_last_dates.csv";
 
 Promise.all([
     d3.csv(file_cases),
     d3.csv(file_mortality),
     d3.csv(file_update_time),
-    d3.csv(file_hr_lookup)
+    d3.csv(file_hr_lookup),
+    //d3.csv(file_case_days)
 ]).then(function(data) {
     //everthing else below is in d3 promise scope
     // get data sets from promise
@@ -19,6 +21,7 @@ Promise.all([
     var mortalities = data[1];
     var updateTime = data[2];
     var regionLookup = data[3];
+    //var caseDays = data[4];
 
     // create reformatted case and mortality dates
     // case date orig format dd-mm-yyyy, but better as yyyy-mm-dd
@@ -82,6 +85,8 @@ Promise.all([
     for (var i=1; i<caseRegionByDate.length; i++) {
         var x = [];
         var y = [];
+        // create new column last_date and copy report date where cases has value
+        // fill forward from last date has value 
         var totalRegionCases = null;
         for (var j=0; j<caseRegionByDate[i]['values'].length; j++) {
             x.push(caseRegionByDate[i]['values'][j]['key']);

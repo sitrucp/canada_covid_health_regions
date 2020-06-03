@@ -226,7 +226,6 @@ Promise.all([
         var legend = L.control({position: 'topright'});
         legend.onAdd = function (map) {
             var div = L.DomUtil.create('div', 'legend');
-            // assign color scale ranges baesd on metric
             div.innerHTML +='<span>' + mapMetric.replace(/_/g,' ') + '</span><br>';
             div.innerHTML += '<i style="background:#ffffff"></i>0<br>';
             classBreaks.push(999); // add dummy class to extend to get last class color, chroma only returns class.length - 1 colors
