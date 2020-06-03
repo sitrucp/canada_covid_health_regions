@@ -33,7 +33,7 @@ The Montreal map data web scraping code is in another repository <a href = "http
 **Small Multiples of Canada COVID-19 Cases By Provincial Health Regions**
 
 View charts here:
-<a href="https://sitrucp.github.io/canada_covid_health_regions/small_multiples/index.html">https://sitrucp.github.io/canada_covid_health_regions/montreal/index.html</a>
+<a href="https://sitrucp.github.io/canada_covid_health_regions/small_multiples/index.html">https://sitrucp.github.io/canada_covid_health_regions/small_multiples/index.html</a>
 
 This uses same data as above but visualizes each health region as separate small area chart using Plotly.js for charting and Isotope.js to present small multiples in responsive, interactive grid that can be sorted and filtered.
 
