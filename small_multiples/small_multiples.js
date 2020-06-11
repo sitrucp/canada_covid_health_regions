@@ -74,19 +74,22 @@ Promise.all([
     .key(function(d) { return d.report_date; })
     .rollup(function(v) { return v.length; })
     .entries(caseWithStatscan)
+
+    //console.log(JSON.stringify(caseRegionByDate));
     
     // create chart data
     var minCaseDate = d3.min(caseWithStatscan, d=>d.report_date);
     var maxCaseDate = d3.max(caseWithStatscan, d=>d.report_date);
     var maxDailyCases = d3.max(caseWithStatscan, d=>d.case_count);
     var rowCount = (caseRegionByDate.length / 3).toFixed();
-    var colCount = 3;
+    var arrColorWord = [];
 
     for (var i=1; i<caseRegionByDate.length; i++) {
         var x = [];
         var y = [];
+        
         // create new column last_date and copy report date where cases has value
-        // fill forward from last date has value 
+        // fill forward from last date has value
         var totalRegionCases = null;
         for (var j=0; j<caseRegionByDate[i]['values'].length; j++) {
             x.push(caseRegionByDate[i]['values'][j]['key']);
@@ -96,13 +99,15 @@ Promise.all([
         var data = {};
         var layout = {};
         var provRegion = caseRegionByDate[i]['key'];
-        var province = caseRegionByDate[i]['key'].split('|')[0];
-        var region = caseRegionByDate[i]['key'].split('|')[1];
+        var province = provRegion.split('|')[0];
+        var region = provRegion.split('|')[1];
         var maxRegionCases = d3.max(y);
         var maxRegionCaseDate = d3.max(x);
         var minRegionCaseDate = d3.min(x);
         var timeDiff = (new Date(lastUpdated)) - (new Date(maxRegionCaseDate));
         var daysLastCase = parseInt(Math.round((timeDiff / (1000 * 60 * 60 * 24)-1)));
+        var regionColor = fillColor(daysLastCase).colorWord;
+        arrColorWord.push(regionColor);
 
         function fillColor(days) {
             var daysColor = '';
@@ -110,14 +115,14 @@ Promise.all([
             if (days === 0) {
                 var daysColor = '#ff6666'; // red
                 var colorWord = 'red';
-            } else if (days < 8) {
+            } else if (days > 0 && days < 7) {
                 var daysColor = '#ef9000'; // orange
                 var colorWord = 'orange';
             } else {
                 var daysColor = '#259625'; // green
                 var colorWord = 'green';
             }
-            return daysColor
+            return { daysColor, colorWord }
         }
 
         function movingAverage(values, N) {
@@ -143,10 +148,10 @@ Promise.all([
             type:'scatter',
             mode: 'lines',
             line: {
-                color: fillColor(daysLastCase)
+                color: fillColor(daysLastCase).daysColor
               },
             fill:'tozeroy',
-            fillcolor: fillColor(daysLastCase),
+            fillcolor: fillColor(daysLastCase).daysColor,
         };
         var layout = {
             //title: {
@@ -216,6 +221,18 @@ Promise.all([
         Plotly.newPlot(newChartDiv, [data], layout, config);
     }
 
+    var countColorWord = arrColorWord.reduce((p, c) => {
+        var color = c;
+        if (!p.hasOwnProperty(color)) {
+          p[color] = 0;
+        }
+        p[color]++;
+        return p;
+      }, {});
+
+      var divDesc = document.getElementById('daysDescription');
+      divDesc.innerHTML += '<p><strong><span style="color:#259625">Green: ' + countColorWord.green + '</span> | <span style="color:#ef9000">Orange: ' + countColorWord.orange + '</span> | <span style="color:#ff6666">Red: ' + countColorWord.red + '</span></strong></p>';
+
     // isotope
     var $grid = $('.grid').isotope({
         // options
@@ -272,7 +289,7 @@ Promise.all([
     // filter label
     labelFilterLI = document.createElement('li');
     labelFilterLI.className = 'list-inline-item';
-    labelFilterLI.innerHTML = 'Filters:';
+    labelFilterLI.innerHTML = 'Region:';
     newFilterUL.append(labelFilterLI);
     // all button
     allFilterLI = document.createElement('li');

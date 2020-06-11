@@ -113,6 +113,11 @@ td {
   .text-div {
       word-wrap: break-word;
   }
+
+  .stackedtext-div {
+    float: right;
+    word-wrap: break-word;
+}
   
   .grid-item > * {
       margin: 0;

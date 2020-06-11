@@ -80,7 +80,7 @@ Promise.all([
     // summarize case counts by prov | health_region concat
     var caseByRegion = d3.nest()
         .key(function(d) { return d.prov_health_region_case; })
-        .rollup(function(v) {return {
+        .rollup(function(v) { return {
             case_count: d3.sum(v, function(d) { return d.cases; }),
             case_new_count: d3.sum(v, function(d) { return d.case_new_count; }) 
             };
@@ -441,7 +441,7 @@ Promise.all([
         } else {
             daysLastCase = null;
         }
-
+        
         // create count of days since last mort for selected region
         if (maxMortDate) {
             var mortTimeDiff = (new Date(lastUpdated)) - (new Date(maxMortDate));

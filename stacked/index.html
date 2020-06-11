@@ -1,0 +1,81 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Canada COVID-19 Cases Small Multiple Charts By Provincial Health Regions</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" type="image/x-icon" href="../favicon.ico" />
+
+    <meta property="og:title" content="Canada COVID-19 Cases Small Multiple Charts By Provincial Health Regions."/>
+
+    <meta property='og:image' content='https://sitrucp.github.io/canada_covid_health_regions/small_multiples/image_stacked.jpg'/>
+
+    <meta property="og:description" content="7-day moving average COVID-91 counts by provincial health regions."/>
+
+    <meta property="og:url" content="https://sitrucp.github.io/canada_covid_health_regions/stacked/index.html" />
+
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.16.0/d3.min.js" integrity="sha256-Xb6SSzhH3wEPC4Vy3W70Lqh9Y3Du/3KxPqI2JHQSpTw=" crossorigin="anonymous"></script>
+
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chroma-js/2.1.0/chroma.min.js"></script>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="row">
+        <div class="col-md-12">
+            <ul class="list-inline">
+                <li class="list-inline-item"><a href="../index.html">Canada Map</a></li>
+                <li class="list-inline-item">/</li>
+                <li class="list-inline-item">Canada Small Multiple Charts</li>
+                <li class="list-inline-item">/</li>
+                <li class="list-inline-item">Canada Stacked Charts</li>
+                <li class="list-inline-item">/</li>
+                <li class="list-inline-item"><a href="../montreal/index.html">Montreal Map - Canada's Hotspot</a></li>
+                <li class="list-inline-item"></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <h4>Canada COVID-19 Cases Small Multiple Charts By Provincial Health Regions</h4>
+            
+            <p>Stacked 7-day moving average COVID-91 count charts by provincial health regions. The COVID-91 data comes from <a href = "https://github.com/ishaberry/Covid19Canada" target="blank">COVID-19 Canada Open Data Working Group</a> and is updated daily.</p>
+            <p id="header"></p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <p>Days since last case (DL): <strong><span style="color:#259625">Green > 7 days</span> | <span style="color:#ef9000">Orange 1-7 days</span> | <span style="color:#ff6666">Red 0 days</span></strong></p>
+        </div>
+    </div>
+    
+
+    <div class="row">
+        <div id="charts" class="col-md-12"></div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <br><br>
+            <p><small class="text-muted">Site files: <a href="https://github.com/sitrucp/canada_covid_health_regions/" target="blank">github.com/sitrucp/canada_covid_health_regions/small_multiples/</a></small></p>
+        </div>
+    </div>
+
+</div>
+
+<script src="stacked.js"></script>
+
+</body>
+</html>
