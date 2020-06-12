@@ -230,8 +230,8 @@ Promise.all([
         return p;
       }, {});
 
-      var divDesc = document.getElementById('daysDescription');
-      divDesc.innerHTML += '<p><strong><span style="color:#259625">Green: ' + countColorWord.green + '</span> | <span style="color:#ef9000">Orange: ' + countColorWord.orange + '</span> | <span style="color:#ff6666">Red: ' + countColorWord.red + '</span></strong></p>';
+    var divDesc = document.getElementById('daysDescription');
+    divDesc.innerHTML += '<p>Days since last case (DL): <span style="color:#259625">Green: > 7 days (' + countColorWord.green + ')</span> | <span style="color:#ef9000">Orange: 1-7 days (' + countColorWord.orange + ')</span> | <span style="color:#ff6666">Red: 0 days (' + countColorWord.red + ')</span></p>';
 
     // isotope
     var $grid = $('.grid').isotope({
