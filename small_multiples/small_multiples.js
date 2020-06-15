@@ -37,7 +37,7 @@ Promise.all([
     // summarize cases and mortalities counts overall for header
     var caseTotalCanada = cases.length;
     var mortTotalCanada = mortalities.length;
-    var div = document.getElementById('header');
+    var div = document.getElementById('countSummary');
     div.innerHTML += 'Total cases: ' + caseTotalCanada.toLocaleString() + ' Total mortalities: ' + mortTotalCanada.toLocaleString() + ' Date data updated: ' + lastUpdated;
 
     cases.forEach(function(d) {
@@ -75,19 +75,16 @@ Promise.all([
     .rollup(function(v) { return v.length; })
     .entries(caseWithStatscan)
 
-    //console.log(JSON.stringify(caseRegionByDate));
-    
     // create chart data
     var minCaseDate = d3.min(caseWithStatscan, d=>d.report_date);
     var maxCaseDate = d3.max(caseWithStatscan, d=>d.report_date);
     var maxDailyCases = d3.max(caseWithStatscan, d=>d.case_count);
     var rowCount = (caseRegionByDate.length / 3).toFixed();
     var arrColorWord = [];
-
+   
     for (var i=1; i<caseRegionByDate.length; i++) {
         var x = [];
         var y = [];
-        
         // create new column last_date and copy report date where cases has value
         // fill forward from last date has value
         var totalRegionCases = null;
@@ -96,6 +93,7 @@ Promise.all([
             y.push(caseRegionByDate[i]['values'][j]['value']);
             totalRegionCases += caseRegionByDate[i]['values'][j]['value']
         }
+
         var data = {};
         var layout = {};
         var provRegion = caseRegionByDate[i]['key'];
@@ -113,13 +111,13 @@ Promise.all([
             var daysColor = '';
             var colorWord = '';
             if (days === 0) {
-                var daysColor = '#ff6666'; // red
+                var daysColor = '#de425b'; // red
                 var colorWord = 'red';
             } else if (days > 0 && days < 7) {
-                var daysColor = '#ef9000'; // orange
+                var daysColor = '#f27d58'; // orange
                 var colorWord = 'orange';
             } else {
-                var daysColor = '#259625'; // green
+                var daysColor = '#488f31'; // green
                 var colorWord = 'green';
             }
             return { daysColor, colorWord }
@@ -148,7 +146,8 @@ Promise.all([
             type:'scatter',
             mode: 'lines',
             line: {
-                color: fillColor(daysLastCase).daysColor
+                color: fillColor(daysLastCase).daysColor,
+                width: 5
               },
             fill:'tozeroy',
             fillcolor: fillColor(daysLastCase).daysColor,
@@ -168,7 +167,7 @@ Promise.all([
             width: 210,
             height: 40,
             margin: {
-                l: 5,
+                l: 8,
                 r: 5,
                 b: 13,
                 t: 10,
@@ -208,7 +207,7 @@ Promise.all([
         chartText = '<p class="chart-text"><strong><span class="province">' + province + '</span><span class="region"> - ' + region + '</span></strong><br><strong>F:</strong><span class="minRegionCaseDate">' + minRegionCaseDate + '</span> <strong>L:</strong><span class="maxRegionCaseDate">' + maxRegionCaseDate + '</span> <strong>T:</strong><span class="totalRegionCases">' + totalRegionCases + '</span> <strong>MD:</strong><span class="maxRegionCases">' + maxRegionCases + '</span> <strong>DL:</strong><span class="daysLastCase">' + daysLastCase + '</span></p>'
 
         // create div and append chart to it iteratively
-        let parent = document.getElementById('charts');
+        let parent = document.getElementById('small-charts');
         let newChartDiv = document.createElement('div');
         newChartDiv.className = 'grid-item';
         newChartDiv.className += ' ' + province.replace(' ', '-');
@@ -221,6 +220,64 @@ Promise.all([
         Plotly.newPlot(newChartDiv, [data], layout, config);
     }
 
+    // create case days normalized stacked area chart
+    var areaX = []
+    var y0days = []
+    var y1to7days = []
+    var y7plusdays = []
+    for (var i=1; i<case_dates_data.length; i++) {
+        areaX.push(case_dates_data[i]['report_date']);
+        y0days.push(case_dates_data[i]['0 days']);
+        y1to7days.push(case_dates_data[i]['1-7 days']);
+        y7plusdays.push(case_dates_data[i]['7+ days']);
+    }
+
+    var areaTraces = [
+        {x: areaX, y: y0days, stackgroup: 'one', groupnorm:'percent', line: {color: '#de425b'}, fillcolor: '#de425b'},
+        {x: areaX, y: y1to7days, stackgroup: 'one', line: {color: '#f8b267'}, fillcolor: '#f8b267'},
+        {x: areaX, y: y7plusdays, stackgroup: 'one', line: {color: '#488f31'}, fillcolor: '#488f31'}
+    ];
+
+    var areaLayout = {
+        showlegend: false,
+        hovermode: false,
+        autosize: true,
+        width: 400,
+        height: 100,
+        margin: {
+            l: 5,
+            r: 5,
+            b: 20,
+            t: 5,
+            pad: 0
+        },
+        xaxis: {
+            autotick: true,
+            mirror: 'allticks',
+            type: "date",
+            tickformat: "%b-%d",
+            tickfont: {
+                size: 10
+            },
+            range:[
+                new Date(minCaseDate).getTime(), 
+                new Date(maxCaseDate).getTime()
+            ],
+            showgrid: false
+        },
+        yaxis: {
+            showticklabels: false,
+            showgrid: false,
+            range: [0, maxDailyCases]
+        }
+    };
+    var areaConfig = {
+        responsive: true,
+        displayModeBar: false
+    };
+    Plotly.newPlot('area-chart', areaTraces, areaLayout, areaConfig);
+    //////////////////////
+
     var countColorWord = arrColorWord.reduce((p, c) => {
         var color = c;
         if (!p.hasOwnProperty(color)) {
@@ -231,7 +288,7 @@ Promise.all([
       }, {});
 
     var divDesc = document.getElementById('daysDescription');
-    divDesc.innerHTML += '<p>Days since last case (DL): <span style="color:#259625">Green: > 7 days (' + countColorWord.green + ')</span> | <span style="color:#ef9000">Orange: 1-7 days (' + countColorWord.orange + ')</span> | <span style="color:#ff6666">Red: 0 days (' + countColorWord.red + ')</span></p>';
+    divDesc.innerHTML += '<p>Days since last case (DL) grouped by: <span style="color:#259625"> > 7 days (' + countColorWord.green + ')</span> | <span style="color:#ef9000"> 1-7 days (' + countColorWord.orange + ')</span> | <span style="color:#ff6666"> 0 days (' + countColorWord.red + ')</span></p>';
 
     // isotope
     var $grid = $('.grid').isotope({
@@ -300,7 +357,28 @@ Promise.all([
     allFilterLI.setAttribute('data-filter', '*');
     allFilterLI.innerHTML = 'All';
     newFilterUL.append(allFilterLI);
+
     // add button for each province
+    var provAbbrev = {
+        'Alberta':'AB',
+        'BC':'BC',
+        'Manitoba':'MB',
+        'New Brunswick':'NB',
+        'NL':'NF',
+        'NWT':'NT',
+        'Nova Scotia':'NS',
+        'Nunavut':'NU',
+        'Ontario':'ON',
+        'PEI':'PE',
+        'Repatriated': 'Repatriated',
+        'Quebec':'QC',
+        'Saskatchewan':'SK',
+        'Yukon':'YT',
+    };
+    
+    function getProvAbbrev(province) {
+        return provAbbrev[province];
+    }
     for (i in provinces) {
         newFilterLI = document.createElement('li');
         newFilterLI.className = 'list-inline-item';
@@ -308,7 +386,8 @@ Promise.all([
         newFilterLI.className += ' btn-sm';
         newFilterLI.className += ' filter-btn';
         newFilterLI.setAttribute('data-filter', '.' + provinces[i].replace(' ', '-'));
-        newFilterLI.innerHTML = provinces[i].replace(' ', '-');
+        //newFilterLI.innerHTML = provinces[i];
+        newFilterLI.innerHTML = getProvAbbrev(provinces[i]);
         newFilterUL.append(newFilterLI);
     }
 

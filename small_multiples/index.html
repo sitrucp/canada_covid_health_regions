@@ -30,7 +30,7 @@
 
 <body>
 
-<div class="container">
+<div class="container-sm">
 
     <div class="row">
         <div class="col-md-12">
@@ -49,8 +49,19 @@
         <div class="col-md-12">
             <h4>Canada COVID-19 Cases Small Multiple Charts By Provincial Health Regions</h4>
             
-            <p>Interactive sort & filter set of small multiple charts of 7-day moving average COVID-91 counts by provincial health regions. The COVID-91 data comes from <a href = "https://github.com/ishaberry/Covid19Canada" target="blank">COVID-19 Canada Open Data Working Group</a> and is updated daily.</p>
-            <p id="header"></p>
+            <p id="countSummary">Interactive set of charts showing 7-day moving average case count by provincial health regions. The COVID-91 data comes from <a href = "https://github.com/ishaberry/Covid19Canada" target="blank">COVID-19 Canada Open Data Working Group</a> and is updated daily. </p>
+
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12" id="daysDescription">
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <p id="area-chart">Trend of days since last case over all health regions:</p>
         </div>
     </div>
 
@@ -58,11 +69,10 @@
         <div class="col-md-12" id="sorts">
             <ul class="list-inline">
             <li class="list-inline-item">Sort:</li>
-            <li class="list-inline-item btn btn-secondary btn-sm sort-btn" data-sort-by="original-order" >Reset</li>
-            <li class="list-inline-item btn btn-primary btn-sm sort-btn" data-sort-by="region" >Region</li>
+            <li class="list-inline-item btn btn-secondary btn-sm sort-btn" data-sort-by="original-order">Reset</li>
+            <li class="list-inline-item btn btn-primary btn-sm sort-btn" data-sort-by="region">Region</li>
             <li class="list-inline-item btn btn-primary btn-sm sort-btn" data-sort-by="province" >Province</li>
             <li class="list-inline-item btn btn-primary btn-sm sort-btn" data-sort-by="minRegionCaseDate">First Date (F)</li>
-            <li class="list-inline-item btn btn-primary btn-sm sort-btn" data-sort-by="maxRegionCaseDate" >Last Date (L)</li>
             <li class="list-inline-item btn btn-primary btn-sm sort-btn" data-sort-by="totalRegionCases" >Total Count (T)</li>
             <li class="list-inline-item btn btn-primary btn-sm sort-btn" data-sort-by="maxRegionCases" >Max Daily Count (MD)</li>
             <li class="list-inline-item btn btn-primary btn-sm sort-btn" data-sort-by="daysLastCase" ># Days Since Last (DL)</li>
@@ -73,14 +83,9 @@
         <div class="col-md-12" id="filters">
         </div>
     </div>
-    <div class="row">
-        <div class="col-md-12" id="daysDescription">
-        </div>
-    </div>
     
-
     <div class="row">
-        <div id="charts" class="grid col-md-12"></div>
+        <div class="grid col-md-12" id="small-charts"></div>
     </div>
 
     <div class="row">
@@ -93,6 +98,8 @@
 </div>
 
 <script src="small_multiples.js"></script>
+
+<script src="https://canada-covid-data.s3.amazonaws.com/covid_case_days.json" type="text/javascript"></script>
 
 </body>
 </html>

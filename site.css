@@ -1,50 +1,50 @@
 
-#map {
+    #map {
     height:450px;
-}
+    }
 
-html, body {
+    html, body {
     height: 100%;
     margin: 10px;  
     font-family: Arial, Helvetica, sans-serif;
-}
+    }
 
-table tbody tr td {
+    table tbody tr td {
     font-size: 12px;
-}
+    }
 
-table thead tr th {
+    table thead tr th {
     font-size: 12px;
-}
+    }
 
-.modebar{
+    .modebar{
     display: none !important;
-}
+    }
 
-th {
+    th {
     padding: 10px;
     font-weight: bold;
     text-align: left;
     border-bottom: 1px solid #ddd;
-}
+    }
 
-td {
+    td {
     padding: 10px;
     text-align: left;
     border-bottom: 1px solid #ddd;
-}
+    }
 
-#region_details {
+    #region_details {
     padding: 2px;
-  
-}
 
-#project_details {
+    }
+
+    #project_details {
     padding: 5px;
     margin: 5px;
-}
+    }
 
-.total-box {
+    .total-box {
     font: 18px/20px;
     font-weight: 500;
     color: #023858;
@@ -54,9 +54,9 @@ td {
     text-align: center;
     padding: 5px;
     margin: 5px;
-}
+    }
 
-.infobox {
+    .infobox {
     padding: 6px 8px;
     font: 14px/16px;
     background: white;
@@ -64,14 +64,14 @@ td {
     background: rgba(255,255,255,0.8);
     box-shadow: 0 0 15px rgba(0,0,0,0.2);
     border-radius: 5px;
-}
+    }
 
-.infobox h4 {
+    .infobox h4 {
     margin: 0 0 5px;
     color: #777;
-}
+    }
 
-.legend {
+    .legend {
     line-height: 20px;
     color: #555;
     padding: 6px 8px;
@@ -81,50 +81,52 @@ td {
     background: rgba(255,255,255,0.8);
     box-shadow: 0 0 15px rgba(0,0,0,0.2);
     border-radius: 5px;
-}
+    }
 
-.legend i {
+    .legend i {
     width: 18px;
     height: 18px;
     float: left;
     margin-right: 8px;
     opacity: 1;
-}
+    }
 
 
-/* clear fix */
-.grid:after {
+    /* clear fix */
+    .grid:after {
     content: '';
     display: block;
     clear: both;
-  }
-  
-  .grid-item {
+    }
+
+    .grid-item {
     position: relative;
     float: left;
     width: 220;
     height: 50px;
     margin: 10px;
     padding: 0px;
-  }
-  
-  .btn{margin-bottom:10px;}
-  
-  .text-div {
-      word-wrap: break-word;
-  }
-
-  .stackedtext-div {
-    float: right;
-    word-wrap: break-word;
-}
-  
-  .grid-item > * {
-      margin: 0;
-      padding: 0;
     }
-  
-  .chart-text {
-      font-size: 10px;
-     
-  }
+
+    .btn{ 
+        margin-bottom:10px;
+    }
+
+    .text-div {
+        word-wrap: break-word;
+    }
+
+    .stackedtext-div {
+        float: right;
+        word-wrap: break-word;
+    }
+
+    .grid-item > * {
+        margin: 0;
+        padding: 0;
+    }
+
+    .chart-text {
+        font-size: 10px;
+        
+    }

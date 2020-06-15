@@ -512,7 +512,7 @@ Promise.all([
             var yAxis2RangeMaxCase = log(regionCaseCount);
         }
         
-        if(regionMaxDailyCaseCount > 0) {
+        if(regionCaseCount > 0) {
             // create x and y axis data sets
             var xCases = [];
             var yCases = [];
@@ -605,8 +605,8 @@ Promise.all([
                     pad: 2
                 },
                 xaxis: { 
-                    autotick: true,
-                    mirror: 'allticks',
+                    //autotick: true,
+                    //mirror: 'allticks',
                     type: "date",
                     tickformat: "%b-%d",
                     tickfont: {
@@ -646,6 +646,7 @@ Promise.all([
                     showgrid: false
                 }
             };
+            console.log(caseChartLayout);
             Plotly.newPlot('region_daily_cases_chart', caseChartData, caseChartLayout);
         } else {
             document.getElementById('region_daily_cases_chart').innerHTML = '';
@@ -666,7 +667,7 @@ Promise.all([
             var yAxis2RangeMaxMort = 5;
         }
         
-        if(regionMaxDailyMortCount > 0) {
+        if(regionMortCount > 0) {
             // create x and y axis data sets
             var xMort = [];
             var yMort = [];
@@ -737,15 +738,6 @@ Promise.all([
                     },
                 },
                 showlegend: false,
-                legend: {
-                    "orientation": "v",
-                    x: 0,
-                    xanchor: 'left',
-                    y: 1,
-                    font: {
-                        size: 10
-                    },
-                },
                 autosize: false,
                 autoscale: false,
                 width: 250,
@@ -758,8 +750,8 @@ Promise.all([
                     pad: 5
                 },
                 xaxis: { 
-                    autotick: true,
-                    mirror: 'allticks',
+                    //autotick: true,
+                    //mirror: 'allticks',
                     type: "date",
                     tickformat: "%b-%d",
                     tickfont: {
