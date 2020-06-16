@@ -155,7 +155,6 @@ Promise.all([
 //CREATE MAP=================================
 
     // set default map, chroma, chart and region detail variables
-    var statscanRegion = 'Canada'
     var mapMetric = 'case_count';
     var colorHex = ['#deebf7','#08306b'];
     var classBreaks = [1,50,100,250,500,1000,2000,3000,6000,9000];
@@ -175,7 +174,8 @@ Promise.all([
         zoomOffset: -1
     }).addTo(map);
 
-    // create charts default to all canada
+    // create charts default to canada
+    var statscanRegion = 'Canada'
     createCharts(statscanRegion);
 
     // default info box content on mouseover action
@@ -293,7 +293,6 @@ Promise.all([
         var lon = '-95.424717';
         var mag = 4;
         map.setView([lat, lon], mag);
-        // remove existing legend
         var statscanRegion = 'Canada'
         createCharts(statscanRegion);
     };
@@ -565,7 +564,6 @@ Promise.all([
                 mode: 'lines',
                 line: {
                     shape: 'linear', 
-
                     color: 'rgb(5,113,176)',
                     width: 2
                 },
@@ -646,7 +644,6 @@ Promise.all([
                     showgrid: false
                 }
             };
-            console.log(caseChartLayout);
             Plotly.newPlot('region_daily_cases_chart', caseChartData, caseChartLayout);
         } else {
             document.getElementById('region_daily_cases_chart').innerHTML = '';
