@@ -174,10 +174,6 @@ Promise.all([
         zoomOffset: -1
     }).addTo(map);
 
-    // create charts default to canada
-    var statscanRegion = 'Canada'
-    createCharts(statscanRegion);
-
     // default info box content on mouseover action
     var infoBoxDefaultText = '<p>Hover mouse over region to see details here.<br> Click on region to show details in left side panel.<br> Scroll to zoom.</p>';
     // create info box control
@@ -243,7 +239,11 @@ Promise.all([
         };
         legend.addTo(map);
     }
-    
+
+    // create charts default to canada
+    var statscanRegion = 'Canada'
+    createCharts(statscanRegion);
+
     // buttons to select map metrics
     // btnCase
     document.getElementById("btnCase").addEventListener("click", e => mapCaseTotal(e));
@@ -549,7 +549,6 @@ Promise.all([
                 mode: 'lines',
                 line: {
                     shape: 'linear', 
-
                     color: 'rgb(64,64,64)',
                     width: 2
                 },
