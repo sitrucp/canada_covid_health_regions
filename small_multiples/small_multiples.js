@@ -106,18 +106,21 @@ Promise.all([
         var daysLastCase = parseInt(Math.round((timeDiff / (1000 * 60 * 60 * 24)-1)));
         var regionColor = fillColor(daysLastCase).colorWord;
         arrColorWord.push(regionColor);
-
+        var zero_day_color = '#DC143C';
+        var zero_7_days_color = '#FF9526';
+        var grtr_7_days_color = '#228B22';
+        
         function fillColor(days) {
             var daysColor = '';
             var colorWord = '';
             if (days === 0) {
-                var daysColor = '#de425b'; // red
+                var daysColor = zero_day_color; // red
                 var colorWord = 'red';
             } else if (days > 0 && days < 7) {
-                var daysColor = '#f27d58'; // orange
+                var daysColor = zero_7_days_color; // orange
                 var colorWord = 'orange';
             } else {
-                var daysColor = '#488f31'; // green
+                var daysColor = grtr_7_days_color; // green
                 var colorWord = 'green';
             }
             return { daysColor, colorWord }
@@ -220,64 +223,6 @@ Promise.all([
         Plotly.newPlot(newChartDiv, [data], layout, config);
     }
 
-    // create case days normalized stacked area chart
-    var areaX = []
-    var y0days = []
-    var y1to7days = []
-    var y7plusdays = []
-    for (var i=1; i<case_dates_data.length; i++) {
-        areaX.push(case_dates_data[i]['report_date']);
-        y0days.push(case_dates_data[i]['0 days']);
-        y1to7days.push(case_dates_data[i]['1-7 days']);
-        y7plusdays.push(case_dates_data[i]['7+ days']);
-    }
-
-    var areaTraces = [
-        {x: areaX, y: y0days, stackgroup: 'one', groupnorm:'percent', line: {color: '#de425b'}, fillcolor: '#de425b'},
-        {x: areaX, y: y1to7days, stackgroup: 'one', line: {color: '#f8b267'}, fillcolor: '#f8b267'},
-        {x: areaX, y: y7plusdays, stackgroup: 'one', line: {color: '#488f31'}, fillcolor: '#488f31'}
-    ];
-
-    var areaLayout = {
-        showlegend: false,
-        hovermode: false,
-        autosize: true,
-        width: 400,
-        height: 100,
-        margin: {
-            l: 5,
-            r: 5,
-            b: 20,
-            t: 5,
-            pad: 0
-        },
-        xaxis: {
-            autotick: true,
-            mirror: 'allticks',
-            type: "date",
-            tickformat: "%b-%d",
-            tickfont: {
-                size: 10
-            },
-            range:[
-                new Date(minCaseDate).getTime(), 
-                new Date(maxCaseDate).getTime()
-            ],
-            showgrid: false
-        },
-        yaxis: {
-            showticklabels: false,
-            showgrid: false,
-            range: [0, maxDailyCases]
-        }
-    };
-    var areaConfig = {
-        responsive: true,
-        displayModeBar: false
-    };
-    Plotly.newPlot('area-chart', areaTraces, areaLayout, areaConfig);
-    //////////////////////
-
     var countColorWord = arrColorWord.reduce((p, c) => {
         var color = c;
         if (!p.hasOwnProperty(color)) {
@@ -288,7 +233,7 @@ Promise.all([
       }, {});
 
     var divDesc = document.getElementById('daysDescription');
-    divDesc.innerHTML += '<p>Days since last case (DL) grouped by: <span style="color:#259625"> > 7 days (' + countColorWord.green + ')</span> | <span style="color:#ef9000"> 1-7 days (' + countColorWord.orange + ')</span> | <span style="color:#ff6666"> 0 days (' + countColorWord.red + ')</span></p>';
+    divDesc.innerHTML += '<p>Days since last case (DL) grouped by: <span style="color:' + grtr_7_days_color + '"> > 7 days (' + countColorWord.green + ')</span> | <span style="color:' + zero_7_days_color + '"> 1-7 days (' + countColorWord.orange + ')</span> | <span style="color:' + zero_day_color + '"> 0 days (' + countColorWord.red + ')</span></p>';
 
     // isotope
     var $grid = $('.grid').isotope({
@@ -401,6 +346,75 @@ Promise.all([
         if (day.length < 2) 
             day = '0' + day;
         return [year, month, day].join('-');
+    }
+
+    summaryChart(700, 150);
+
+    function summaryChart(width, height) {
+        
+    // create case days normalized stacked area chart
+    var areaX = [];
+    var y0days = [];
+    var y1to7days = [];
+    var y7plusdays = [];
+    var chartWidth = width;
+    var chartHeight = height;
+    
+    // case_dates_data from json file
+    for (var i=1; i < case_dates_data.length; i++) {
+        areaX.push(case_dates_data[i]['report_date']);
+        y0days.push(case_dates_data[i]['0 days']);
+        y1to7days.push(case_dates_data[i]['1-7 days']);
+        y7plusdays.push(case_dates_data[i]['7+ days']);
+    }
+
+    var areaTraces = [
+        {x: areaX, y: y0days, name: '', stackgroup: 'one', groupnorm:'percent', line: {color: zero_day_color}, fillcolor: zero_day_color},
+        {x: areaX, y: y1to7days, name: '', stackgroup: 'one', line: {color: zero_7_days_color}, fillcolor: zero_7_days_color},
+        {x: areaX, y: y7plusdays, name: '', stackgroup: 'one', line: {color: grtr_7_days_color}, fillcolor: grtr_7_days_color}
+    ];
+
+    var areaLayout = {
+        showlegend: false,
+        //hovermode: false,
+        //autosize: true,
+        width: chartWidth,
+        height: chartHeight,
+        margin: {
+            l: 5,
+            r: 5,
+            b: 25,
+            t: 5,
+            pad: 0
+        },
+        xaxis: {
+            autotick: true,
+            mirror: 'allticks',
+            type: "date",
+            tickformat: "%b-%d",
+            tickfont: {
+                size: 10
+            },
+            range:[
+                new Date(minCaseDate).getTime(), 
+                new Date(maxCaseDate).getTime()
+            ],
+            showgrid: false
+        },
+        yaxis: {
+            showticklabels: false,
+            showgrid: false,
+            range: [0, maxDailyCases],
+            hoverformat: '.0f'
+        }
+    };
+    var areaConfig = {
+        responsive: true,
+        displayModeBar: false
+    };
+    Plotly.newPlot('summary_chart', areaTraces, areaLayout, areaConfig);
+    //////////////////////
+
     }
     
 });

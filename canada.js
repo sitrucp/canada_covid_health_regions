@@ -527,7 +527,8 @@ Promise.all([
             }
             // set up plotly chart
             var casesDaily = {
-                name: 'Daily',
+                name: '',
+                text: 'Daily',
                 x: xCases,
                 y: yCases,
                 type: 'bar',
@@ -541,7 +542,8 @@ Promise.all([
                 }
             };
             var casesCum = {
-                name: 'Cumulative',
+                name: '',
+                text: 'Cumulative',
                 x: xCasesCum,
                 y: yCasesCum,
                 yaxis: 'y2',
@@ -555,7 +557,8 @@ Promise.all([
                 connectgaps: true
             };
             var casesMA = {
-                name: '7D MA',
+                name: '',
+                text: '7D MA',
                 x: xCases,
                 y: movingAverage(yCases, 7),
                 yaxis: 'y',
@@ -680,7 +683,8 @@ Promise.all([
             
             // set up plotly chart
             var mortsDaily = {
-                name: 'Daily',
+                name: '',
+                text: 'Daily',
                 x: xMort,
                 y: yMort,
                 type: 'bar',
@@ -694,7 +698,8 @@ Promise.all([
                 }
             };
             var mortsCum = {
-                name: 'Cumulative',
+                name: '',
+                text: 'Cumulative',
                 x: xMortCum,
                 y: yMortCum,
                 yaxis: 'y2',
@@ -710,7 +715,8 @@ Promise.all([
                 connectgaps: true
             };
             var mortsMA = {
-                name: '7D MA',
+                name: '',
+                text: '7D MA',
                 x: xMort,
                 y: movingAverage(yMort, 7),
                 yaxis: 'y',
@@ -718,7 +724,6 @@ Promise.all([
                 mode: 'lines',
                 line: {
                     shape: 'linear',
-
                     color: 'rgb(5,113,176)',
                     width: 2
                 },
@@ -841,7 +846,7 @@ Promise.all([
         }
         for (let n = values.length; i < n; ++i) {
             sum += values[i];
-            means[i] = sum / N;
+            means[i] = parseInt(sum / N);
             sum -= values[i - N + 1];
         }
         return means;
