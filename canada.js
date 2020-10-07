@@ -527,23 +527,23 @@ Promise.all([
             }
             // set up plotly chart
             var casesDaily = {
-                name: '',
-                text: 'Daily',
+                name: 'Daily',
+                //text: 'Daily',
                 x: xCases,
                 y: yCases,
                 type: 'bar',
                 width: 1000*3600*24,
                 marker: {
-                    color: 'rgb(240,240,240)',
+                    color: 'rgb(169,169,169)',
                     line: {
-                    color: 'rgb(189,189,189)',
+                    color: 'rgb(169,169,169)',
                     width: 1
                     }
                 }
             };
             var casesCum = {
-                name: '',
-                text: 'Cumulative',
+                name: 'Cumulative',
+                //text: 'Cumulative',
                 x: xCasesCum,
                 y: yCasesCum,
                 yaxis: 'y2',
@@ -557,8 +557,8 @@ Promise.all([
                 connectgaps: true
             };
             var casesMA = {
-                name: '',
-                text: '7D MA',
+                name: '7D MA',
+                //text: '7D MA',
                 x: xCases,
                 y: movingAverage(yCases, 7),
                 yaxis: 'y',
@@ -683,23 +683,23 @@ Promise.all([
             
             // set up plotly chart
             var mortsDaily = {
-                name: '',
-                text: 'Daily',
+                name: 'Daily',
+                //text: 'Daily',
                 x: xMort,
                 y: yMort,
                 type: 'bar',
                 width: 1000*3600*24,
                 marker: {
-                    color: 'rgb(240,240,240)',
+                    color: 'rgb(169,169,169)',
                     line: {
-                    color: 'rgb(189,189,189)',
+                    color: 'rgb(169,169,169)',
                     width: 1
                     }
                 }
             };
             var mortsCum = {
-                name: '',
-                text: 'Cumulative',
+                name: 'Cumulative',
+                //text: 'Cumulative',
                 x: xMortCum,
                 y: yMortCum,
                 yaxis: 'y2',
@@ -707,7 +707,6 @@ Promise.all([
                 mode: 'lines',
                 line: {
                     shape: 'linear',
-
                     color: 'rgb(64,64,64)',
                     width: 2
                 },
@@ -715,8 +714,8 @@ Promise.all([
                 connectgaps: true
             };
             var mortsMA = {
-                name: '',
-                text: '7D MA',
+                name: '7D MA',
+                //text: '7D MA',
                 x: xMort,
                 y: movingAverage(yMort, 7),
                 yaxis: 'y',
