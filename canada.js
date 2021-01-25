@@ -150,7 +150,7 @@ Promise.all([
     maxNewCaseByRegion = d3.max(covidData.map(d=>d.case_new_count));
     maxNewMortByRegion = d3.max(covidData.map(d=>d.mort_new_count));
 
-   document.getElementById('title').innerHTML += ' <small class="text-muted">Last updated: ' + lastUpdated + '</small>';
+   document.getElementById('last_update').innerHTML += ' <small class="text-muted">Last updated: ' + lastUpdated + '</small>';
 
 //CREATE MAP=================================
 
