@@ -3,11 +3,11 @@
     height:450px;
     }
 
-    html, body {
-    height: 100%;
-    margin: 5px 0px 20px 0px; 
-    font-family: Arial, Helvetica, sans-serif;
+    .container { 
+        margin-top: 20px;
+        margin-bottom: 40px; 
     }
+
 
     table tbody tr td {
     font-size: 12px;
