@@ -20,29 +20,17 @@ The Statscan and COVID-19 Canada Open Data Working Group data health region boun
 
 To address boundary naming variance issues above, a lookup or mapping table was created in file "health_regions_lookup.csv" to match Statscan health region names with working group cases and mortality data health region names.
 
-## Edit
+# Code available in repository but content no longer live on github.io website
 
-As of April 9 the map now retrieves COVID-19 Canada Open Data Working Group data  automatically directly from working group Github repository when the map web page is opened or refreshed in browser by using D3.js to get and transform data from cases.csv and mortaliy.csv files. This code is included in "leaflet_map.js" file. Previously, the  data manipulation was done manually using Excel Power Query to retrieve and transform data files to create map "covid_data" json dataset.
-
-# Map of Montreal COVID-19 Confirmed Cases By City Neighbourhoods
-
-## View map here:
-
-<a href="https://sitrucp.github.io/canada_covid_health_regions/montreal/index.html" >https://sitrucp.github.io/canada_covid_health_regions/montreal/index.html</a>
+## Map of Montreal COVID-19 Confirmed Cases By City Neighbourhoods
 
 A separate map was created for Montreal as it is Canada's "covid hotspot". The boundaries used on the Montreal map are Montreal island neighbourhood or linked cities. The confirmed cases counts come from the <a href = "https://santemontreal.qc.ca/en/public/coronavirus-covid-19/" target="blank">Quebec Health Montreal website</a>. 
 
-## Data Scraping
-
-The Montreal map data is automatically retrieved from Health Montreal web page using web server based cron job and Python BeautifulSoup4, Requests, and Pandas to retrieve and transform webpage table data and create the json data file "montreal_confirmed_cases.json". 
+The Montreal map data was automatically retrieved from Health Montreal web page using web server based cron job and Python BeautifulSoup4, Requests, and Pandas to retrieve and transform webpage table data and create the json data file "montreal_confirmed_cases.json". 
 
 The Montreal map data web scraping code is in another repository <a href = "https://github.com/sitrucp/covid_montreal_scrape_data" target="blank">https://github.com/sitrucp/covid_montreal_scrape_data</a>.
 
-# Small Multiples of Canada COVID-19 Cases By Provincial Health Regions
-
-## View charts here:
-
-<a href="https://sitrucp.github.io/canada_covid_health_regions/small_multiples/index.html" target="blank">https://sitrucp.github.io/canada_covid_health_regions/small_multiples/index.html</a>
+## Small Multiples of Canada COVID-19 Cases By Provincial Health Regions
 
 This uses same data as above but visualizes each health region as separate small area chart using Plotly.js for charting and Isotope.js to present small multiples in responsive, interactive grid that can be sorted and filtered.
 
