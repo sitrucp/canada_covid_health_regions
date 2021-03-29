@@ -1,0 +1,353 @@
+var covid_data = 
+[
+    {
+        "website_name": "Ahuntsic–Cartierville",
+        "region_name": "Ahuntsic–Cartierville",
+        "geojson_name": "Ahuntsic-Cartierville",
+        "case_count": "20",
+        "case_percent": "191",
+        "case_per_100k": "142.3",
+        "mort_count": 3403.0,
+        "mort_per_100k": "2534.9"
+    },
+    {
+        "website_name": "Anjou",
+        "region_name": "Anjou",
+        "geojson_name": "Anjou",
+        "case_count": "9",
+        "case_percent": "72",
+        "case_per_100k": "168.2",
+        "mort_count": 1070.0,
+        "mort_per_100k": "2500.2"
+    },
+    {
+        "website_name": "Baie-D'Urfé",
+        "region_name": "Baie-D'Urfé",
+        "geojson_name": "BAIE D'URFE",
+        "case_count": "< 5",
+        "case_percent": "< 5",
+        "case_per_100k": "n.p.",
+        "mort_count": 39.0,
+        "mort_per_100k": "1020.1"
+    },
+    {
+        "website_name": "Beaconsfield",
+        "region_name": "Beaconsfield",
+        "geojson_name": "BEACONSFIELD",
+        "case_count": "0",
+        "case_percent": "18",
+        "case_per_100k": "* 93.1",
+        "mort_count": 122.0,
+        "mort_per_100k": "631.3"
+    },
+    {
+        "website_name": "Côte-des-Neiges–Notre-Dame-de-Grâce",
+        "region_name": NaN,
+        "geojson_name": "Côte-des-Neiges–Notre-Dame-de-Grâce",
+        "case_count": NaN,
+        "case_percent": NaN,
+        "case_per_100k": NaN,
+        "mort_count": NaN,
+        "mort_per_100k": NaN
+    },
+    {
+        "website_name": "Côte-Saint-Luc",
+        "region_name": "Côte-Saint-Luc",
+        "geojson_name": "CÔTE-SAINT-LUC",
+        "case_count": "10",
+        "case_percent": "140",
+        "case_per_100k": "431.5",
+        "mort_count": 1027.0,
+        "mort_per_100k": "3165.1"
+    },
+    {
+        "website_name": "Dollard-des-Ormeaux",
+        "region_name": "Dollard-des-Ormeaux",
+        "geojson_name": "DOLLARD-DES-ORMEAUX",
+        "case_count": "< 5",
+        "case_percent": "94",
+        "case_per_100k": "192.2",
+        "mort_count": 792.0,
+        "mort_per_100k": "1619.7"
+    },
+    {
+        "website_name": "Dorval",
+        "region_name": "Dorval",
+        "geojson_name": "DORVAL",
+        "case_count": "< 5",
+        "case_percent": "14",
+        "case_per_100k": "* 73.8",
+        "mort_count": 321.0,
+        "mort_per_100k": "1691.3"
+    },
+    {
+        "website_name": "Hampstead",
+        "region_name": "Hampstead",
+        "geojson_name": "HAMPSTEAD",
+        "case_count": "0",
+        "case_percent": "8",
+        "case_per_100k": "n.p.",
+        "mort_count": 124.0,
+        "mort_per_100k": "1778.3"
+    },
+    {
+        "website_name": "Kirkland",
+        "region_name": "Kirkland",
+        "geojson_name": "KIRKLAND",
+        "case_count": "< 5",
+        "case_percent": "25",
+        "case_per_100k": "* 124.1",
+        "mort_count": 221.0,
+        "mort_per_100k": "1096.7"
+    },
+    {
+        "website_name": "Lachine",
+        "region_name": "Lachine",
+        "geojson_name": "Lachine",
+        "case_count": "12",
+        "case_percent": "123",
+        "case_per_100k": "276.5",
+        "mort_count": 976.0,
+        "mort_per_100k": "2193.8"
+    },
+    {
+        "website_name": "LaSalle",
+        "region_name": "LaSalle",
+        "geojson_name": "LaSalle",
+        "case_count": "14",
+        "case_percent": "229",
+        "case_per_100k": "298.0",
+        "mort_count": 1886.0,
+        "mort_per_100k": "2454.0"
+    },
+    {
+        "website_name": "L'Île-Bizard–Sainte-Geneviève",
+        "region_name": "L'Île-Bizard–Sainte-Geneviève",
+        "geojson_name": "L’Île-Bizard–Sainte-Geneviève",
+        "case_count": "0",
+        "case_percent": "9",
+        "case_per_100k": "* 48.9",
+        "mort_count": 287.0,
+        "mort_per_100k": "1558.7"
+    },
+    {
+        "website_name": "Mercier–Hochelaga-Maisonneuve",
+        "region_name": "Mercier–Hochelaga-Maisonneuve",
+        "geojson_name": "Mercier–Hochelaga-Maisonneuve",
+        "case_count": "21",
+        "case_percent": "197",
+        "case_per_100k": "144.8",
+        "mort_count": 3447.0,
+        "mort_per_100k": "2534.1"
+    },
+    {
+        "website_name": "Montréal-Est",
+        "region_name": "Montréal-Est",
+        "geojson_name": "MONTRÉAL-EST",
+        "case_count": "0",
+        "case_percent": "7",
+        "case_per_100k": "n.p.",
+        "mort_count": 70.0,
+        "mort_per_100k": "1818.2"
+    },
+    {
+        "website_name": "Montréal-Nord",
+        "region_name": "Montréal-Nord",
+        "geojson_name": "MONTRÉAL-NORD",
+        "case_count": "13",
+        "case_percent": "169",
+        "case_per_100k": "200.6",
+        "mort_count": 3610.0,
+        "mort_per_100k": "4285.7"
+    },
+    {
+        "website_name": "Montréal-Ouest",
+        "region_name": "Montréal-Ouest",
+        "geojson_name": "MONTRÉAL-OUEST",
+        "case_count": "< 5",
+        "case_percent": "8",
+        "case_per_100k": "n.p.",
+        "mort_count": 49.0,
+        "mort_per_100k": "970.3"
+    },
+    {
+        "website_name": "Mont-Royal",
+        "region_name": "Mont-Royal",
+        "geojson_name": "MONT-ROYAL",
+        "case_count": "< 5",
+        "case_percent": "26",
+        "case_per_100k": "* 128.2",
+        "mort_count": 484.0,
+        "mort_per_100k": "2387.1"
+    },
+    {
+        "website_name": "Outremont",
+        "region_name": "Outremont",
+        "geojson_name": "Outremont",
+        "case_count": "< 5",
+        "case_percent": "22",
+        "case_per_100k": "* 91.8",
+        "mort_count": 575.0,
+        "mort_per_100k": "2400.4"
+    },
+    {
+        "website_name": "Pierrefonds–Roxboro",
+        "region_name": "Pierrefonds–Roxboro",
+        "geojson_name": "Pierrefonds-Roxboro",
+        "case_count": "11",
+        "case_percent": "107",
+        "case_per_100k": "154.4",
+        "mort_count": 995.0,
+        "mort_per_100k": "1435.8"
+    },
+    {
+        "website_name": "Plateau-Mont-Royal",
+        "region_name": "Plateau-Mont-Royal",
+        "geojson_name": "Le Plateau-Mont-Royal",
+        "case_count": "8",
+        "case_percent": "80",
+        "case_per_100k": "76.9",
+        "mort_count": 1730.0,
+        "mort_per_100k": "1663.5"
+    },
+    {
+        "website_name": "Pointe-Claire",
+        "region_name": "Pointe-Claire",
+        "geojson_name": "POINTE-CLAIRE",
+        "case_count": "0",
+        "case_percent": "21",
+        "case_per_100k": "* 66.9",
+        "mort_count": 304.0,
+        "mort_per_100k": "968.8"
+    },
+    {
+        "website_name": "Rivière-des-Prairies–Pointe-aux-Trembles",
+        "region_name": NaN,
+        "geojson_name": "Rivière-des-Prairies–Pointe-aux-Trembles",
+        "case_count": NaN,
+        "case_percent": NaN,
+        "case_per_100k": NaN,
+        "mort_count": NaN,
+        "mort_per_100k": NaN
+    },
+    {
+        "website_name": "Rosemont–La Petite Patrie",
+        "region_name": "Rosemont–La Petite Patrie",
+        "geojson_name": "Rosemont–La Petite-Patrie",
+        "case_count": "8",
+        "case_percent": "240",
+        "case_per_100k": "171.9",
+        "mort_count": 2705.0,
+        "mort_per_100k": "1937.8"
+    },
+    {
+        "website_name": "Sainte-Anne-de-Bellevue",
+        "region_name": "Sainte-Anne-de-Bellevue",
+        "geojson_name": "SAINTE-ANNE-DE-BELLEVUE",
+        "case_count": "0",
+        "case_percent": "< 5",
+        "case_per_100k": "n.p.",
+        "mort_count": 25.0,
+        "mort_per_100k": "* 504.2"
+    },
+    {
+        "website_name": "Saint-Laurent",
+        "region_name": "Saint-Laurent",
+        "geojson_name": "Saint-Laurent",
+        "case_count": "19",
+        "case_percent": "240",
+        "case_per_100k": "242.8",
+        "mort_count": 2085.0,
+        "mort_per_100k": "2109.7"
+    },
+    {
+        "website_name": "Saint-Léonard",
+        "region_name": "Saint-Léonard",
+        "geojson_name": "Saint-Léonard",
+        "case_count": "28",
+        "case_percent": "163",
+        "case_per_100k": "208.2",
+        "mort_count": 1939.0,
+        "mort_per_100k": "2476.2"
+    },
+    {
+        "website_name": "Senneville",
+        "region_name": "Senneville",
+        "geojson_name": "SENNEVILLE",
+        "case_count": "0",
+        "case_percent": "< 5",
+        "case_per_100k": "n.p.",
+        "mort_count": 8.0,
+        "mort_per_100k": "n.p."
+    },
+    {
+        "website_name": "Sud-Ouest",
+        "region_name": "Sud-Ouest",
+        "geojson_name": "Le Sud-Ouest",
+        "case_count": "5",
+        "case_percent": "117",
+        "case_per_100k": "149.7",
+        "mort_count": 1562.0,
+        "mort_per_100k": "1998.7"
+    },
+    {
+        "website_name": "Verdun",
+        "region_name": "Verdun",
+        "geojson_name": "Verdun",
+        "case_count": "5",
+        "case_percent": "76",
+        "case_per_100k": "109.8",
+        "mort_count": 1358.0,
+        "mort_per_100k": "1961.6"
+    },
+    {
+        "website_name": "Ville-Marie",
+        "region_name": "Ville-Marie",
+        "geojson_name": "Ville-Marie",
+        "case_count": "< 5",
+        "case_percent": "119",
+        "case_per_100k": "133.5",
+        "mort_count": 1880.0,
+        "mort_per_100k": "2108.3"
+    },
+    {
+        "website_name": "Villeray–Saint-Michel–Parc-Extension",
+        "region_name": "Villeray–Saint-Michel–Parc-Extension",
+        "geojson_name": "Villeray–Saint-Michel–Parc-Extension",
+        "case_count": "32",
+        "case_percent": "329",
+        "case_per_100k": "228.7",
+        "mort_count": 3698.0,
+        "mort_per_100k": "2570.7"
+    },
+    {
+        "website_name": "Westmount",
+        "region_name": "Westmount",
+        "geojson_name": "WESTMOUNT",
+        "case_count": "0",
+        "case_percent": "10",
+        "case_per_100k": "* 49.2",
+        "mort_count": 283.0,
+        "mort_per_100k": "1393.3"
+    },
+    {
+        "website_name": "Territory to be confirmed2",
+        "region_name": NaN,
+        "geojson_name": "Territory to be confirmed2",
+        "case_count": NaN,
+        "case_percent": NaN,
+        "case_per_100k": NaN,
+        "mort_count": NaN,
+        "mort_per_100k": NaN
+    },
+    {
+        "website_name": "Total for Montréal",
+        "region_name": "Total for Montréal",
+        "geojson_name": "Total for Montréal",
+        "case_count": "253",
+        "case_percent": "3439",
+        "case_per_100k": "166.5",
+        "mort_count": 44969.0,
+        "mort_per_100k": "2177.0"
+    }
+]
