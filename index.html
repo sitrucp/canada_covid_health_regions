@@ -94,7 +94,11 @@
             <button type="buttons" id="btnMaritimes" class="btn btn-secondary btn-sm">Maritimes</button>
             <button type="buttons" id="btnCanada" class="btn btn-secondary btn-sm">Canada</button>
             
-            <div id="map" class="map"></div>
+            <div id="map" class="map">
+                <div id="loading" class="spinner-grow" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
+            </div>
 
             <div id="project_details">
                 <small class="text-muted">COVID-91 data comes from the <a href = "https://github.com/ishaberry/Covid19Canada" target="blank">COVID-19 Canada Open Data Working Group</a>. Map uses Statscan health regions. More details on usage <a href="https://github.com/sitrucp/canada_covid_health_regions" target="blank">here</a>. </small>
