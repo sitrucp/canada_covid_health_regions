@@ -232,7 +232,6 @@ Promise.all([
                 } else {
                     div.innerHTML += '<i style="background:' + getColor(classBreaks[i], classBreaks, colorHex) + '"></i> ' +
                     classBreaks[i] + '&ndash;' + classBreaks[i+1] + '<br>';
-                    
                 }
             }
             return div;
@@ -346,8 +345,10 @@ Promise.all([
     function getRegionCount(mapMetric,regionName,classBreaks,colorHex) {
         var regionColor;
         for(var i = 0; i < covidData.length; i++) {
+
             if (covidData[i]['statscan_arcgis_health_region'] === regionName) {
                 regionColor = getColor(covidData[i][mapMetric],classBreaks,colorHex);
+
                 break;
             }
         }
@@ -988,6 +989,7 @@ Promise.all([
 
 //CREATE TABLE BELOW MAP=================================
     $(document).ready(function () {
+        
         var thead;
         var thead_tr;
         thead = $("<thead>");
@@ -1001,11 +1003,13 @@ Promise.all([
         thead_tr.append("<th style='text-align: right';>Mort % Canada</th>");
         thead_tr.append("<th style='text-align: right';>Mort per Case</th>");
         thead_tr.append("<th style='text-align: right';>New Case Count</th>");
-        thead_tr.append("<th style='text-align: right';>New Mort Count</th>");thead_tr.append("<th style='text-align: right';>New Case % Canada</th>");
+        thead_tr.append("<th style='text-align: right';>New Mort Count</th>");
+        thead_tr.append("<th style='text-align: right';>New Case % Canada</th>");
         thead_tr.append("<th style='text-align: right';>New Mort % Canada</th>");
         thead_tr.append("</tr>");
         thead.append(thead_tr);
         $('table').append(thead);
+
         var tbody;
         var tbody_tr;
         tbody = $("<tbody>");
